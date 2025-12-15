@@ -1,19 +1,18 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+body {
+  background-color: #fafafa;
+  color: rgb(0, 0, 0);
+  padding: 40px;
   text-align: center;
+  justify-content: center;
+  align-items: center;
 }
 
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #ffffff;
-}
-
-.text-3xl font-bold text-gray-900 mb-3 {
-  color: #b51e1e;
+.bg-white{
+  color: rgb(0, 0, 0);
+  background-color: #ffffff;
+  border: 2px solid rgb(200, 200, 200);
+  border-radius: 5px;
+  display: inline-block;
+  padding: 50px;
+  margin: 10px;
 }
