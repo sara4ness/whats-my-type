@@ -6,18 +6,18 @@ function OptionCard({ letter, title, description, onClick, fontFamily }) {
   return (
     <div 
       onClick={onClick}
-      className="bg-white p-12 rounded-lg shadow-lg max-w-md cursor-pointer hover:shadow-xl transition-shadow"
+      className="optionBox"
     >
       <div 
-        className="text-7xl font-bold text-gray-800 mb-6"
+        className="fontFamily"
         style={{ fontFamily }}
       >
         {letter}
       </div>
-      <h2 className="text-3xl font-bold text-gray-900 mb-3">
+      <h2 className="titleh2">
         {title}
       </h2>
-      <p className="text-gray-600 text-lg">
+      <p className="description">
         {description}
       </p>
     </div>
@@ -41,7 +41,7 @@ function App() {
   // Step 0: Choose Serif or Sans-Serif
   if (step === 0) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-8 gap-8">
+      <div className="choiceFontFamily">
         <OptionCard
           letter="Aa"
           title="Serif"
@@ -84,15 +84,15 @@ function App() {
     const fonts = choices.fontCategory === 'serif' ? serifFonts : sansSerifFonts;
     
     return (
-      <div className="min-h-screen bg-gray-100 p-8">
+      <div className="buttonBox">
         <button 
           onClick={() => setStep(0)}
-          className="mb-8 px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+          className="button"
         >
           ← Back
         </button>
         
-        <div className="flex items-center justify-center gap-8 flex-wrap">
+        <div className="choiceFont">
           {fonts.map((font) => (
             <OptionCard
               key={font.name}
@@ -125,28 +125,28 @@ function App() {
 
     return (
       <div 
-        className="min-h-screen bg-gray-100 p-8"
+        className="buttonBox"
         style={{ fontFamily: getFontFamily() }}
       >
         <button 
           onClick={() => setStep(1)}
-          className="mb-8 px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+          className="button"
         >
           ← Back
         </button>
         
-        <div className="max-w-4xl mx-auto bg-white p-12 rounded-lg shadow-lg">
-          <h1 className="text-5xl font-bold text-gray-900 mb-6">
+        <div className="summaryPage">
+          <h1 className="titleh1">
             Your Custom Style
           </h1>
           
-          <div className="mb-8 p-6 bg-gray-50 rounded">
-            <h3 className="text-xl font-bold mb-4">Your Choices:</h3>
-            <p className="text-lg">Font Category: <strong>{choices.fontCategory}</strong></p>
-            <p className="text-lg">Specific Font: <strong>{choices.specificFont}</strong></p>
+          <div className="customChoicesSummary">
+            <h3 className="yourChoices">Your Choices:</h3>
+            <p className="spesification">Font Category: <strong>{choices.fontCategory}</strong></p>
+            <p className="spesification">Specific Font: <strong>{choices.specificFont}</strong></p>
           </div>
           
-          <div className="prose max-w-none">
+          <div className="sampleText">
             <h2>Sample Text</h2>
             <p>
               This is how your text will look with the selected font. 
@@ -170,7 +170,7 @@ function App() {
               link.download = 'user-choices.json';
               link.click();
             }}
-            className="mt-8 px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold"
+            className="saveData"
           >
             Download My Choices
           </button>
