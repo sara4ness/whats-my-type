@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import Navbar from './components/Navbar';
 
 // Simple reusable card component
 function OptionCard({ letter, title, description, onClick, fontFamily }) {
@@ -25,7 +26,6 @@ function OptionCard({ letter, title, description, onClick, fontFamily }) {
 }
 
 function App() {
-  // All user choices in one place
   const [choices, setChoices] = useState({
     fontCategory: null,
     specificFont: null
@@ -33,41 +33,63 @@ function App() {
   
   const [step, setStep] = useState(0);
 
-  // Save to localStorage whenever choices change
   useEffect(() => {
     localStorage.setItem('userChoices', JSON.stringify(choices));
   }, [choices]);
 
+  // Function to reset everything
+  const handleStartOver = () => {
+    setChoices({ fontCategory: null, specificFont: null });
+    setStep(0);
+    localStorage.removeItem('userChoices');
+  };
+
+  // Get current font
+  const getCurrentFont = () => {
+    if (!choices.specificFont) return 'system-ui';
+    
+    if (choices.specificFont === 'Georgia') return 'Georgia, serif';
+    if (choices.specificFont === 'Times New Roman') return '"Times New Roman", serif';
+    if (choices.specificFont === 'Garamond') return 'Garamond, serif';
+    if (choices.specificFont === 'Arial') return 'Arial, sans-serif';
+    if (choices.specificFont === 'Helvetica') return 'Helvetica, sans-serif';
+    if (choices.specificFont === 'Verdana') return 'Verdana, sans-serif';
+    return 'system-ui';
+  };
+
   // Step 0: Choose Serif or Sans-Serif
   if (step === 0) {
     return (
-      <div className="choiceFontFamily">
-        <OptionCard
-          letter="Aa"
-          title="Serif"
-          description="Traditional typefaces with decorative strokes"
-          fontFamily="Georgia, serif"
-          onClick={() => {
-            setChoices({ ...choices, fontCategory: 'serif' });
-            setStep(1);
-          }}
-        />
-        
-        <OptionCard
-          letter="Aa"
-          title="Sans-Serif"
-          description="Clean, modern typefaces without decorative strokes"
-          fontFamily="Arial, sans-serif"
-          onClick={() => {
-            setChoices({ ...choices, fontCategory: 'sans-serif' });
-            setStep(1);
-          }}
-        />
-      </div>
+      <>
+        <Navbar onStartOver={handleStartOver} fontFamily={getCurrentFont()} />
+        <div className="choiceFontFamily" style={{ marginTop: '80px' }}>
+          <OptionCard
+            letter="Aa"
+            title="Serif"
+            description="Traditional typefaces with decorative strokes"
+            fontFamily="Georgia, serif"
+            onClick={() => {
+              setChoices({ ...choices, fontCategory: 'serif' });
+              setStep(1);
+            }}
+          />
+          
+          <OptionCard
+            letter="Aa"
+            title="Sans-Serif"
+            description="Clean, modern typefaces without decorative strokes"
+            fontFamily="Arial, sans-serif"
+            onClick={() => {
+              setChoices({ ...choices, fontCategory: 'sans-serif' });
+              setStep(1);
+            }}
+          />
+        </div>
+      </>
     );
   }
 
-  // Step 1: Choose specific font based on category
+  // Step 1: Choose specific font
   if (step === 1) {
     const serifFonts = [
       { name: 'Georgia', family: 'Georgia, serif' },
@@ -84,98 +106,84 @@ function App() {
     const fonts = choices.fontCategory === 'serif' ? serifFonts : sansSerifFonts;
     
     return (
-      <div className="buttonBox">
-        <button 
-          onClick={() => setStep(0)}
-          className="button"
-        >
-          ← Back
-        </button>
-        
-        <div className="choiceFont">
-          {fonts.map((font) => (
-            <OptionCard
-              key={font.name}
-              letter="Aa"
-              title={font.name}
-              description={`The ${font.name} typeface`}
-              fontFamily={font.family}
-              onClick={() => {
-                setChoices({ ...choices, specificFont: font.name });
-                setStep(2);
-              }}
-            />
-          ))}
+      <>
+        <Navbar onStartOver={handleStartOver} fontFamily={getCurrentFont()} />
+        <div className="buttonBox" style={{ marginTop: '80px' }}>
+          <button onClick={() => setStep(0)} className="button">
+            ← Back
+          </button>
+          
+          <div className="choiceFont">
+            {fonts.map((font) => (
+              <OptionCard
+                key={font.name}
+                letter="Aa"
+                title={font.name}
+                description={`The ${font.name} typeface`}
+                fontFamily={font.family}
+                onClick={() => {
+                  setChoices({ ...choices, specificFont: font.name });
+                  setStep(2);
+                }}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
-  // Step 2: Final preview with all choices
+  // Step 2: Final preview
   if (step === 2) {
-    const getFontFamily = () => {
-      if (choices.specificFont === 'Georgia') return 'Georgia, serif';
-      if (choices.specificFont === 'Times New Roman') return '"Times New Roman", serif';
-      if (choices.specificFont === 'Garamond') return 'Garamond, serif';
-      if (choices.specificFont === 'Arial') return 'Arial, sans-serif';
-      if (choices.specificFont === 'Helvetica') return 'Helvetica, sans-serif';
-      if (choices.specificFont === 'Verdana') return 'Verdana, sans-serif';
-      return 'system-ui';
-    };
-
     return (
-      <div 
-        className="buttonBox"
-        style={{ fontFamily: getFontFamily() }}
-      >
-        <button 
-          onClick={() => setStep(1)}
-          className="button"
+      <>
+        <Navbar onStartOver={handleStartOver} fontFamily={getCurrentFont()} />
+        <div 
+          className="buttonBox"
+          style={{ fontFamily: getCurrentFont(), marginTop: '80px' }}
         >
-          ← Back
-        </button>
-        
-        <div className="summaryPage">
-          <h1 className="titleh1">
-            Your Custom Style
-          </h1>
-          
-          <div className="customChoicesSummary">
-            <h3 className="yourChoices">Your Choices:</h3>
-            <p className="spesification">Font Category: <strong>{choices.fontCategory}</strong></p>
-            <p className="spesification">Specific Font: <strong>{choices.specificFont}</strong></p>
-          </div>
-          
-          <div className="sampleText">
-            <h2>Sample Text</h2>
-            <p>
-              This is how your text will look with the selected font. 
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-              Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-            <p>
-              The quick brown fox jumps over the lazy dog. 
-              ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890
-            </p>
-          </div>
-
-          <button 
-            onClick={() => {
-              // Download choices as JSON file
-              const dataStr = JSON.stringify(choices, null, 2);
-              const dataBlob = new Blob([dataStr], { type: 'application/json' });
-              const url = URL.createObjectURL(dataBlob);
-              const link = document.createElement('a');
-              link.href = url;
-              link.download = 'user-choices.json';
-              link.click();
-            }}
-            className="saveData"
-          >
-            Download My Choices
+          <button onClick={() => setStep(1)} className="button">
+            ← Back
           </button>
+          
+          <div className="summaryPage">
+            <h1 className="titleh1">Your Custom Style</h1>
+            
+            <div className="customChoicesSummary">
+              <h3 className="yourChoices">Your Choices:</h3>
+              <p className="spesification">Font Category: <strong>{choices.fontCategory}</strong></p>
+              <p className="spesification">Specific Font: <strong>{choices.specificFont}</strong></p>
+            </div>
+            
+            <div className="sampleText">
+              <h2>Sample Text</h2>
+              <p>
+                This is how your text will look with the selected font. 
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              </p>
+              <p>
+                The quick brown fox jumps over the lazy dog. 
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890
+              </p>
+            </div>
+
+            <button 
+              onClick={() => {
+                const dataStr = JSON.stringify(choices, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'user-choices.json';
+                link.click();
+              }}
+              className="saveData"
+            >
+              Download My Choices
+            </button>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 }
