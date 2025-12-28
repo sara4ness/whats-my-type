@@ -7,15 +7,139 @@ body {
   align-items: center;
 }
 
-.optionBox{
+.choiceFontFamily,
+.choiceFont {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.optionBox {
   color: rgb(0, 0, 0);
   background-color: #ffffff;
   border: 2px solid rgb(200, 200, 200);
   border-radius: 5px;
   width: 35%;
-  min-height: 200px;
+  padding: 50px;
+  min-height: 300px;
   display: flex;
   flex-direction: column;
-  padding: 50px;
-  margin: 10px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.optionBox:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.buttonBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+}
+
+.button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  position: fixed;
+  top: 90px;
+  left: 2rem;
+  z-index: 999;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.summaryPage {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.titleh1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.customChoicesSummary {
+  background-color: #ffffff;
+  border: 2px solid rgb(200, 200, 200);
+  border-radius: 5px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.yourChoices {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.spesification {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+}
+
+.sampleText {
+  background-color: #ffffff;
+  border: 2px solid rgb(200, 200, 200);
+  border-radius: 5px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.sampleText h2 {
+  margin-top: 0;
+}
+
+.sampleText p {
+  line-height: 1.6;
+  margin: 1rem 0;
+}
+
+.saveData {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.saveData:hover {
+  background-color: #218838;
+}
+
+.fontFamily {
+  font-size: 4rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.titleh2 {
+  font-size: 1.8rem;
+  margin: 1rem 0;
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #666;
 }
