@@ -119,7 +119,6 @@ function App() {
             {fonts.map((font) => (
               <OptionCard
                 key={font.name}
-                letter="Aa"
                 title={font.name}
                 description={font.description}
                 fontFamily={font.family}
