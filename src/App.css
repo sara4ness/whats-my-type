@@ -13,7 +13,9 @@ body {
   border: 2px solid rgb(200, 200, 200);
   border-radius: 5px;
   width: 35%;
-  display: inline-block;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
   padding: 50px;
   margin: 10px;
 }
