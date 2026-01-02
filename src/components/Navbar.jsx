@@ -1,9 +1,16 @@
 import React from 'react';
 import './Navbar.css';
 
-function Navbar({ onStartOver, fontFamily }) {
+function Navbar({ onStartOver, fontFamily, fontSize = 16, lineHeight = 1.5 }) {
   return (
-    <nav className="navbar" style={{ fontFamily: fontFamily || 'system-ui' }}>
+    <nav 
+      className="navbar" 
+      style={{ 
+        fontFamily: fontFamily || 'system-ui',
+        fontSize: `${fontSize}px`,
+        lineHeight: lineHeight
+      }}
+    >
       {/* Left side */}
       <button onClick={onStartOver} className="nav-button">
         Start Over

@@ -10,9 +10,7 @@ function OptionCard({ letter, title, description, onClick, fontFamily }) {
       className="optionBox"
       style={{ fontFamily }}
     >
-      <div 
-        className="fontFamily"
-      >
+      <div className="fontFamily">
         {letter}
       </div>
       <h2 className="titleh2">
@@ -25,10 +23,43 @@ function OptionCard({ letter, title, description, onClick, fontFamily }) {
   );
 }
 
+// Slider component for size and leading
+function SliderOption({ title, description, value, onChange, min, max, step, unit, previewText, fontFamily, fontSize, lineHeight }) {
+  return (
+    <div className="sliderOption">
+      <div className="sliderHeader">
+        <h2 className="titleh2">{title}</h2>
+        <span className="sliderValue">{value.toFixed(step < 1 ? 1 : 0)}{unit}</span>
+      </div>
+      <p className="description">{description}</p>
+      
+      <input 
+        type="range"
+        min={min}
+        max={max}
+        step={step || 1}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="slider"
+      />
+      
+      <div className="previewBox" style={{ 
+        fontFamily, 
+        fontSize: fontSize ? `${fontSize}px` : undefined,
+        lineHeight: lineHeight ? lineHeight : undefined
+      }}>
+        <p>{previewText}</p>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [choices, setChoices] = useState({
     fontCategory: null,
-    specificFont: null
+    specificFont: null,
+    fontSize: 16,
+    leading: 1.5
   });
   
   const [step, setStep] = useState(0);
@@ -39,7 +70,12 @@ function App() {
 
   // Function to reset everything
   const handleStartOver = () => {
-    setChoices({ fontCategory: null, specificFont: null });
+    setChoices({ 
+      fontCategory: null, 
+      specificFont: null,
+      fontSize: 16,
+      leading: 1.5
+    });
     setStep(0);
     localStorage.removeItem('userChoices');
   };
@@ -51,7 +87,7 @@ function App() {
     if (choices.specificFont === 'Georgia') return 'Georgia, serif';
     if (choices.specificFont === 'Times New Roman') return '"Times New Roman", serif';
     if (choices.specificFont === 'Garamond') return 'Garamond, serif';
-    if (choices.specificFont === 'Merriweather') return 'MMerriweather, serif';
+    if (choices.specificFont === 'Merriweather') return 'Merriweather, serif';
     if (choices.specificFont === 'Arial') return 'Arial, sans-serif';
     if (choices.specificFont === 'Helvetica') return 'Helvetica, sans-serif';
     if (choices.specificFont === 'Verdana') return 'Verdana, sans-serif';
@@ -63,11 +99,20 @@ function App() {
   if (step === 0) {
     return (
       <>
-        <Navbar onStartOver={handleStartOver} fontFamily={getCurrentFont()} />
-        <div className="choiceFontFamily" style={{ marginTop: '80px' }}>
+        <Navbar 
+          onStartOver={handleStartOver} 
+          fontFamily={getCurrentFont()}
+          fontSize={choices.fontSize}
+          lineHeight={choices.leading}
+        />
+        <div className="choiceFontFamily" style={{ 
+          marginTop: '80px',
+          fontSize: `${choices.fontSize}px`,
+          lineHeight: choices.leading
+        }}>
           <OptionCard
             title="Serif"
-            description="Serif fonts are typefaces with small decorative strokes (serifs) at the ends of letters. They have a traditional, formal, and elegant appearance, which helps guide the reader’s eye along lines of text. Serif fonts are often used in books, newspapers, academic writing, and classic branding."
+            description="Serif fonts are typefaces with small decorative strokes (serifs) at the ends of letters. They have a traditional, formal, and elegant appearance, which helps guide the reader's eye along lines of text. Serif fonts are often used in books, newspapers, academic writing, and classic branding."
             fontFamily="Georgia, serif"
             onClick={() => {
               setChoices({ ...choices, fontCategory: 'serif' });
@@ -109,8 +154,17 @@ function App() {
     
     return (
       <>
-        <Navbar onStartOver={handleStartOver} fontFamily={getCurrentFont()} />
-        <div className="buttonBox" style={{ marginTop: '80px' }}>
+        <Navbar 
+          onStartOver={handleStartOver} 
+          fontFamily={getCurrentFont()}
+          fontSize={choices.fontSize}
+          lineHeight={choices.leading}
+        />
+        <div className="buttonBox" style={{ 
+          marginTop: '80px',
+          fontSize: `${choices.fontSize}px`,
+          lineHeight: choices.leading
+        }}>
           <button onClick={() => setStep(0)} className="button">
             ← Back
           </button>
@@ -134,37 +188,159 @@ function App() {
     );
   }
 
-  // Step 2: Final preview
+  // Step 2: Choose font size
   if (step === 2) {
     return (
       <>
-        <Navbar onStartOver={handleStartOver} fontFamily={getCurrentFont()} />
-        <div 
-          className="buttonBox"
-          style={{ fontFamily: getCurrentFont(), marginTop: '80px' }}
-        >
+        <Navbar 
+          onStartOver={handleStartOver} 
+          fontFamily={getCurrentFont()}
+          fontSize={choices.fontSize}
+          lineHeight={choices.leading}
+        />
+        <div className="buttonBox" style={{ 
+          marginTop: '80px',
+          fontSize: `${choices.fontSize}px`,
+          lineHeight: choices.leading
+        }}>
           <button onClick={() => setStep(1)} className="button">
             ← Back
           </button>
           
+          <div className="sliderContainer">
+            <SliderOption
+              title="Font Size"
+              description="Font size determines how large the text appears. Larger sizes are easier to read but take up more space, while smaller sizes fit more content but may strain the eyes. Standard body text is typically 14-18px."
+              value={choices.fontSize}
+              onChange={(value) => setChoices({ ...choices, fontSize: value })}
+              min={12}
+              max={32}
+              step={1}
+              unit="px"
+              previewText="The quick brown fox jumps over the lazy dog. This is a sample of how your text will look at this font size. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+              fontFamily={getCurrentFont()}
+              fontSize={choices.fontSize}
+            />
+            
+            <button 
+              onClick={() => setStep(3)} 
+              className="continueButton"
+            >
+              Continue →
+            </button>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  // Step 3: Choose leading (line height)
+  if (step === 3) {
+    return (
+      <>
+        <Navbar 
+          onStartOver={handleStartOver} 
+          fontFamily={getCurrentFont()}
+          fontSize={choices.fontSize}
+          lineHeight={choices.leading}
+        />
+        <div className="buttonBox" style={{ 
+          marginTop: '80px',
+          fontSize: `${choices.fontSize}px`,
+          lineHeight: choices.leading
+        }}>
+          <button onClick={() => setStep(2)} className="button">
+            ← Back
+          </button>
+          
+          <div className="sliderContainer">
+            <SliderOption
+              title="Leading (Line Height)"
+              description="Leading controls the vertical space between lines of text. More spacing improves readability and creates a lighter feel, while tighter spacing saves space but can make text harder to read. Standard leading is 1.4-1.6."
+              value={choices.leading}
+              onChange={(value) => setChoices({ ...choices, leading: value })}
+              min={1}
+              max={2.5}
+              step={0.1}
+              unit=""
+              previewText="The quick brown fox jumps over the lazy dog. This is a sample paragraph to demonstrate line height. Leading affects how easy it is to track from one line to the next. Proper spacing prevents lines from feeling cramped or too loose. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+              fontFamily={getCurrentFont()}
+              fontSize={choices.fontSize}
+              lineHeight={choices.leading}
+            />
+            
+            <button 
+              onClick={() => setStep(4)} 
+              className="continueButton"
+            >
+              Continue →
+            </button>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  // Step 4: Final preview
+  if (step === 4) {
+    return (
+      <>
+        <Navbar 
+          onStartOver={handleStartOver} 
+          fontFamily={getCurrentFont()}
+          fontSize={choices.fontSize}
+          lineHeight={choices.leading}
+        />
+        <div 
+          className="buttonBox"
+          style={{ 
+            marginTop: '80px',
+            fontSize: `${choices.fontSize}px`,
+            lineHeight: choices.leading
+          }}
+        >
+          <button onClick={() => setStep(3)} className="button">
+            ← Back
+          </button>
+          
           <div className="summaryPage">
-            <h1 className="titleh1">Your Custom Style</h1>
+            <h1 className="titleh1" style={{ 
+              fontFamily: getCurrentFont(),
+              fontSize: `${choices.fontSize * 1.8}px`,
+              lineHeight: choices.leading
+            }}>
+              Your Custom Style
+            </h1>
             
             <div className="customChoicesSummary">
-              <h3 className="yourChoices">Your Choices:</h3>
+              <h3 className="yourChoices" style={{ fontSize: `${choices.fontSize * 1.3}px` }}>Your Choices:</h3>
               <p className="spesification">Font Category: <strong>{choices.fontCategory}</strong></p>
               <p className="spesification">Specific Font: <strong>{choices.specificFont}</strong></p>
+              <p className="spesification">Font Size: <strong>{choices.fontSize}px</strong></p>
+              <p className="spesification">Leading: <strong>{choices.leading}</strong></p>
             </div>
             
-            <div className="sampleText">
-              <h2>Sample Text</h2>
+            <div 
+              className="sampleText"
+              style={{
+                fontFamily: getCurrentFont()
+              }}
+            >
+              <h2 style={{ fontSize: `${choices.fontSize * 1.5}px`, lineHeight: choices.leading }}>Sample Text</h2>
               <p>
-                This is how your text will look with the selected font. 
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                This is how your text will look with the selected font, size, and leading. 
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
               </p>
               <p>
                 The quick brown fox jumps over the lazy dog. 
                 ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890
+              </p>
+              <p>
+                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore 
+                eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, 
+                sunt in culpa qui officia deserunt mollit anim id est laborum.
               </p>
             </div>
 
