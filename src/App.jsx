@@ -4,6 +4,8 @@ import Navbar from './components/Navbar';
 
 // Simple reusable card component
 function OptionCard({ letter, title, description, onClick, fontFamily, textColor, bgColor }) {
+  const boxBg = getBoxBackground(bgColor);
+  
   return (
     <div 
       onClick={onClick}
@@ -11,7 +13,7 @@ function OptionCard({ letter, title, description, onClick, fontFamily, textColor
       style={{ 
         fontFamily,
         color: textColor,
-        backgroundColor: bgColor,
+        backgroundColor: boxBg,
         borderColor: textColor + '33' // 20% opacity for border
       }}
     >
@@ -30,8 +32,10 @@ function OptionCard({ letter, title, description, onClick, fontFamily, textColor
 
 // Slider component for size and leading
 function SliderOption({ title, description, value, onChange, min, max, step, unit, previewText, fontFamily, fontSize, lineHeight, textColor, bgColor }) {
+  const boxBg = getBoxBackground(bgColor);
+  
   return (
-    <div className="sliderOption" style={{ backgroundColor: bgColor, borderColor: textColor + '33', color: textColor }}>
+    <div className="sliderOption" style={{ backgroundColor: boxBg, borderColor: textColor + '33', color: textColor }}>
       <div className="sliderHeader">
         <h2 className="titleh2" style={{ color: textColor }}>{title}</h2>
         <span className="sliderValue" style={{ color: textColor }}>{value.toFixed(step < 1 ? 1 : 0)}{unit}</span>
@@ -53,7 +57,7 @@ function SliderOption({ title, description, value, onChange, min, max, step, uni
         fontSize: fontSize ? `${fontSize}px` : undefined,
         lineHeight: lineHeight ? lineHeight : undefined,
         color: textColor,
-        backgroundColor: bgColor === '#ffffff' ? '#f8f9fa' : adjustBrightness(bgColor, 5),
+        backgroundColor: adjustBrightness(boxBg, bgColor === '#ffffff' ? -2 : 5),
         borderColor: textColor + '33'
       }}>
         <p>{previewText}</p>
@@ -62,9 +66,30 @@ function SliderOption({ title, description, value, onChange, min, max, step, uni
   );
 }
 
+// Helper function to get contrasting box background
+function getBoxBackground(bgColor) {
+  // Parse hex color
+  const hex = bgColor.replace('#', '');
+  const r = parseInt(hex.substr(0, 2), 16);
+  const g = parseInt(hex.substr(2, 2), 16);
+  const b = parseInt(hex.substr(4, 2), 16);
+  
+  // Calculate perceived brightness
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  
+  // If bright background, make boxes slightly darker; if dark, make them lighter
+  if (brightness > 128) {
+    return adjustBrightness(bgColor, -3); // Slightly darker
+  } else {
+    return adjustBrightness(bgColor, 8); // Slightly lighter
+  }
+}
+
 // Color picker component
 function ColorOption({ title, description, currentTextColor, currentBgColor, onTextChange, onBgChange }) {
-  // Preset color combinations
+  const boxBg = getBoxBackground(currentBgColor);
+  
+  // Preset color combinations with accessible text colors
   const presets = [
     { name: 'Classic', text: '#000000', bg: '#ffffff' },
     { name: 'Dark Mode', text: '#ffffff', bg: '#1a1a1a' },
@@ -76,7 +101,7 @@ function ColorOption({ title, description, currentTextColor, currentBgColor, onT
 
   return (
     <div className="colorOption" style={{ 
-      backgroundColor: currentBgColor,
+      backgroundColor: boxBg,
       borderColor: currentTextColor + '33',
       color: currentTextColor 
     }}>
@@ -132,7 +157,7 @@ function ColorOption({ title, description, currentTextColor, currentBgColor, onT
 
       <div className="previewBox" style={{ 
         color: currentTextColor,
-        backgroundColor: currentBgColor === '#ffffff' ? '#f8f9fa' : adjustBrightness(currentBgColor, 5),
+        backgroundColor: adjustBrightness(boxBg, currentBgColor === '#ffffff' ? -2 : 5),
         borderColor: currentTextColor + '33'
       }}>
         <p>This is a preview of your color scheme. The quick brown fox jumps over the lazy dog.</p>
@@ -168,8 +193,9 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('userChoices', JSON.stringify(choices));
-    // Update body background color
+    // Update body background and text color
     document.body.style.backgroundColor = choices.bgColor;
+    document.body.style.color = choices.textColor;
   }, [choices]);
 
   // Function to reset everything
@@ -185,6 +211,7 @@ function App() {
     setStep(0);
     localStorage.removeItem('userChoices');
     document.body.style.backgroundColor = '#ffffff';
+    document.body.style.color = '#000000';
   };
 
   // Get current font
@@ -487,7 +514,7 @@ function App() {
             </h1>
             
             <div className="customChoicesSummary" style={{ 
-              backgroundColor: choices.bgColor,
+              backgroundColor: getBoxBackground(choices.bgColor),
               borderColor: choices.textColor + '33',
               color: choices.textColor 
             }}>
@@ -505,7 +532,7 @@ function App() {
               style={{
                 fontFamily: getCurrentFont(),
                 color: choices.textColor,
-                backgroundColor: choices.bgColor,
+                backgroundColor: getBoxBackground(choices.bgColor),
                 borderColor: choices.textColor + '33'
               }}
             >
