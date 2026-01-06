@@ -3,7 +3,7 @@ import './App.css';
 import Navbar from './components/Navbar';
 
 // Simple reusable card component
-function OptionCard({ letter, title, description, onClick, fontFamily, textColor, bgColor }) {
+function OptionCard({ letter, title, description, onClick, fontFamily, fontSize, lineHeight, textColor, bgColor }) {
   const boxBg = getBoxBackground(bgColor);
   
   return (
@@ -12,18 +12,20 @@ function OptionCard({ letter, title, description, onClick, fontFamily, textColor
       className="optionBox"
       style={{ 
         fontFamily,
+        fontSize: `${fontSize}px`,
+        lineHeight: lineHeight,
         color: textColor,
         backgroundColor: boxBg,
         borderColor: textColor + '33'
       }}
     >
-      <div className="fontFamily">
+      <div className="fontFamily" style={{ fontSize: `${fontSize * 2.5}px`, lineHeight: lineHeight }}>
         {letter}
       </div>
-      <h2 className="titleh2">
+      <h2 className="titleh2" style={{ fontSize: `${fontSize * 1.3}px`, lineHeight: lineHeight }}>
         {title}
       </h2>
-      <p className="description" style={{ color: textColor + 'CC' }}>
+      <p className="description" style={{ color: textColor + 'CC', fontSize: `${fontSize}px`, lineHeight: lineHeight }}>
         {description}
       </p>
     </div>
@@ -35,12 +37,18 @@ function SliderOption({ title, description, value, onChange, min, max, step, uni
   const boxBg = getBoxBackground(bgColor);
   
   return (
-    <div className="sliderOption" style={{ backgroundColor: boxBg, borderColor: textColor + '33', color: textColor }}>
+    <div className="sliderOption" style={{ 
+      backgroundColor: boxBg, 
+      borderColor: textColor + '33', 
+      color: textColor,
+      fontSize: `${fontSize}px`,
+      lineHeight: lineHeight
+    }}>
       <div className="sliderHeader">
-        <h2 className="titleh2" style={{ color: textColor }}>{title}</h2>
-        <span className="sliderValue" style={{ color: textColor }}>{value.toFixed(step < 1 ? 1 : 0)}{unit}</span>
+        <h2 className="titleh2" style={{ color: textColor, fontSize: `${fontSize * 1.3}px`, lineHeight: lineHeight }}>{title}</h2>
+        <span className="sliderValue" style={{ color: textColor, fontSize: `${fontSize * 1.2}px`, lineHeight: lineHeight }}>{value.toFixed(step < 1 ? 1 : 0)}{unit}</span>
       </div>
-      <p className="description" style={{ color: textColor + 'CC' }}>{description}</p>
+      <p className="description" style={{ color: textColor + 'CC', fontSize: `${fontSize}px`, lineHeight: lineHeight }}>{description}</p>
       
       <input 
         type="range"
@@ -60,7 +68,7 @@ function SliderOption({ title, description, value, onChange, min, max, step, uni
         backgroundColor: adjustBrightness(boxBg, bgColor === '#ffffff' ? -2 : 5),
         borderColor: textColor + '33'
       }}>
-        <p>{previewText}</p>
+        <p style={{ fontSize: `${fontSize}px`, lineHeight: lineHeight }}>{previewText}</p>
       </div>
     </div>
   );
@@ -83,7 +91,7 @@ function getBoxBackground(bgColor) {
 }
 
 // Color picker component
-function ColorOption({ title, description, currentTextColor, currentBgColor, onTextChange, onBgChange, onPresetChange }) {
+function ColorOption({ title, description, currentTextColor, currentBgColor, onTextChange, onBgChange, onPresetChange, fontSize, lineHeight }) {
   const boxBg = getBoxBackground(currentBgColor);
   
   const presets = [
@@ -99,37 +107,39 @@ function ColorOption({ title, description, currentTextColor, currentBgColor, onT
     <div className="colorOption" style={{ 
       backgroundColor: boxBg,
       borderColor: currentTextColor + '33',
-      color: currentTextColor 
+      color: currentTextColor,
+      fontSize: `${fontSize}px`,
+      lineHeight: lineHeight
     }}>
-      <h2 className="titleh2" style={{ color: currentTextColor }}>{title}</h2>
-      <p className="description" style={{ color: currentTextColor + 'CC' }}>{description}</p>
+      <h2 className="titleh2" style={{ color: currentTextColor, fontSize: `${fontSize * 1.3}px`, lineHeight: lineHeight }}>{title}</h2>
+      <p className="description" style={{ color: currentTextColor + 'CC', fontSize: `${fontSize}px`, lineHeight: lineHeight }}>{description}</p>
       
       <div className="colorPickers">
         <div className="colorPickerGroup">
-          <label style={{ color: currentTextColor }}>Text Color</label>
+          <label style={{ color: currentTextColor, fontSize: `${fontSize * 1.1}px`, lineHeight: lineHeight }}>Text Color</label>
           <input 
             type="color"
             value={currentTextColor}
             onChange={(e) => onTextChange(e.target.value)}
             className="colorInput"
           />
-          <span className="colorValue" style={{ color: currentTextColor }}>{currentTextColor}</span>
+          <span className="colorValue" style={{ color: currentTextColor, fontSize: `${fontSize * 0.9}px` }}>{currentTextColor}</span>
         </div>
         
         <div className="colorPickerGroup">
-          <label style={{ color: currentTextColor }}>Background Color</label>
+          <label style={{ color: currentTextColor, fontSize: `${fontSize * 1.1}px`, lineHeight: lineHeight }}>Background Color</label>
           <input 
             type="color"
             value={currentBgColor}
             onChange={(e) => onBgChange(e.target.value)}
             className="colorInput"
           />
-          <span className="colorValue" style={{ color: currentTextColor }}>{currentBgColor}</span>
+          <span className="colorValue" style={{ color: currentTextColor, fontSize: `${fontSize * 0.9}px` }}>{currentBgColor}</span>
         </div>
       </div>
 
       <div className="presetColors">
-        <h3 style={{ color: currentTextColor }}>Presets:</h3>
+        <h3 style={{ color: currentTextColor, fontSize: `${fontSize * 1.2}px`, lineHeight: lineHeight }}>Presets:</h3>
         <div className="presetGrid">
           {presets.map((preset) => (
             <button
@@ -138,7 +148,9 @@ function ColorOption({ title, description, currentTextColor, currentBgColor, onT
               style={{
                 backgroundColor: preset.bg,
                 color: preset.text,
-                border: `2px solid ${preset.text}33`
+                border: `2px solid ${preset.text}33`,
+                fontSize: `${fontSize}px`,
+                lineHeight: lineHeight
               }}
               onClick={() => {
                 if (onPresetChange) {
@@ -158,9 +170,11 @@ function ColorOption({ title, description, currentTextColor, currentBgColor, onT
       <div className="previewBox" style={{ 
         color: currentTextColor,
         backgroundColor: adjustBrightness(boxBg, currentBgColor === '#ffffff' ? -2 : 5),
-        borderColor: currentTextColor + '33'
+        borderColor: currentTextColor + '33',
+        fontSize: `${fontSize}px`,
+        lineHeight: lineHeight
       }}>
-        <p>This is a preview of your color scheme. The quick brown fox jumps over the lazy dog.</p>
+        <p style={{ fontSize: `${fontSize}px`, lineHeight: lineHeight }}>This is a preview of your color scheme. The quick brown fox jumps over the lazy dog.</p>
       </div>
     </div>
   );
@@ -250,6 +264,8 @@ function App() {
               title="Serif"
               description="Serif fonts are typefaces with small decorative strokes (serifs) at the ends of letters. They have a traditional, formal, and elegant appearance, which helps guide the reader's eye along lines of text. Serif fonts are often used in books, newspapers, academic writing, and classic branding."
               fontFamily="Georgia, serif"
+              fontSize={choices.fontSize}
+              lineHeight={choices.leading}
               textColor={choices.textColor}
               bgColor={choices.bgColor}
               onClick={() => {
@@ -262,6 +278,8 @@ function App() {
               title="Sans-Serif"
               description="Sans serif fonts are typefaces without the small decorative strokes (serifs) at the ends of letters. They have a clean, simple, and modern look, which makes them easy to read—especially on screens. Sans serif fonts are commonly used in web design, user interfaces, signage, and contemporary branding."
               fontFamily="Arial, sans-serif"
+              fontSize={choices.fontSize}
+              lineHeight={choices.leading}
               textColor={choices.textColor}
               bgColor={choices.bgColor}
               onClick={() => {
@@ -315,6 +333,8 @@ function App() {
                 title={font.name}
                 description={font.description}
                 fontFamily={font.family}
+                fontSize={choices.fontSize}
+                lineHeight={choices.leading}
                 textColor={choices.textColor}
                 bgColor={choices.bgColor}
                 onClick={() => {
@@ -329,7 +349,12 @@ function App() {
             <button 
               onClick={() => setStep(0)} 
               className="navButton"
-              style={{ color: choices.bgColor, backgroundColor: choices.textColor }}
+              style={{ 
+                color: choices.bgColor, 
+                backgroundColor: choices.textColor,
+                fontSize: `${choices.fontSize * 1.1}px`,
+                lineHeight: choices.leading
+              }}
             >
               ← Back
             </button>
@@ -369,6 +394,7 @@ function App() {
               previewText="The quick brown fox jumps over the lazy dog. This is a sample of how your text will look at this font size. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
               fontFamily={getCurrentFont()}
               fontSize={choices.fontSize}
+              lineHeight={choices.leading}
               textColor={choices.textColor}
               bgColor={choices.bgColor}
             />
@@ -378,14 +404,24 @@ function App() {
             <button 
               onClick={() => setStep(1)} 
               className="navButton"
-              style={{ color: choices.bgColor, backgroundColor: choices.textColor }}
+              style={{ 
+                color: choices.bgColor, 
+                backgroundColor: choices.textColor,
+                fontSize: `${choices.fontSize * 1.1}px`,
+                lineHeight: choices.leading
+              }}
             >
               ← Back
             </button>
             <button 
               onClick={() => setStep(3)} 
               className="navButton"
-              style={{ color: choices.bgColor, backgroundColor: choices.textColor }}
+              style={{ 
+                color: choices.bgColor, 
+                backgroundColor: choices.textColor,
+                fontSize: `${choices.fontSize * 1.1}px`,
+                lineHeight: choices.leading
+              }}
             >
               Continue →
             </button>
@@ -435,14 +471,24 @@ function App() {
             <button 
               onClick={() => setStep(2)} 
               className="navButton"
-              style={{ color: choices.bgColor, backgroundColor: choices.textColor }}
+              style={{ 
+                color: choices.bgColor, 
+                backgroundColor: choices.textColor,
+                fontSize: `${choices.fontSize * 1.1}px`,
+                lineHeight: choices.leading
+              }}
             >
               ← Back
             </button>
             <button 
               onClick={() => setStep(4)} 
               className="navButton"
-              style={{ color: choices.bgColor, backgroundColor: choices.textColor }}
+              style={{ 
+                color: choices.bgColor, 
+                backgroundColor: choices.textColor,
+                fontSize: `${choices.fontSize * 1.1}px`,
+                lineHeight: choices.leading
+              }}
             >
               Continue →
             </button>
@@ -478,6 +524,8 @@ function App() {
               onTextChange={(color) => setChoices(prev => ({ ...prev, textColor: color }))}
               onBgChange={(color) => setChoices(prev => ({ ...prev, bgColor: color }))}
               onPresetChange={(textColor, bgColor) => setChoices(prev => ({ ...prev, textColor, bgColor }))}
+              fontSize={choices.fontSize}
+              lineHeight={choices.leading}
             />
           </div>
           
@@ -485,14 +533,24 @@ function App() {
             <button 
               onClick={() => setStep(3)} 
               className="navButton"
-              style={{ color: choices.bgColor, backgroundColor: choices.textColor }}
+              style={{ 
+                color: choices.bgColor, 
+                backgroundColor: choices.textColor,
+                fontSize: `${choices.fontSize * 1.1}px`,
+                lineHeight: choices.leading
+              }}
             >
               ← Back
             </button>
             <button 
               onClick={() => setStep(5)} 
               className="navButton"
-              style={{ color: choices.bgColor, backgroundColor: choices.textColor }}
+              style={{ 
+                color: choices.bgColor, 
+                backgroundColor: choices.textColor,
+                fontSize: `${choices.fontSize * 1.1}px`,
+                lineHeight: choices.leading
+              }}
             >
               Continue →
             </button>
@@ -535,15 +593,45 @@ function App() {
             <div className="customChoicesSummary" style={{ 
               backgroundColor: getBoxBackground(choices.bgColor),
               borderColor: choices.textColor + '33',
-              color: choices.textColor 
+              color: choices.textColor,
+              fontSize: `${choices.fontSize}px`,
+              lineHeight: choices.leading
             }}>
-              <h3 className="yourChoices" style={{ fontSize: `${choices.fontSize * 1.3}px`, color: choices.textColor }}>Your Choices:</h3>
-              <p className="spesification" style={{ color: choices.textColor }}>Font Category: <strong>{choices.fontCategory}</strong></p>
-              <p className="spesification" style={{ color: choices.textColor }}>Specific Font: <strong>{choices.specificFont}</strong></p>
-              <p className="spesification" style={{ color: choices.textColor }}>Font Size: <strong>{choices.fontSize}px</strong></p>
-              <p className="spesification" style={{ color: choices.textColor }}>Leading: <strong>{choices.leading}</strong></p>
-              <p className="spesification" style={{ color: choices.textColor }}>Text Color: <strong>{choices.textColor}</strong></p>
-              <p className="spesification" style={{ color: choices.textColor }}>Background Color: <strong>{choices.bgColor}</strong></p>
+              <h3 className="yourChoices" style={{ 
+                fontSize: `${choices.fontSize * 1.3}px`, 
+                color: choices.textColor,
+                lineHeight: choices.leading 
+              }}>Your Choices:</h3>
+              <p className="spesification" style={{ 
+                color: choices.textColor,
+                fontSize: `${choices.fontSize}px`,
+                lineHeight: choices.leading 
+              }}>Font Category: <strong>{choices.fontCategory}</strong></p>
+              <p className="spesification" style={{ 
+                color: choices.textColor,
+                fontSize: `${choices.fontSize}px`,
+                lineHeight: choices.leading 
+              }}>Specific Font: <strong>{choices.specificFont}</strong></p>
+              <p className="spesification" style={{ 
+                color: choices.textColor,
+                fontSize: `${choices.fontSize}px`,
+                lineHeight: choices.leading 
+              }}>Font Size: <strong>{choices.fontSize}px</strong></p>
+              <p className="spesification" style={{ 
+                color: choices.textColor,
+                fontSize: `${choices.fontSize}px`,
+                lineHeight: choices.leading 
+              }}>Leading: <strong>{choices.leading}</strong></p>
+              <p className="spesification" style={{ 
+                color: choices.textColor,
+                fontSize: `${choices.fontSize}px`,
+                lineHeight: choices.leading 
+              }}>Text Color: <strong>{choices.textColor}</strong></p>
+              <p className="spesification" style={{ 
+                color: choices.textColor,
+                fontSize: `${choices.fontSize}px`,
+                lineHeight: choices.leading 
+              }}>Background Color: <strong>{choices.bgColor}</strong></p>
             </div>
             
             <div 
@@ -552,21 +640,36 @@ function App() {
                 fontFamily: getCurrentFont(),
                 color: choices.textColor,
                 backgroundColor: getBoxBackground(choices.bgColor),
-                borderColor: choices.textColor + '33'
+                borderColor: choices.textColor + '33',
+                fontSize: `${choices.fontSize}px`,
+                lineHeight: choices.leading
               }}
             >
-              <h2 style={{ fontSize: `${choices.fontSize * 1.5}px`, lineHeight: choices.leading, color: choices.textColor }}>Sample Text</h2>
-              <p>
+              <h2 style={{ 
+                fontSize: `${choices.fontSize * 1.5}px`, 
+                lineHeight: choices.leading, 
+                color: choices.textColor 
+              }}>Sample Text</h2>
+              <p style={{ 
+                fontSize: `${choices.fontSize}px`, 
+                lineHeight: choices.leading 
+              }}>
                 This is how your text will look with the selected font, size, leading, and colors. 
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
                 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
                 quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
               </p>
-              <p>
+              <p style={{ 
+                fontSize: `${choices.fontSize}px`, 
+                lineHeight: choices.leading 
+              }}>
                 The quick brown fox jumps over the lazy dog. 
                 ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890
               </p>
-              <p>
+              <p style={{ 
+                fontSize: `${choices.fontSize}px`, 
+                lineHeight: choices.leading 
+              }}>
                 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore 
                 eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, 
                 sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -584,7 +687,12 @@ function App() {
                 link.click();
               }}
               className="saveData"
-              style={{ color: choices.bgColor, backgroundColor: choices.textColor }}
+              style={{ 
+                color: choices.bgColor, 
+                backgroundColor: choices.textColor,
+                fontSize: `${choices.fontSize * 1.1}px`,
+                lineHeight: choices.leading
+              }}
             >
               Download My Choices
             </button>
@@ -594,7 +702,12 @@ function App() {
             <button 
               onClick={() => setStep(4)} 
               className="navButton"
-              style={{ color: choices.bgColor, backgroundColor: choices.textColor }}
+              style={{ 
+                color: choices.bgColor, 
+                backgroundColor: choices.textColor,
+                fontSize: `${choices.fontSize * 1.1}px`,
+                lineHeight: choices.leading
+              }}
             >
               ← Back
             </button>
