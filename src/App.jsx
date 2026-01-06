@@ -86,7 +86,7 @@ function getBoxBackground(bgColor) {
 }
 
 // Color picker component
-function ColorOption({ title, description, currentTextColor, currentBgColor, onTextChange, onBgChange }) {
+function ColorOption({ title, description, currentTextColor, currentBgColor, onTextChange, onBgChange, onPresetChange }) {
   const boxBg = getBoxBackground(currentBgColor);
   
   // Preset color combinations with accessible text colors
@@ -95,7 +95,7 @@ function ColorOption({ title, description, currentTextColor, currentBgColor, onT
     { name: 'Dark Mode', text: '#ffffff', bg: '#1a1a1a' },
     { name: 'Sepia', text: '#5c4a3a', bg: '#f4ecd8' },
     { name: 'Night Blue', text: '#e0e6ed', bg: '#1b2838' },
-    { name: 'Forest', text: '#e8f5e9', bg: '#1b5e20' },
+    { name: 'Forest', text: '#e8f5e9', bg: '#254127' },
     { name: 'Purple', text: '#f3e5f5', bg: '#4a148c' },
   ];
 
@@ -145,8 +145,12 @@ function ColorOption({ title, description, currentTextColor, currentBgColor, onT
                 border: `2px solid ${preset.text}33`
               }}
               onClick={() => {
-                onTextChange(preset.text);
-                onBgChange(preset.bg);
+                if (onPresetChange) {
+                  onPresetChange(preset.text, preset.bg);
+                } else {
+                  onTextChange(preset.text);
+                  onBgChange(preset.bg);
+                }
               }}
             >
               {preset.name}
@@ -191,11 +195,28 @@ function App() {
   
   const [step, setStep] = useState(0);
 
+  // Get current font
+  const getCurrentFont = () => {
+    if (!choices.specificFont) return 'system-ui';
+    
+    if (choices.specificFont === 'Georgia') return 'Georgia, serif';
+    if (choices.specificFont === 'Times New Roman') return '"Times New Roman", serif';
+    if (choices.specificFont === 'Garamond') return 'Garamond, serif';
+    if (choices.specificFont === 'Merriweather') return 'Merriweather, serif';
+    if (choices.specificFont === 'Arial') return 'Arial, sans-serif';
+    if (choices.specificFont === 'Helvetica') return 'Helvetica, sans-serif';
+    if (choices.specificFont === 'Verdana') return 'Verdana, sans-serif';
+    if (choices.specificFont === 'Roboto') return 'Roboto, sans-serif';
+    return 'system-ui';
+  };
+
   useEffect(() => {
     localStorage.setItem('userChoices', JSON.stringify(choices));
     // Update body background and text color
     document.body.style.backgroundColor = choices.bgColor;
     document.body.style.color = choices.textColor;
+    // Update body font family
+    document.body.style.fontFamily = getCurrentFont();
   }, [choices]);
 
   // Function to reset everything
@@ -212,21 +233,7 @@ function App() {
     localStorage.removeItem('userChoices');
     document.body.style.backgroundColor = '#ffffff';
     document.body.style.color = '#000000';
-  };
-
-  // Get current font
-  const getCurrentFont = () => {
-    if (!choices.specificFont) return 'system-ui';
-    
-    if (choices.specificFont === 'Georgia') return 'Georgia, serif';
-    if (choices.specificFont === 'Times New Roman') return '"Times New Roman", serif';
-    if (choices.specificFont === 'Garamond') return 'Garamond, serif';
-    if (choices.specificFont === 'Merriweather') return 'Merriweather, serif';
-    if (choices.specificFont === 'Arial') return 'Arial, sans-serif';
-    if (choices.specificFont === 'Helvetica') return 'Helvetica, sans-serif';
-    if (choices.specificFont === 'Verdana') return 'Verdana, sans-serif';
-    if (choices.specificFont === 'Roboto') return 'Roboto, sans-serif';
-    return 'system-ui';
+    document.body.style.fontFamily = 'system-ui';
   };
 
   // Step 0: Choose Serif or Sans-Serif
@@ -244,7 +251,8 @@ function App() {
         <div className="choiceFontFamily" style={{ 
           marginTop: '80px',
           fontSize: `${choices.fontSize}px`,
-          lineHeight: choices.leading
+          lineHeight: choices.leading,
+          fontFamily: getCurrentFont()
         }}>
           <OptionCard
             title="Serif"
@@ -305,7 +313,8 @@ function App() {
         <div className="buttonBox" style={{ 
           marginTop: '80px',
           fontSize: `${choices.fontSize}px`,
-          lineHeight: choices.leading
+          lineHeight: choices.leading,
+          fontFamily: getCurrentFont()
         }}>
           <button onClick={() => setStep(0)} className="button" style={{ color: choices.bgColor, backgroundColor: choices.textColor }}>
             ← Back
@@ -347,7 +356,8 @@ function App() {
         <div className="buttonBox" style={{ 
           marginTop: '80px',
           fontSize: `${choices.fontSize}px`,
-          lineHeight: choices.leading
+          lineHeight: choices.leading,
+          fontFamily: getCurrentFont()
         }}>
           <button onClick={() => setStep(1)} className="button" style={{ color: choices.bgColor, backgroundColor: choices.textColor }}>
             ← Back
@@ -398,7 +408,8 @@ function App() {
         <div className="buttonBox" style={{ 
           marginTop: '80px',
           fontSize: `${choices.fontSize}px`,
-          lineHeight: choices.leading
+          lineHeight: choices.leading,
+          fontFamily: getCurrentFont()
         }}>
           <button onClick={() => setStep(2)} className="button" style={{ color: choices.bgColor, backgroundColor: choices.textColor }}>
             ← Back
@@ -450,7 +461,8 @@ function App() {
         <div className="buttonBox" style={{ 
           marginTop: '80px',
           fontSize: `${choices.fontSize}px`,
-          lineHeight: choices.leading
+          lineHeight: choices.leading,
+          fontFamily: getCurrentFont()
         }}>
           <button onClick={() => setStep(3)} className="button" style={{ color: choices.bgColor, backgroundColor: choices.textColor }}>
             ← Back
@@ -462,8 +474,9 @@ function App() {
               description="Choose colors that work well together and ensure good readability. High contrast between text and background improves legibility."
               currentTextColor={choices.textColor}
               currentBgColor={choices.bgColor}
-              onTextChange={(color) => setChoices({ ...choices, textColor: color })}
-              onBgChange={(color) => setChoices({ ...choices, bgColor: color })}
+              onTextChange={(color) => setChoices(prev => ({ ...prev, textColor: color }))}
+              onBgChange={(color) => setChoices(prev => ({ ...prev, bgColor: color }))}
+              onPresetChange={(textColor, bgColor) => setChoices(prev => ({ ...prev, textColor, bgColor }))}
             />
             
             <button 
@@ -496,7 +509,8 @@ function App() {
           style={{ 
             marginTop: '80px',
             fontSize: `${choices.fontSize}px`,
-            lineHeight: choices.leading
+            lineHeight: choices.leading,
+            fontFamily: getCurrentFont()
           }}
         >
           <button onClick={() => setStep(4)} className="button" style={{ color: choices.bgColor, backgroundColor: choices.textColor }}>
