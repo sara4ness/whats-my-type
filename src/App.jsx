@@ -14,7 +14,7 @@ function OptionCard({ letter, title, description, onClick, fontFamily, textColor
         fontFamily,
         color: textColor,
         backgroundColor: boxBg,
-        borderColor: textColor + '33' // 20% opacity for border
+        borderColor: textColor + '33'
       }}
     >
       <div className="fontFamily">
@@ -68,20 +68,17 @@ function SliderOption({ title, description, value, onChange, min, max, step, uni
 
 // Helper function to get contrasting box background
 function getBoxBackground(bgColor) {
-  // Parse hex color
   const hex = bgColor.replace('#', '');
   const r = parseInt(hex.substr(0, 2), 16);
   const g = parseInt(hex.substr(2, 2), 16);
   const b = parseInt(hex.substr(4, 2), 16);
   
-  // Calculate perceived brightness
   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
   
-  // If bright background, make boxes slightly darker; if dark, make them lighter
   if (brightness > 128) {
-    return adjustBrightness(bgColor, -3); // Slightly darker
+    return adjustBrightness(bgColor, -3);
   } else {
-    return adjustBrightness(bgColor, 8); // Slightly lighter
+    return adjustBrightness(bgColor, 8);
   }
 }
 
@@ -89,7 +86,6 @@ function getBoxBackground(bgColor) {
 function ColorOption({ title, description, currentTextColor, currentBgColor, onTextChange, onBgChange, onPresetChange }) {
   const boxBg = getBoxBackground(currentBgColor);
   
-  // Preset color combinations with accessible text colors
   const presets = [
     { name: 'Classic', text: '#000000', bg: '#ffffff' },
     { name: 'Dark Mode', text: '#ffffff', bg: '#1a1a1a' },
@@ -195,7 +191,6 @@ function App() {
   
   const [step, setStep] = useState(0);
 
-  // Get current font
   const getCurrentFont = () => {
     if (!choices.specificFont) return 'system-ui';
     
@@ -212,14 +207,11 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('userChoices', JSON.stringify(choices));
-    // Update body background and text color
     document.body.style.backgroundColor = choices.bgColor;
     document.body.style.color = choices.textColor;
-    // Update body font family
     document.body.style.fontFamily = getCurrentFont();
   }, [choices]);
 
-  // Function to reset everything
   const handleStartOver = () => {
     setChoices({ 
       fontCategory: null, 
@@ -236,7 +228,6 @@ function App() {
     document.body.style.fontFamily = 'system-ui';
   };
 
-  // Step 0: Choose Serif or Sans-Serif
   if (step === 0) {
     return (
       <>
@@ -248,41 +239,42 @@ function App() {
           textColor={choices.textColor}
           bgColor={choices.bgColor}
         />
-        <div className="choiceFontFamily" style={{ 
+        <div className="pageContainer" style={{ 
           marginTop: '80px',
           fontSize: `${choices.fontSize}px`,
           lineHeight: choices.leading,
           fontFamily: getCurrentFont()
         }}>
-          <OptionCard
-            title="Serif"
-            description="Serif fonts are typefaces with small decorative strokes (serifs) at the ends of letters. They have a traditional, formal, and elegant appearance, which helps guide the reader's eye along lines of text. Serif fonts are often used in books, newspapers, academic writing, and classic branding."
-            fontFamily="Georgia, serif"
-            textColor={choices.textColor}
-            bgColor={choices.bgColor}
-            onClick={() => {
-              setChoices({ ...choices, fontCategory: 'serif' });
-              setStep(1);
-            }}
-          />
-          
-          <OptionCard
-            title="Sans-Serif"
-            description="Sans serif fonts are typefaces without the small decorative strokes (serifs) at the ends of letters. They have a clean, simple, and modern look, which makes them easy to read—especially on screens. Sans serif fonts are commonly used in web design, user interfaces, signage, and contemporary branding."
-            fontFamily="Arial, sans-serif"
-            textColor={choices.textColor}
-            bgColor={choices.bgColor}
-            onClick={() => {
-              setChoices({ ...choices, fontCategory: 'sans-serif' });
-              setStep(1);
-            }}
-          />
+          <div className="choiceFontFamily">
+            <OptionCard
+              title="Serif"
+              description="Serif fonts are typefaces with small decorative strokes (serifs) at the ends of letters. They have a traditional, formal, and elegant appearance, which helps guide the reader's eye along lines of text. Serif fonts are often used in books, newspapers, academic writing, and classic branding."
+              fontFamily="Georgia, serif"
+              textColor={choices.textColor}
+              bgColor={choices.bgColor}
+              onClick={() => {
+                setChoices({ ...choices, fontCategory: 'serif' });
+                setStep(1);
+              }}
+            />
+            
+            <OptionCard
+              title="Sans-Serif"
+              description="Sans serif fonts are typefaces without the small decorative strokes (serifs) at the ends of letters. They have a clean, simple, and modern look, which makes them easy to read—especially on screens. Sans serif fonts are commonly used in web design, user interfaces, signage, and contemporary branding."
+              fontFamily="Arial, sans-serif"
+              textColor={choices.textColor}
+              bgColor={choices.bgColor}
+              onClick={() => {
+                setChoices({ ...choices, fontCategory: 'sans-serif' });
+                setStep(1);
+              }}
+            />
+          </div>
         </div>
       </>
     );
   }
 
-  // Step 1: Choose specific font
   if (step === 1) {
     const serifFonts = [
       { name: 'Georgia', family: 'Georgia, serif', description: "Georgia is a serif typeface designed for clear readability on screens, featuring large letterforms, generous spacing, and sturdy serifs. It has a classic yet friendly appearance, making it well suited for web content, long-form reading, and accessible digital typography." },
@@ -310,16 +302,12 @@ function App() {
           textColor={choices.textColor}
           bgColor={choices.bgColor}
         />
-        <div className="buttonBox" style={{ 
+        <div className="pageContainer" style={{ 
           marginTop: '80px',
           fontSize: `${choices.fontSize}px`,
           lineHeight: choices.leading,
           fontFamily: getCurrentFont()
         }}>
-          <button onClick={() => setStep(0)} className="button" style={{ color: choices.bgColor, backgroundColor: choices.textColor }}>
-            ← Back
-          </button>
-          
           <div className="choiceFont">
             {fonts.map((font) => (
               <OptionCard
@@ -336,12 +324,21 @@ function App() {
               />
             ))}
           </div>
+          
+          <div className="navigationButtons">
+            <button 
+              onClick={() => setStep(0)} 
+              className="navButton"
+              style={{ color: choices.bgColor, backgroundColor: choices.textColor }}
+            >
+              ← Back
+            </button>
+          </div>
         </div>
       </>
     );
   }
 
-  // Step 2: Choose font size
   if (step === 2) {
     return (
       <>
@@ -353,16 +350,12 @@ function App() {
           textColor={choices.textColor}
           bgColor={choices.bgColor}
         />
-        <div className="buttonBox" style={{ 
+        <div className="pageContainer" style={{ 
           marginTop: '80px',
           fontSize: `${choices.fontSize}px`,
           lineHeight: choices.leading,
           fontFamily: getCurrentFont()
         }}>
-          <button onClick={() => setStep(1)} className="button" style={{ color: choices.bgColor, backgroundColor: choices.textColor }}>
-            ← Back
-          </button>
-          
           <div className="sliderContainer">
             <SliderOption
               title="Font Size"
@@ -379,10 +372,19 @@ function App() {
               textColor={choices.textColor}
               bgColor={choices.bgColor}
             />
-            
+          </div>
+          
+          <div className="navigationButtons">
+            <button 
+              onClick={() => setStep(1)} 
+              className="navButton"
+              style={{ color: choices.bgColor, backgroundColor: choices.textColor }}
+            >
+              ← Back
+            </button>
             <button 
               onClick={() => setStep(3)} 
-              className="continueButton"
+              className="navButton"
               style={{ color: choices.bgColor, backgroundColor: choices.textColor }}
             >
               Continue →
@@ -393,7 +395,6 @@ function App() {
     );
   }
 
-  // Step 3: Choose leading (line height)
   if (step === 3) {
     return (
       <>
@@ -405,16 +406,12 @@ function App() {
           textColor={choices.textColor}
           bgColor={choices.bgColor}
         />
-        <div className="buttonBox" style={{ 
+        <div className="pageContainer" style={{ 
           marginTop: '80px',
           fontSize: `${choices.fontSize}px`,
           lineHeight: choices.leading,
           fontFamily: getCurrentFont()
         }}>
-          <button onClick={() => setStep(2)} className="button" style={{ color: choices.bgColor, backgroundColor: choices.textColor }}>
-            ← Back
-          </button>
-          
           <div className="sliderContainer">
             <SliderOption
               title="Leading (Line Height)"
@@ -432,10 +429,19 @@ function App() {
               textColor={choices.textColor}
               bgColor={choices.bgColor}
             />
-            
+          </div>
+          
+          <div className="navigationButtons">
+            <button 
+              onClick={() => setStep(2)} 
+              className="navButton"
+              style={{ color: choices.bgColor, backgroundColor: choices.textColor }}
+            >
+              ← Back
+            </button>
             <button 
               onClick={() => setStep(4)} 
-              className="continueButton"
+              className="navButton"
               style={{ color: choices.bgColor, backgroundColor: choices.textColor }}
             >
               Continue →
@@ -446,7 +452,6 @@ function App() {
     );
   }
 
-  // Step 4: Choose colors
   if (step === 4) {
     return (
       <>
@@ -458,16 +463,12 @@ function App() {
           textColor={choices.textColor}
           bgColor={choices.bgColor}
         />
-        <div className="buttonBox" style={{ 
+        <div className="pageContainer" style={{ 
           marginTop: '80px',
           fontSize: `${choices.fontSize}px`,
           lineHeight: choices.leading,
           fontFamily: getCurrentFont()
         }}>
-          <button onClick={() => setStep(3)} className="button" style={{ color: choices.bgColor, backgroundColor: choices.textColor }}>
-            ← Back
-          </button>
-          
           <div className="sliderContainer">
             <ColorOption
               title="Color Scheme"
@@ -478,10 +479,19 @@ function App() {
               onBgChange={(color) => setChoices(prev => ({ ...prev, bgColor: color }))}
               onPresetChange={(textColor, bgColor) => setChoices(prev => ({ ...prev, textColor, bgColor }))}
             />
-            
+          </div>
+          
+          <div className="navigationButtons">
+            <button 
+              onClick={() => setStep(3)} 
+              className="navButton"
+              style={{ color: choices.bgColor, backgroundColor: choices.textColor }}
+            >
+              ← Back
+            </button>
             <button 
               onClick={() => setStep(5)} 
-              className="continueButton"
+              className="navButton"
               style={{ color: choices.bgColor, backgroundColor: choices.textColor }}
             >
               Continue →
@@ -492,7 +502,6 @@ function App() {
     );
   }
 
-  // Step 5: Final preview
   if (step === 5) {
     return (
       <>
@@ -505,7 +514,7 @@ function App() {
           bgColor={choices.bgColor}
         />
         <div 
-          className="buttonBox"
+          className="pageContainer"
           style={{ 
             marginTop: '80px',
             fontSize: `${choices.fontSize}px`,
@@ -513,10 +522,6 @@ function App() {
             fontFamily: getCurrentFont()
           }}
         >
-          <button onClick={() => setStep(4)} className="button" style={{ color: choices.bgColor, backgroundColor: choices.textColor }}>
-            ← Back
-          </button>
-          
           <div className="summaryPage">
             <h1 className="titleh1" style={{ 
               fontFamily: getCurrentFont(),
@@ -582,6 +587,16 @@ function App() {
               style={{ color: choices.bgColor, backgroundColor: choices.textColor }}
             >
               Download My Choices
+            </button>
+          </div>
+          
+          <div className="navigationButtons">
+            <button 
+              onClick={() => setStep(4)} 
+              className="navButton"
+              style={{ color: choices.bgColor, backgroundColor: choices.textColor }}
+            >
+              ← Back
             </button>
           </div>
         </div>
