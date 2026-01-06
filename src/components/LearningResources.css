@@ -1,0 +1,141 @@
+.learningContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.learningHeader {
+  padding: 2rem;
+  text-align: center;
+}
+
+.learningHeader h1 {
+  margin: 0 0 0.5rem 0;
+}
+
+.learningHeader p {
+  margin: 0;
+}
+
+.learningContent {
+  display: flex;
+  flex: 1;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  gap: 0;
+}
+
+.learningNav {
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: fit-content;
+}
+
+.navItem {
+  padding: 1.25rem 1.5rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+}
+
+.navItem:hover {
+  opacity: 0.8;
+}
+
+.navItem:first-child {
+  border-top-left-radius: 5px;
+}
+
+.navItem:last-child {
+  border-bottom-left-radius: 5px;
+  border-bottom: none;
+}
+
+.learningMain {
+  flex: 1;
+  padding: 2rem 3rem;
+  overflow-y: auto;
+}
+
+.contentCard {
+  transition: transform 0.2s;
+}
+
+.contentCard:hover {
+  transform: translateX(5px);
+}
+
+.contentCard h3 {
+  margin: 0 0 0.75rem 0;
+}
+
+.contentCard p {
+  margin: 0;
+}
+
+.exampleBox {
+  margin-top: 1rem;
+}
+
+.exampleBox strong {
+  display: block;
+}
+
+.exampleBox p {
+  margin: 0.5rem 0 0 0;
+}
+
+.learningFooter {
+  margin-top: auto;
+}
+
+.closeButton {
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.closeButton:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .learningContent {
+    flex-direction: column;
+  }
+
+  .learningNav {
+    width: 100%;
+    position: static;
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .navItem {
+    white-space: nowrap;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: none;
+  }
+
+  .navItem:first-child {
+    border-radius: 0;
+  }
+
+  .navItem:last-child {
+    border-radius: 0;
+    border-right: none;
+  }
+
+  .learningMain {
+    padding: 1.5rem;
+  }
+
+  .contentCard {
+    padding: 1rem;
+  }
+}

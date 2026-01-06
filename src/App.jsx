@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Navbar from './components/Navbar';
+import LearningResources from './components/LearningResources';
 
 // Simple reusable card component
 function OptionCard({ letter, title, description, onClick, fontFamily, fontSize, lineHeight, textColor, bgColor }) {
@@ -204,6 +205,11 @@ function App() {
   });
   
   const [step, setStep] = useState(0);
+  const [showLearning, setShowLearning] = useState(false);
+  const [sessionId] = useState(() => {
+    // Generate a unique session ID for this user
+    return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  });
 
   const getCurrentFont = () => {
     if (!choices.specificFont) return 'system-ui';
@@ -226,6 +232,40 @@ function App() {
     document.body.style.fontFamily = getCurrentFont();
   }, [choices]);
 
+  const saveChoicesToBackend = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/save-choices', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fontCategory: choices.fontCategory,
+          specificFont: choices.specificFont,
+          fontSize: choices.fontSize,
+          leading: choices.leading,
+          textColor: choices.textColor,
+          bgColor: choices.bgColor,
+          sessionId: sessionId
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        console.log('Choices saved successfully!');
+        return true;
+      } else {
+        console.error('Failed to save choices:', data.error);
+        return false;
+      }
+    } catch (error) {
+      console.error('Error saving choices:', error);
+      // Don't block the user if backend is down
+      return false;
+    }
+  };
+
   const handleStartOver = () => {
     setChoices({ 
       fontCategory: null, 
@@ -236,11 +276,26 @@ function App() {
       bgColor: '#ffffff'
     });
     setStep(0);
+    setShowLearning(false);
     localStorage.removeItem('userChoices');
     document.body.style.backgroundColor = '#ffffff';
     document.body.style.color = '#000000';
     document.body.style.fontFamily = 'system-ui';
   };
+
+  // Show learning resources
+  if (showLearning) {
+    return (
+      <LearningResources
+        fontFamily={getCurrentFont()}
+        fontSize={choices.fontSize}
+        lineHeight={choices.leading}
+        textColor={choices.textColor}
+        bgColor={choices.bgColor}
+        onClose={() => setShowLearning(false)}
+      />
+    );
+  }
 
   if (step === 0) {
     return (
@@ -561,6 +616,11 @@ function App() {
   }
 
   if (step === 5) {
+    // Auto-save choices when reaching summary page
+    React.useEffect(() => {
+      saveChoicesToBackend();
+    }, []);
+
     return (
       <>
         <Navbar 
@@ -676,26 +736,20 @@ function App() {
               </p>
             </div>
 
-            <button 
-              onClick={() => {
-                const dataStr = JSON.stringify(choices, null, 2);
-                const dataBlob = new Blob([dataStr], { type: 'application/json' });
-                const url = URL.createObjectURL(dataBlob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = 'user-choices.json';
-                link.click();
-              }}
-              className="saveData"
-              style={{ 
-                color: choices.bgColor, 
-                backgroundColor: choices.textColor,
-                fontSize: `${choices.fontSize * 1.1}px`,
-                lineHeight: choices.leading
-              }}
-            >
-              Download My Choices
-            </button>
+            <div className="navigationButtons" style={{ gap: '1.5rem', marginTop: '2rem' }}>
+              <button 
+                onClick={() => setShowLearning(true)}
+                className="navButton"
+                style={{ 
+                  color: choices.bgColor, 
+                  backgroundColor: choices.textColor,
+                  fontSize: `${choices.fontSize * 1.1}px`,
+                  lineHeight: choices.leading
+                }}
+              >
+                📚 Learn About Typography & Accessibility
+              </button>
+            </div>
           </div>
           
           <div className="navigationButtons">
