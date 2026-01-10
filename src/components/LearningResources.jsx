@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './LearningResources.css';
 
-function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColor, onClose }) {
+function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColor, onClose, onViewSummary }) {
   const [activeSection, setActiveSection] = useState('typography');
 
   const getBoxBackground = (bg) => {
@@ -259,8 +259,29 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
         backgroundColor: boxBg,
         borderTop: `2px solid ${textColor}33`,
         padding: '1.5rem',
-        textAlign: 'center'
+        textAlign: 'center',
+        display: 'flex',
+        gap: '1rem',
+        justifyContent: 'center'
       }}>
+        {onViewSummary && (
+          <button
+            onClick={onViewSummary}
+            className="closeButton"
+            style={{
+              backgroundColor: 'transparent',
+              color: textColor,
+              border: `2px solid ${textColor}`,
+              padding: '1rem 2rem',
+              borderRadius: '5px',
+              fontSize: `${fontSize * 1.1}px`,
+              fontWeight: '600',
+              cursor: 'pointer'
+            }}
+          >
+            View My Summary
+          </button>
+        )}
         <button
           onClick={onClose}
           className="closeButton"
@@ -275,7 +296,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
             cursor: 'pointer'
           }}
         >
-          Back to Summary
+          Start Over
         </button>
       </div>
     </div>

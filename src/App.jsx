@@ -1,7 +1,77 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import Navbar from './components/Navbar';
 import LearningResources from './components/LearningResources';
+
+// Navbar component
+function Navbar({ onStartOver, onSkipToLearning, fontFamily, fontSize, lineHeight, textColor, bgColor }) {
+  return (
+    <nav style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: bgColor,
+      borderBottom: `2px solid ${textColor}33`,
+      padding: '1rem 2rem',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      zIndex: 1000,
+      fontFamily,
+      fontSize: `${fontSize}px`,
+      lineHeight
+    }}>
+      <h1 style={{ 
+        margin: 0, 
+        color: textColor,
+        fontSize: `${fontSize * 1.5}px`
+      }}>
+        What's My Type?
+      </h1>
+      <div style={{ display: 'flex', gap: '1rem' }}>
+        <button
+          onClick={onSkipToLearning}
+          style={{
+            backgroundColor: 'transparent',
+            color: textColor,
+            border: `2px solid ${textColor}`,
+            padding: '0.5rem 1rem',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontSize: `${fontSize}px`,
+            fontWeight: '600',
+            transition: 'all 0.2s'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = textColor;
+            e.target.style.color = bgColor;
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = 'transparent';
+            e.target.style.color = textColor;
+          }}
+        >
+          Learning Resources
+        </button>
+        <button
+          onClick={onStartOver}
+          style={{
+            backgroundColor: textColor,
+            color: bgColor,
+            border: 'none',
+            padding: '0.5rem 1rem',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontSize: `${fontSize}px`,
+            fontWeight: '600'
+          }}
+        >
+          Start Over
+        </button>
+      </div>
+    </nav>
+  );
+}
 
 // Simple reusable card component
 function OptionCard({ letter, title, description, onClick, fontFamily, fontSize, lineHeight, textColor, bgColor }) {
@@ -285,6 +355,9 @@ function App() {
 
   // Show learning resources
   if (showLearning) {
+    // Only show summary option if user has completed choices (has a specific font selected)
+    const hasCompletedChoices = choices.specificFont !== null;
+    
     return (
       <LearningResources
         fontFamily={getCurrentFont()}
@@ -292,7 +365,11 @@ function App() {
         lineHeight={choices.leading}
         textColor={choices.textColor}
         bgColor={choices.bgColor}
-        onClose={() => setShowLearning(false)}
+        onClose={handleStartOver}
+        onViewSummary={hasCompletedChoices ? () => {
+          setShowLearning(false);
+          setStep(5);
+        } : null}
       />
     );
   }
@@ -301,7 +378,8 @@ function App() {
     return (
       <>
         <Navbar 
-          onStartOver={handleStartOver} 
+          onStartOver={handleStartOver}
+          onSkipToLearning={() => setShowLearning(true)}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -368,7 +446,8 @@ function App() {
     return (
       <>
         <Navbar 
-          onStartOver={handleStartOver} 
+          onStartOver={handleStartOver}
+          onSkipToLearning={() => setShowLearning(true)}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -423,7 +502,8 @@ function App() {
     return (
       <>
         <Navbar 
-          onStartOver={handleStartOver} 
+          onStartOver={handleStartOver}
+          onSkipToLearning={() => setShowLearning(true)}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -490,7 +570,8 @@ function App() {
     return (
       <>
         <Navbar 
-          onStartOver={handleStartOver} 
+          onStartOver={handleStartOver}
+          onSkipToLearning={() => setShowLearning(true)}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -557,7 +638,8 @@ function App() {
     return (
       <>
         <Navbar 
-          onStartOver={handleStartOver} 
+          onStartOver={handleStartOver}
+          onSkipToLearning={() => setShowLearning(true)}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -598,7 +680,11 @@ function App() {
               ← Back
             </button>
             <button 
-              onClick={() => setStep(5)} 
+              onClick={() => {
+                // Save data to backend before showing learning resources
+                saveChoicesToBackend();
+                setShowLearning(true);
+              }} 
               className="navButton"
               style={{ 
                 color: choices.bgColor, 
@@ -616,15 +702,11 @@ function App() {
   }
 
   if (step === 5) {
-    // Auto-save choices when reaching summary page
-    React.useEffect(() => {
-      saveChoicesToBackend();
-    }, []);
-
     return (
       <>
         <Navbar 
-          onStartOver={handleStartOver} 
+          onStartOver={handleStartOver}
+          onSkipToLearning={() => setShowLearning(true)}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -747,7 +829,7 @@ function App() {
                   lineHeight: choices.leading
                 }}
               >
-                📚 Learn About Typography & Accessibility
+                Learn About Typography & Accessibility
               </button>
             </div>
           </div>
