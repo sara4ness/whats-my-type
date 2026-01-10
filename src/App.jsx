@@ -1,6 +1,77 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import Navbar from './components/Navbar';
+import LearningResources from './components/LearningResources';
+
+// Navbar component
+function Navbar({ onStartOver, onSkipToLearning, fontFamily, fontSize, lineHeight, textColor, bgColor }) {
+  return (
+    <nav style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: bgColor,
+      borderBottom: `2px solid ${textColor}33`,
+      padding: '1rem 2rem',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      zIndex: 1000,
+      fontFamily,
+      fontSize: `${fontSize}px`,
+      lineHeight
+    }}>
+      <h1 style={{ 
+        margin: 0, 
+        color: textColor,
+        fontSize: `${fontSize * 1.5}px`
+      }}>
+        What's My Type?
+      </h1>
+      <div style={{ display: 'flex', gap: '1rem' }}>
+        <button
+          onClick={onSkipToLearning}
+          style={{
+            backgroundColor: 'transparent',
+            color: textColor,
+            border: `2px solid ${textColor}`,
+            padding: '0.5rem 1rem',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontSize: `${fontSize}px`,
+            fontWeight: '600',
+            transition: 'all 0.2s'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = textColor;
+            e.target.style.color = bgColor;
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = 'transparent';
+            e.target.style.color = textColor;
+          }}
+        >
+          Learning Resources
+        </button>
+        <button
+          onClick={onStartOver}
+          style={{
+            backgroundColor: textColor,
+            color: bgColor,
+            border: 'none',
+            padding: '0.5rem 1rem',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontSize: `${fontSize}px`,
+            fontWeight: '600'
+          }}
+        >
+          Start Over
+        </button>
+      </div>
+    </nav>
+  );
+}
 
 // Simple reusable card component
 function OptionCard({ letter, title, description, onClick, fontFamily, fontSize, lineHeight, textColor, bgColor }) {
@@ -204,6 +275,11 @@ function App() {
   });
   
   const [step, setStep] = useState(0);
+  const [showLearning, setShowLearning] = useState(false);
+  const [sessionId] = useState(() => {
+    // Generate a unique session ID for this user
+    return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  });
 
   const getCurrentFont = () => {
     if (!choices.specificFont) return 'system-ui';
@@ -226,6 +302,40 @@ function App() {
     document.body.style.fontFamily = getCurrentFont();
   }, [choices]);
 
+  const saveChoicesToBackend = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/save-choices', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fontCategory: choices.fontCategory,
+          specificFont: choices.specificFont,
+          fontSize: choices.fontSize,
+          leading: choices.leading,
+          textColor: choices.textColor,
+          bgColor: choices.bgColor,
+          sessionId: sessionId
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        console.log('Choices saved successfully!');
+        return true;
+      } else {
+        console.error('Failed to save choices:', data.error);
+        return false;
+      }
+    } catch (error) {
+      console.error('Error saving choices:', error);
+      // Don't block the user if backend is down
+      return false;
+    }
+  };
+
   const handleStartOver = () => {
     setChoices({ 
       fontCategory: null, 
@@ -236,17 +346,40 @@ function App() {
       bgColor: '#ffffff'
     });
     setStep(0);
+    setShowLearning(false);
     localStorage.removeItem('userChoices');
     document.body.style.backgroundColor = '#ffffff';
     document.body.style.color = '#000000';
     document.body.style.fontFamily = 'system-ui';
   };
 
+  // Show learning resources
+  if (showLearning) {
+    // Only show summary option if user has completed choices (has a specific font selected)
+    const hasCompletedChoices = choices.specificFont !== null;
+    
+    return (
+      <LearningResources
+        fontFamily={getCurrentFont()}
+        fontSize={choices.fontSize}
+        lineHeight={choices.leading}
+        textColor={choices.textColor}
+        bgColor={choices.bgColor}
+        onClose={handleStartOver}
+        onViewSummary={hasCompletedChoices ? () => {
+          setShowLearning(false);
+          setStep(5);
+        } : null}
+      />
+    );
+  }
+
   if (step === 0) {
     return (
       <>
         <Navbar 
-          onStartOver={handleStartOver} 
+          onStartOver={handleStartOver}
+          onSkipToLearning={() => setShowLearning(true)}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -313,7 +446,8 @@ function App() {
     return (
       <>
         <Navbar 
-          onStartOver={handleStartOver} 
+          onStartOver={handleStartOver}
+          onSkipToLearning={() => setShowLearning(true)}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -368,7 +502,8 @@ function App() {
     return (
       <>
         <Navbar 
-          onStartOver={handleStartOver} 
+          onStartOver={handleStartOver}
+          onSkipToLearning={() => setShowLearning(true)}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -435,7 +570,8 @@ function App() {
     return (
       <>
         <Navbar 
-          onStartOver={handleStartOver} 
+          onStartOver={handleStartOver}
+          onSkipToLearning={() => setShowLearning(true)}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -502,7 +638,8 @@ function App() {
     return (
       <>
         <Navbar 
-          onStartOver={handleStartOver} 
+          onStartOver={handleStartOver}
+          onSkipToLearning={() => setShowLearning(true)}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -543,7 +680,11 @@ function App() {
               ← Back
             </button>
             <button 
-              onClick={() => setStep(5)} 
+              onClick={() => {
+                // Save data to backend before showing learning resources
+                saveChoicesToBackend();
+                setShowLearning(true);
+              }} 
               className="navButton"
               style={{ 
                 color: choices.bgColor, 
@@ -564,7 +705,8 @@ function App() {
     return (
       <>
         <Navbar 
-          onStartOver={handleStartOver} 
+          onStartOver={handleStartOver}
+          onSkipToLearning={() => setShowLearning(true)}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -676,26 +818,20 @@ function App() {
               </p>
             </div>
 
-            <button 
-              onClick={() => {
-                const dataStr = JSON.stringify(choices, null, 2);
-                const dataBlob = new Blob([dataStr], { type: 'application/json' });
-                const url = URL.createObjectURL(dataBlob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = 'user-choices.json';
-                link.click();
-              }}
-              className="saveData"
-              style={{ 
-                color: choices.bgColor, 
-                backgroundColor: choices.textColor,
-                fontSize: `${choices.fontSize * 1.1}px`,
-                lineHeight: choices.leading
-              }}
-            >
-              Download My Choices
-            </button>
+            <div className="navigationButtons" style={{ gap: '1.5rem', marginTop: '2rem' }}>
+              <button 
+                onClick={() => setShowLearning(true)}
+                className="navButton"
+                style={{ 
+                  color: choices.bgColor, 
+                  backgroundColor: choices.textColor,
+                  fontSize: `${choices.fontSize * 1.1}px`,
+                  lineHeight: choices.leading
+                }}
+              >
+                Learn About Typography & Accessibility
+              </button>
+            </div>
           </div>
           
           <div className="navigationButtons">
