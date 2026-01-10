@@ -311,3 +311,204 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
+
+/* Welcome page responsive adjustments */
+@media (max-width: 768px) {
+  .pageContainer {
+    padding: 1rem !important;
+  }
+  
+  .pageContainer > div {
+    padding: 1.5rem !important;
+  }
+
+  .pageContainer h1 {
+    font-size: 1.8rem !important;
+  }
+
+  .pageContainer h2 {
+    font-size: 1.3rem !important;
+  }
+
+  /* Make the two-column grid single column on mobile */
+  .pageContainer div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Button hover effects */
+.navButton {
+  transition: all 0.2s ease;
+}
+
+.navButton:hover {
+  opacity: 0.9;
+}
+
+.navButton:active {
+  transform: scale(0.98);
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* List styling */
+ol, ul {
+  line-height: inherit;
+}
+
+ol li, ul li {
+  margin-bottom: 0.5rem;
+}
+
+/* Make sure links are visible */
+a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* Ensure proper spacing for content */
+p {
+  margin-bottom: 1rem;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+/* Better button spacing */
+button {
+  font-family: inherit;
+}
+
+/* Welcome page styles */
+.welcomeContainer {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.welcomeBox {
+  border: 2px solid rgb(200, 200, 200);
+  border-radius: 10px;
+  padding: 3rem;
+  text-align: left;
+}
+
+.welcomeBox h1 {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 2.5rem;
+}
+
+.welcomeBox h2 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.welcomeBox p {
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.welcomeBox ol,
+.welcomeBox ul {
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.welcomeBox li {
+  margin-bottom: 0.75rem;
+}
+
+.welcomeGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.welcomeCard {
+  padding: 1.5rem;
+  border: 2px solid rgb(200, 200, 200);
+  border-radius: 8px;
+}
+
+.welcomeCard h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.welcomeCard p {
+  font-size: 0.95rem;
+  margin-bottom: 0;
+}
+
+.welcomeNote {
+  padding: 1.5rem;
+  border: 2px solid rgb(200, 200, 200);
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.welcomeNote p {
+  margin: 0;
+  font-style: italic;
+  font-size: 0.95rem;
+}
+
+.welcomeButtonContainer {
+  text-align: center;
+}
+
+.welcomeButton {
+  padding: 1rem 3rem;
+  border-radius: 8px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: none;
+}
+
+.welcomeButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.welcomeButton:active {
+  transform: translateY(0);
+}
+
+/* Responsive welcome page */
+@media (max-width: 768px) {
+  .welcomeContainer {
+    padding: 1rem;
+  }
+
+  .welcomeBox {
+    padding: 1.5rem;
+  }
+
+  .welcomeBox h1 {
+    font-size: 1.8rem;
+  }
+
+  .welcomeBox h2 {
+    font-size: 1.3rem;
+  }
+
+  .welcomeGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .welcomeButton {
+    font-size: 1.1rem;
+    padding: 0.8rem 2rem;
+  }
+}
