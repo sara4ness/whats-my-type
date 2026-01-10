@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import LearningResources from './components/LearningResources';
+import AdminDashboard from './components/AdminDashboard';
 
 // Navbar component
 function Navbar({ onStartOver, onSkipToLearning, fontFamily, fontSize, lineHeight, textColor, bgColor }) {
@@ -264,7 +266,7 @@ function adjustBrightness(hex, percent) {
     .toString(16).slice(1);
 }
 
-function App() {
+function MainApp() {
   const [choices, setChoices] = useState({
     fontCategory: null,
     specificFont: null,
@@ -959,6 +961,17 @@ function App() {
       </>
     );
   }
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainApp />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
