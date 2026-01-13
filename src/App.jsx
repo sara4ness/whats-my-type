@@ -274,7 +274,7 @@ function App() {
     bgColor: '#ffffff'
   });
   
-  const [step, setStep] = useState(-1); // Start at -1 for welcome page
+  const [step, setStep] = useState(0);
   const [showLearning, setShowLearning] = useState(false);
   const [sessionId] = useState(() => {
     // Generate a unique session ID for this user
@@ -345,7 +345,7 @@ function App() {
       textColor: '#000000',
       bgColor: '#ffffff'
     });
-    setStep(-1); // Return to welcome page
+    setStep(0);
     setShowLearning(false);
     localStorage.removeItem('userChoices');
     document.body.style.backgroundColor = '#ffffff';
@@ -371,113 +371,6 @@ function App() {
           setStep(5);
         } : null}
       />
-    );
-  }
-
-  // Welcome page (step -1)
-  if (step === -1) {
-    return (
-      <>
-        <Navbar 
-          onStartOver={handleStartOver}
-          onSkipToLearning={() => setShowLearning(true)}
-          fontFamily={getCurrentFont()}
-          fontSize={choices.fontSize}
-          lineHeight={choices.leading}
-          textColor={choices.textColor}
-          bgColor={choices.bgColor}
-        />
-        <div className="pageContainer" style={{ 
-          marginTop: '80px',
-          fontFamily: getCurrentFont()
-        }}>
-          <div className="welcomeContainer">
-            <div className="welcomeBox" style={{
-              backgroundColor: getBoxBackground(choices.bgColor),
-              borderColor: choices.textColor + '33',
-              color: choices.textColor
-            }}>
-              <h1 style={{ color: choices.textColor }}>
-                Welcome to What's My Type?
-              </h1>
-              
-              <p>
-                This interactive project helps you discover your perfect typography preferences while learning about design and accessibility along the way.
-              </p>
-
-              <h2 style={{ color: choices.textColor }}>What is This?</h2>
-              <p>
-                Typography is the art and technique of arranging text to make it readable and visually appealing. Your preferences in fonts, sizes, spacing, and colors can significantly impact your reading experience and comfort. This tool helps you explore and understand these preferences.
-              </p>
-
-              <h2 style={{ color: choices.textColor }}>How It Works</h2>
-              <ol>
-                <li><strong>Choose a font style</strong> - Serif (traditional) or Sans-serif (modern)</li>
-                <li><strong>Pick a specific font</strong> - See examples and descriptions of each</li>
-                <li><strong>Adjust the font size</strong> - Find your comfortable reading size</li>
-                <li><strong>Set the line spacing</strong> - Control the space between lines (leading)</li>
-                <li><strong>Choose your colors</strong> - Select text and background colors that work for you</li>
-                <li><strong>Learn!</strong> - Explore typography and accessibility principles</li>
-              </ol>
-
-              <h2 style={{ color: choices.textColor }}>What You'll Learn</h2>
-              <ul>
-                <li>Typography fundamentals and best practices</li>
-                <li>Web accessibility standards (WCAG)</li>
-                <li>UX design principles for readable content</li>
-                <li>Tools and resources for designers</li>
-              </ul>
-
-              <h2 style={{ color: choices.textColor }}>Two Ways to Explore</h2>
-              <div className="welcomeGrid">
-                <div className="welcomeCard" style={{
-                  backgroundColor: adjustBrightness(getBoxBackground(choices.bgColor), choices.bgColor === '#ffffff' ? -3 : 5),
-                  borderColor: choices.textColor + '33',
-                  color: choices.textColor
-                }}>
-                  <h3 style={{ color: choices.textColor }}>Make Your Choices</h3>
-                  <p>
-                    Go through the interactive selection process to discover your typography preferences. Your choices will be saved for analysis.
-                  </p>
-                </div>
-                <div className="welcomeCard" style={{
-                  backgroundColor: adjustBrightness(getBoxBackground(choices.bgColor), choices.bgColor === '#ffffff' ? -3 : 5),
-                  borderColor: choices.textColor + '33',
-                  color: choices.textColor
-                }}>
-                  <h3 style={{ color: choices.textColor }}>Jump to Learning</h3>
-                  <p>
-                    Skip straight to the educational content using the "Learning Resources" button in the navigation menu above.
-                  </p>
-                </div>
-              </div>
-
-              <div className="welcomeNote" style={{
-                backgroundColor: adjustBrightness(getBoxBackground(choices.bgColor), choices.bgColor === '#ffffff' ? -5 : 8),
-                borderColor: choices.textColor + '44',
-                color: choices.textColor
-              }}>
-                <p>
-                  <strong>Note:</strong> This entire interface adapts to your typography choices as you make them, so you can see your preferences in action throughout the experience!
-                </p>
-              </div>
-
-              <div className="welcomeButtonContainer">
-                <button
-                  onClick={() => setStep(0)}
-                  className="welcomeButton"
-                  style={{
-                    backgroundColor: choices.textColor,
-                    color: choices.bgColor
-                  }}
-                >
-                  Let's Get Started! →
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
     );
   }
 
