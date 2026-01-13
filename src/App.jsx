@@ -1,76 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import LearningResources from './components/LearningResources';
+import Navbar from './components/Navbar'; // Import the extracted component
 
-// Navbar component
-function Navbar({ onStartOver, onSkipToLearning, fontFamily, fontSize, lineHeight, textColor, bgColor }) {
-  return (
-    <nav style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      backgroundColor: bgColor,
-      borderBottom: `2px solid ${textColor}33`,
-      padding: '1rem 2rem',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      zIndex: 1000,
-      fontFamily,
-      fontSize: `${fontSize}px`,
-      lineHeight
-    }}>
-      <h1 style={{ 
-        margin: 0, 
-        color: textColor,
-        fontSize: `${fontSize * 1.5}px`
-      }}>
-        What's My Type?
-      </h1>
-      <div style={{ display: 'flex', gap: '1rem' }}>
-        <button
-          onClick={onSkipToLearning}
-          style={{
-            backgroundColor: 'transparent',
-            color: textColor,
-            border: `2px solid ${textColor}`,
-            padding: '0.5rem 1rem',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: `${fontSize}px`,
-            fontWeight: '600',
-            transition: 'all 0.2s'
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.backgroundColor = textColor;
-            e.target.style.color = bgColor;
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.backgroundColor = 'transparent';
-            e.target.style.color = textColor;
-          }}
-        >
-          Learning Resources
-        </button>
-        <button
-          onClick={onStartOver}
-          style={{
-            backgroundColor: textColor,
-            color: bgColor,
-            border: 'none',
-            padding: '0.5rem 1rem',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: `${fontSize}px`,
-            fontWeight: '600'
-          }}
-        >
-          Start Over
-        </button>
-      </div>
-    </nav>
-  );
+// --- Helper Functions for Rating System ---
+function getLuminance(hex) {
+  const rgb = parseInt(hex.slice(1), 16);
+  const r = (rgb >> 16) & 0xff;
+  const g = (rgb >>  8) & 0xff;
+  const b = (rgb >>  0) & 0xff;
+
+  const [lr, lg, lb] = [r, g, b].map(c => {
+    c /= 255;
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  });
+
+  return 0.2126 * lr + 0.7152 * lg + 0.0722 * lb;
+}
+
+function getContrastRatio(hex1, hex2) {
+  const lum1 = getLuminance(hex1);
+  const lum2 = getLuminance(hex2);
+  const brightest = Math.max(lum1, lum2);
+  const darkest = Math.min(lum1, lum2);
+  return (brightest + 0.05) / (darkest + 0.05);
 }
 
 // Simple reusable card component
@@ -351,6 +304,61 @@ function App() {
     document.body.style.backgroundColor = '#ffffff';
     document.body.style.color = '#000000';
     document.body.style.fontFamily = 'system-ui';
+  };
+
+  // --- Rating Calculation Logic (Added) ---
+  const calculateRating = () => {
+    const contrast = getContrastRatio(choices.textColor, choices.bgColor);
+    const size = choices.fontSize;
+    const leading = choices.leading;
+    
+    let score = 0;
+    const report = {
+      contrast: { status: '', text: '', score: 0, val: contrast.toFixed(2) },
+      size: { status: '', text: '', score: 0, val: size + 'px' },
+      leading: { status: '', text: '', score: 0, val: leading }
+    };
+
+    // 1. Contrast (50 points max)
+    if (contrast >= 7) {
+      report.contrast = { status: 'Excellent', text: 'Passes WCAG AAA. Perfect for all readers.', score: 50, val: contrast.toFixed(2) };
+    } else if (contrast >= 4.5) {
+      report.contrast = { status: 'Good', text: 'Passes WCAG AA. Readable for most.', score: 40, val: contrast.toFixed(2) };
+    } else if (contrast >= 3) {
+      report.contrast = { status: 'Fair', text: 'Okay for large text, but fails for body text.', score: 20, val: contrast.toFixed(2) };
+    } else {
+      report.contrast = { status: 'Poor', text: 'Fails accessibility standards. Hard to read.', score: 0, val: contrast.toFixed(2) };
+    }
+
+    // 2. Font Size (30 points max)
+    if (size >= 18) {
+      report.size = { status: 'Excellent', text: 'Very comfortable reading size.', score: 30, val: size + 'px' };
+    } else if (size >= 16) {
+      report.size = { status: 'Good', text: 'Standard legible font size.', score: 25, val: size + 'px' };
+    } else if (size >= 14) {
+      report.size = { status: 'Fair', text: 'A bit small for prolonged reading.', score: 10, val: size + 'px' };
+    } else {
+      report.size = { status: 'Poor', text: 'Too small for accessible body text.', score: 0, val: size + 'px' };
+    }
+
+    // 3. Leading (20 points max)
+    if (leading >= 1.4 && leading <= 1.6) {
+      report.leading = { status: 'Excellent', text: 'Perfect spacing for readability.', score: 20, val: leading };
+    } else if (leading >= 1.2 && leading <= 1.8) {
+      report.leading = { status: 'Good', text: 'Acceptable line height.', score: 15, val: leading };
+    } else {
+      report.leading = { status: 'Fair', text: 'Spacing may be too tight or too loose.', score: 5, val: leading };
+    }
+
+    score = report.contrast.score + report.size.score + report.leading.score;
+    
+    let finalGrade = 'Good';
+    if (score >= 90) finalGrade = 'Excellent';
+    else if (score >= 70) finalGrade = 'Good';
+    else if (score >= 50) finalGrade = 'Fair';
+    else finalGrade = 'Needs Work';
+
+    return { score, grade: finalGrade, report };
   };
 
   // Show learning resources
@@ -840,6 +848,10 @@ function App() {
   }
 
   if (step === 5) {
+    // --- Calculate Rating for Summary View ---
+    const rating = calculateRating();
+    const boxBg = getBoxBackground(choices.bgColor);
+
     return (
       <>
         <Navbar 
@@ -869,6 +881,73 @@ function App() {
             }}>
               Your Custom Style
             </h1>
+
+            {/* --- NEW RATING CARD --- */}
+            <div style={{
+              backgroundColor: boxBg,
+              border: `2px solid ${choices.textColor}33`,
+              borderRadius: '5px',
+              padding: '2rem',
+              marginBottom: '2rem',
+              textAlign: 'left'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+                <h2 style={{ margin: 0, fontSize: `${choices.fontSize * 1.5}px`, color: choices.textColor }}>
+                  Best Practice Rating
+                </h2>
+                <div style={{ 
+                  backgroundColor: choices.textColor, 
+                  color: choices.bgColor, 
+                  padding: '0.5rem 1rem', 
+                  borderRadius: '5px', 
+                  fontWeight: 'bold',
+                  fontSize: `${choices.fontSize * 1.2}px`
+                }}>
+                  {rating.grade} ({rating.score}/100)
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
+                {/* Contrast Metric */}
+                <div style={{ padding: '1rem', border: `1px solid ${choices.textColor}22`, borderRadius: '4px' }}>
+                  <strong style={{ display: 'block', color: choices.textColor, opacity: 0.7, marginBottom: '0.5rem' }}>
+                    Contrast ({rating.report.contrast.val}:1)
+                  </strong>
+                  <div style={{ fontSize: `${choices.fontSize * 1.1}px`, fontWeight: '600', color: choices.textColor, marginBottom: '0.5rem' }}>
+                    {rating.report.contrast.status}
+                  </div>
+                  <p style={{ margin: 0, fontSize: `${choices.fontSize * 0.9}px`, color: choices.textColor, opacity: 0.9 }}>
+                    {rating.report.contrast.text}
+                  </p>
+                </div>
+
+                {/* Size Metric */}
+                <div style={{ padding: '1rem', border: `1px solid ${choices.textColor}22`, borderRadius: '4px' }}>
+                  <strong style={{ display: 'block', color: choices.textColor, opacity: 0.7, marginBottom: '0.5rem' }}>
+                    Font Size ({rating.report.size.val})
+                  </strong>
+                  <div style={{ fontSize: `${choices.fontSize * 1.1}px`, fontWeight: '600', color: choices.textColor, marginBottom: '0.5rem' }}>
+                    {rating.report.size.status}
+                  </div>
+                  <p style={{ margin: 0, fontSize: `${choices.fontSize * 0.9}px`, color: choices.textColor, opacity: 0.9 }}>
+                    {rating.report.size.text}
+                  </p>
+                </div>
+
+                {/* Leading Metric */}
+                <div style={{ padding: '1rem', border: `1px solid ${choices.textColor}22`, borderRadius: '4px' }}>
+                  <strong style={{ display: 'block', color: choices.textColor, opacity: 0.7, marginBottom: '0.5rem' }}>
+                    Leading ({rating.report.leading.val})
+                  </strong>
+                  <div style={{ fontSize: `${choices.fontSize * 1.1}px`, fontWeight: '600', color: choices.textColor, marginBottom: '0.5rem' }}>
+                    {rating.report.leading.status}
+                  </div>
+                  <p style={{ margin: 0, fontSize: `${choices.fontSize * 0.9}px`, color: choices.textColor, opacity: 0.9 }}>
+                    {rating.report.leading.text}
+                  </p>
+                </div>
+              </div>
+            </div>
             
             <div className="customChoicesSummary" style={{ 
               backgroundColor: getBoxBackground(choices.bgColor),

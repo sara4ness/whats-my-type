@@ -1,22 +1,10 @@
 import React, { useState } from 'react';
 import './LearningResources.css';
+import Navbar from './Navbar'; //
 
 function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColor, onClose, onViewSummary }) {
-  const [activeSection, setActiveSection] = useState('typography');
-
-  const getBoxBackground = (bg) => {
-    const hex = bg.replace('#', '');
-    const r = parseInt(hex.substr(0, 2), 16);
-    const g = parseInt(hex.substr(2, 2), 16);
-    const b = parseInt(hex.substr(4, 2), 16);
-    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-    
-    if (brightness > 128) {
-      return adjustBrightness(bg, -3);
-    } else {
-      return adjustBrightness(bg, 8);
-    }
-  };
+  const [flippedCardId, setFlippedCardId] = useState(null);
+  const [activeTab, setActiveTab] = useState('ux');
 
   const adjustBrightness = (hex, percent) => {
     const num = parseInt(hex.replace('#', ''), 16);
@@ -30,276 +18,281 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       .toString(16).slice(1);
   };
 
-  const boxBg = getBoxBackground(bgColor);
-
-  const sections = {
-    typography: {
-      title: 'Typography Fundamentals',
-      content: [
-        {
-          heading: 'Font Pairing',
-          text: 'When combining fonts, use contrasting styles (serif + sans-serif) or stick to one font family with different weights. Limit yourself to 2-3 typefaces maximum to maintain visual harmony.',
-          example: 'Headings in bold sans-serif with body text in a readable serif creates clear hierarchy.'
-        },
-        {
-          heading: 'Hierarchy and Scale',
-          text: 'Establish a clear typographic scale with distinct sizes for headings (H1-H6) and body text. Use a ratio like 1.25 (Major Third) or 1.5 (Perfect Fifth) to create harmonious size relationships.',
-          example: 'H1: 32px, H2: 24px, H3: 20px, Body: 16px creates a clear visual hierarchy.'
-        },
-        {
-          heading: 'Line Length (Measure)',
-          text: 'Optimal line length is 50-75 characters per line (including spaces). Lines that are too long tire the eyes, while too-short lines disrupt reading rhythm.',
-          example: 'For 16px text, this translates to roughly 600-900px width for comfortable reading.'
-        },
-        {
-          heading: 'White Space',
-          text: 'Generous white space around text improves readability and creates visual breathing room. Use margins, padding, and line height to prevent cramped layouts.',
-          example: 'Add 1.5-2em margins between paragraphs and ensure comfortable padding around text blocks.'
-        }
-      ]
-    },
-    accessibility: {
-      title: 'Accessibility Best Practices',
-      content: [
-        {
-          heading: 'Color Contrast (WCAG)',
-          text: 'Text must have sufficient contrast with backgrounds. WCAG AA requires 4.5:1 for normal text, 3:1 for large text (18pt+). AAA standard requires 7:1 for normal text.',
-          example: 'Black text on white has 21:1 contrast ratio - excellent. Gray on white is 4.47:1 - just passes AA.'
-        },
-        {
-          heading: 'Font Size Minimums',
-          text: 'Body text should be at least 16px for comfortable reading. Mobile text should never go below 16px to prevent browser zoom. Larger text (18-20px) improves accessibility for users with vision impairments.',
-          example: 'Use 16-18px for body text, 14px minimum for secondary text like captions.'
-        },
-        {
-          heading: 'Text Alternatives',
-          text: 'Never rely on color alone to convey information. Use icons, labels, or patterns in addition to color. This helps colorblind users and improves overall usability.',
-          example: 'For errors, use a red color plus warning icon plus Error label to convey meaning.'
-        },
-        {
-          heading: 'Focus Indicators',
-          text: 'Ensure keyboard navigation has visible focus states. Users who navigate with keyboards need clear indicators of where they are on the page.',
-          example: 'Add a 2-3px outline or color change when elements receive focus via keyboard.'
-        },
-        {
-          heading: 'Responsive Text',
-          text: 'Text should scale appropriately on different screen sizes. Use relative units (rem, em) instead of fixed pixels, and test on mobile devices.',
-          example: 'Set base font size in rem (1rem = 16px) so text scales with user preferences.'
-        }
-      ]
-    },
-    ux: {
-      title: 'UX Design Principles',
-      content: [
-        {
-          heading: 'Consistency',
-          text: 'Maintain consistent typography throughout your interface. Same font sizes, colors, and spacing for similar elements creates predictability and reduces cognitive load.',
-          example: 'All buttons use the same font size, all headings follow the same scale, all body text uses identical styling.'
-        },
-        {
-          heading: 'Visual Hierarchy',
-          text: 'Guide users through content with clear visual priority. Use size, weight, color, and spacing to show what is most important.',
-          example: 'Page title is largest, then Section headings are medium, then Body text is base size, then Captions are smallest.'
-        },
-        {
-          heading: 'Readability vs Legibility',
-          text: 'Legibility is how easily individual characters are distinguished. Readability is how easy it is to read text blocks. Both matter, but prioritize readability for body text.',
-          example: 'A decorative font may be legible but poor for long reading. Choose appropriate fonts for their context.'
-        },
-        {
-          heading: 'Responsive Design',
-          text: 'Design for mobile-first, then scale up. Text should be readable without zooming on any device. Consider how line length changes on different screen widths.',
-          example: 'Use fluid typography with clamp() or media queries to adjust sizes smoothly across devices.'
-        },
-        {
-          heading: 'Performance',
-          text: 'Font loading affects page performance. Use system fonts when possible, or limit custom fonts to 2-3 weights. Consider using font-display: swap for better perceived performance.',
-          example: 'Loading 10 font weights can add 1-2 seconds to page load. Stick to regular and bold for most interfaces.'
-        }
-      ]
-    },
-    tools: {
-      title: 'Helpful Tools & Resources',
-      content: [
-        {
-          heading: 'Contrast Checkers',
-          text: 'Tools to verify your color combinations meet accessibility standards.',
-          example: 'WebAIM Contrast Checker, Contrast Ratio by Lea Verou, Colorable'
-        },
-        {
-          heading: 'Typography Tools',
-          text: 'Resources for finding fonts, testing combinations, and generating type scales.',
-          example: 'Type Scale, Google Fonts, Fontsquirrel, Typewolf'
-        },
-        {
-          heading: 'Testing Tools',
-          text: 'Simulate different vision conditions and test accessibility.',
-          example: 'Chrome DevTools with Lighthouse, WAVE, axe DevTools, Color Oracle for colorblindness simulation'
-        },
-        {
-          heading: 'Learning Resources',
-          text: 'Books and websites to deepen your understanding.',
-          example: 'The Elements of Typographic Style by Robert Bringhurst, Practical Typography by Matthew Butterick, Laws of UX website'
-        },
-        {
-          heading: 'Guidelines & Standards',
-          text: 'Official accessibility and design standards.',
-          example: 'WCAG 2.1 Guidelines, Material Design Typography, Apple Human Interface Guidelines'
-        }
-      ]
-    }
+  const getContrastColor = (bg) => {
+    const hex = bg.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 128 ? adjustBrightness(bg, -10) : adjustBrightness(bg, 15);
   };
 
+  const cardBg = getContrastColor(bgColor);
+  const cardBorder = `${textColor}22`;
+  
+  // Dynamic Sizing Logic
+  // Height: Ensures card grows if text is huge
+  const cardHeight = `${Math.max(320, fontSize * 20)}px`;
+  
+  // Width: Calculates minimum width based on font size. 
+  // Base is 300px (at 16px font). Adds 15px width for every 1px of font size increase.
+  // This forces fewer cards per line as text gets bigger.
+  const minCardWidth = Math.max(300, 300 + (fontSize - 16) * 15);
+
+  const principles = [
+    // --- UX DESIGN ---
+    {
+      id: 2,
+      tab: 'ux',
+      category: "Heuristics",
+      title: "Visibility of System Status",
+      summary: "Keep users informed about what is going on.",
+      details: "Nielsen's 1st Heuristic: The design should always keep users informed about what is going on, through appropriate feedback within a reasonable amount of time. Examples include loading spinners, progress bars, and success notifications.",
+      action: "Ensure every user action has a clear reaction."
+    },
+    {
+      id: 3,
+      tab: 'ux',
+      category: "Cognitive Psychology",
+      title: "Cognitive Load",
+      summary: "Don't make the user think too hard.",
+      details: "Cognitive load refers to the amount of working memory resources used. 'Extraneous' load comes from bad design (distractions, clutter). 'Germane' load is the effort needed to learn. Good UX minimizes extraneous load so users can focus on their actual task.",
+      action: "Simplify interfaces and remove non-essential elements."
+    },
+    {
+      id: 4,
+      tab: 'ux',
+      category: "Heuristics",
+      title: "Error Prevention",
+      summary: "Better a good design than a good error message.",
+      details: "Nielsen's 5th Heuristic: Good design prevents problems from occurring in the first place. Eliminate error-prone conditions or check for them and present users with a confirmation option before they commit to the action.",
+      action: "Use constraints (like date pickers) instead of free text."
+    },
+    {
+      id: 5,
+      tab: 'ux',
+      category: "Gestalt Principles",
+      title: "Law of Proximity",
+      summary: "Things close together appear grouped.",
+      details: "Objects that are near, or proximate to each other, tend to be grouped together. This is a fundamental way we organize information. We perceive elements that are closer together as related, while those further apart are unrelated.",
+      action: "Use whitespace to group related controls."
+    },
+    {
+      id: 7,
+      tab: 'ux',
+      category: "Typography",
+      title: "Line Length (Measure)",
+      summary: "Avoid lines that are too long to track.",
+      details: "For comfortable reading, a line of text should be 50–75 characters long. If lines are too long, the eye has trouble tracking back to the start of the next line. If too short, the rhythm breaks.",
+      action: "Limit container width on large screens."
+    },
+    {
+      id: 8,
+      tab: 'ux',
+      category: "Psychology",
+      title: "Fitts's Law",
+      summary: "Big and close targets are easier to hit.",
+      details: "The time to acquire a target is a function of the distance to and size of the target. Make touch targets (buttons, links) large enough (at least 44x44px) and place commonly used actions in easy-to-reach zones.",
+      action: "Increase padding on clickable elements."
+    },
+    // --- ACCESSIBILITY ---
+    {
+      id: 1,
+      tab: 'accessibility',
+      category: "Visual",
+      title: "WCAG 2.1 Contrast",
+      summary: "Text must distinguish clearly from its background.",
+      details: "The Web Content Accessibility Guidelines (WCAG) require a contrast ratio of at least 4.5:1 for normal text and 3:1 for large text (18pt+). This ensures content is readable by people with moderately low vision.",
+      action: "Check your contrast ratios using tools like WebAIM."
+    },
+    {
+      id: 6,
+      tab: 'accessibility',
+      category: "Navigation",
+      title: "Focus Indicators",
+      summary: "Show where the keyboard is.",
+      details: "Sighted keyboard users need a visible indicator (usually a ring or outline) to know which element currently has focus. Removing outline:none without a replacement breaks accessibility for power users and those with motor disabilities.",
+      action: "Never remove CSS outlines without adding a custom style."
+    },
+    {
+      id: 9,
+      tab: 'accessibility',
+      category: "Structure",
+      title: "Semantic HTML",
+      summary: "Use the right tag for the job.",
+      details: "Screen readers rely on proper HTML tags (button, nav, main, h1) to understand the structure of a page. Using <div>s for everything hides meaning and functionality from assistive technologies.",
+      action: "Use <button> for actions, not <div onClick>."
+    },
+    {
+      id: 10,
+      tab: 'accessibility',
+      category: "Content",
+      title: "Alt Text",
+      summary: "Describe images for those who can't see them.",
+      details: "Alternative text provides a textual alternative to non-text content in web pages. It is read by screen readers in place of images allowing the content and function of the image to be understood by those with visual or cognitive disabilities.",
+      action: "Describe the function or content, not just 'image'."
+    }
+  ];
+
+  const handleCardClick = (id) => {
+    setFlippedCardId(flippedCardId === id ? null : id);
+  };
+
+  const filteredPrinciples = principles.filter(p => p.tab === activeTab);
+
   return (
-    <div className="learningContainer" style={{ 
-      fontFamily,
-      fontSize: `${fontSize}px`,
-      lineHeight,
-      color: textColor,
-      backgroundColor: bgColor
-    }}>
-      <div className="learningHeader" style={{
-        borderBottom: `2px solid ${textColor}33`,
-        backgroundColor: boxBg
+    <>
+      <Navbar 
+        onStartOver={onClose} 
+        onSkipToLearning={() => {}} 
+        showLearningButton={false} 
+        fontFamily={fontFamily}
+        fontSize={fontSize}
+        lineHeight={lineHeight}
+        textColor={textColor}
+        bgColor={bgColor}
+      />
+      <div className="learningContainer" style={{ 
+        fontFamily,
+        fontSize: `${fontSize}px`,
+        lineHeight,
+        color: textColor,
+        backgroundColor: bgColor,
+        paddingTop: '100px'
       }}>
-        <h1 style={{ fontSize: `${fontSize * 2}px`, color: textColor }}>
-          Learning Resources
-        </h1>
-        <p style={{ fontSize: `${fontSize * 1.1}px`, color: textColor + 'CC' }}>
-          Explore typography, accessibility, and UX design principles
-        </p>
-      </div>
-
-      <div className="learningContent">
-        <nav className="learningNav" style={{
-          backgroundColor: boxBg,
-          borderRight: `2px solid ${textColor}33`
-        }}>
-          {Object.entries(sections).map(([key, section]) => (
-            <button
-              key={key}
-              className={`navItem ${activeSection === key ? 'active' : ''}`}
-              onClick={() => setActiveSection(key)}
+        
+        <div className="learningHeader">
+          <h1 style={{ fontSize: `${fontSize * 2}px`, marginBottom: '1rem' }}>
+            UX & Design Principles
+          </h1>
+          
+          <div className="tabsContainer">
+            <button 
+              className={`tabButton ${activeTab === 'ux' ? 'active' : ''}`}
+              onClick={() => setActiveTab('ux')}
               style={{
-                color: activeSection === key ? bgColor : textColor,
-                backgroundColor: activeSection === key ? textColor : 'transparent',
-                borderBottom: `1px solid ${textColor}22`,
-                fontSize: `${fontSize}px`,
-                lineHeight
+                fontSize: `${fontSize * 1.1}px`,
+                color: activeTab === 'ux' ? bgColor : textColor,
+                backgroundColor: activeTab === 'ux' ? textColor : 'transparent',
+                borderColor: textColor
               }}
             >
-              {section.title}
+              UX Design
             </button>
-          ))}
-        </nav>
-
-        <div className="learningMain" style={{ fontSize: `${fontSize}px` }}>
-          <h2 style={{ 
-            fontSize: `${fontSize * 1.8}px`, 
-            color: textColor,
-            marginBottom: '2rem'
-          }}>
-            {sections[activeSection].title}
-          </h2>
-
-          {sections[activeSection].content.map((item, index) => (
-            <div 
-              key={index} 
-              className="contentCard"
+            <button 
+              className={`tabButton ${activeTab === 'accessibility' ? 'active' : ''}`}
+              onClick={() => setActiveTab('accessibility')}
               style={{
-                backgroundColor: boxBg,
-                borderLeft: `4px solid ${textColor}`,
-                marginBottom: '2rem',
-                padding: '1.5rem',
-                borderRadius: '4px'
+                fontSize: `${fontSize * 1.1}px`,
+                color: activeTab === 'accessibility' ? bgColor : textColor,
+                backgroundColor: activeTab === 'accessibility' ? textColor : 'transparent',
+                borderColor: textColor
               }}
             >
-              <h3 style={{ 
-                fontSize: `${fontSize * 1.3}px`,
-                color: textColor,
-                marginBottom: '0.75rem'
-              }}>
-                {item.heading}
-              </h3>
-              <p style={{ 
-                fontSize: `${fontSize}px`,
-                color: textColor + 'DD',
-                marginBottom: '1rem',
-                lineHeight
-              }}>
-                {item.text}
-              </p>
-              <div 
-                className="exampleBox"
-                style={{
-                  backgroundColor: adjustBrightness(boxBg, bgColor === '#ffffff' ? -5 : 10),
-                  padding: '1rem',
-                  borderRadius: '4px',
-                  borderLeft: `3px solid ${textColor}55`
-                }}
-              >
-                <strong style={{ color: textColor + 'AA', fontSize: `${fontSize * 0.9}px` }}>
-                  Example:
-                </strong>
-                <p style={{ 
-                  fontSize: `${fontSize * 0.95}px`,
-                  color: textColor + 'CC',
-                  marginTop: '0.5rem',
-                  fontStyle: 'italic'
+              Accessibility
+            </button>
+          </div>
+
+          <p style={{ opacity: 0.8, marginTop: '1rem' }}>
+            Click a card to reveal the principle behind it.
+          </p>
+        </div>
+
+        <div className="cardsGrid" style={{
+          // Apply dynamic column sizing here
+          gridTemplateColumns: `repeat(auto-fill, minmax(${minCardWidth}px, 1fr))`
+        }}>
+          {filteredPrinciples.map((card) => (
+            <div 
+              key={card.id} 
+              className={`flip-card ${flippedCardId === card.id ? 'flipped' : ''}`}
+              onClick={() => handleCardClick(card.id)}
+              style={{ height: cardHeight }}
+            >
+              <div className="flip-card-inner">
+                {/* Front of Card */}
+                <div className="flip-card-front" style={{ 
+                  backgroundColor: cardBg,
+                  borderColor: cardBorder,
+                  color: textColor
                 }}>
-                  {item.example}
-                </p>
+                  <span className="card-category" style={{ fontSize: `${fontSize * 0.8}px` }}>
+                    {card.category}
+                  </span>
+                  
+                  {/* Icon removed here */}
+
+                  <h3 style={{ fontSize: `${fontSize * 1.4}px`, margin: '0 0 1rem 0' }}>
+                    {card.title}
+                  </h3>
+                  <p style={{ fontSize: `${fontSize}px`, opacity: 0.9 }}>
+                    {card.summary}
+                  </p>
+                  <span className="tap-hint" style={{ 
+                    fontSize: `${fontSize * 0.8}px`, 
+                    borderBottom: `1px solid ${textColor}66`
+                  }}>
+                    Click to learn more ↻
+                  </span>
+                </div>
+
+                {/* Back of Card */}
+                <div className="flip-card-back" style={{ 
+                  backgroundColor: textColor,
+                  color: bgColor,
+                  borderColor: cardBorder
+                }}>
+                  <h3 style={{ 
+                    fontSize: `${fontSize * 1.2}px`, 
+                    borderBottom: `1px solid ${bgColor}44`,
+                    paddingBottom: '0.5rem',
+                    marginBottom: '1rem',
+                    width: '100%'
+                  }}>
+                    {card.title}
+                  </h3>
+                  <p style={{ fontSize: `${fontSize}px`, marginBottom: '1.5rem', lineHeight: lineHeight * 1.1 }}>
+                    {card.details}
+                  </p>
+                  
+                  <div className="action-box" style={{ 
+                    backgroundColor: `${bgColor}22`
+                  }}>
+                    <strong style={{ display: 'block', fontSize: `${fontSize * 0.9}px`, marginBottom: '0.25rem' }}>
+                      Takeaway:
+                    </strong>
+                    <span style={{ fontSize: `${fontSize * 0.95}px`, fontStyle: 'italic' }}>
+                      {card.action}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           ))}
         </div>
-      </div>
 
-      <div className="learningFooter" style={{
-        backgroundColor: boxBg,
-        borderTop: `2px solid ${textColor}33`,
-        padding: '1.5rem',
-        textAlign: 'center',
-        display: 'flex',
-        gap: '1rem',
-        justifyContent: 'center'
-      }}>
-        {onViewSummary && (
-          <button
-            onClick={onViewSummary}
-            className="closeButton"
-            style={{
-              backgroundColor: 'transparent',
-              color: textColor,
-              border: `2px solid ${textColor}`,
-              padding: '1rem 2rem',
-              borderRadius: '5px',
-              fontSize: `${fontSize * 1.1}px`,
-              fontWeight: '600',
-              cursor: 'pointer'
-            }}
-          >
-            View My Summary
-          </button>
-        )}
-        <button
-          onClick={onClose}
-          className="closeButton"
-          style={{
-            backgroundColor: textColor,
-            color: bgColor,
-            padding: '1rem 2rem',
-            border: 'none',
-            borderRadius: '5px',
-            fontSize: `${fontSize * 1.1}px`,
-            fontWeight: '600',
-            cursor: 'pointer'
-          }}
-        >
-          Start Over
-        </button>
+        <div className="learningFooter">
+          {onViewSummary && (
+            <button
+              onClick={onViewSummary}
+              style={{
+                backgroundColor: 'transparent',
+                color: textColor,
+                border: `2px solid ${textColor}`,
+                padding: '1rem 2rem',
+                borderRadius: '5px',
+                fontSize: `${fontSize * 1.1}px`,
+                fontWeight: '600',
+                cursor: 'pointer',
+                marginRight: '1rem'
+              }}
+            >
+              View My Summary
+            </button>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
