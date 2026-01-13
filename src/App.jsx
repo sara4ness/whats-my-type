@@ -1,7 +1,77 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import Navbar from './components/Navbar';
 import LearningResources from './components/LearningResources';
+
+// Navbar component
+function Navbar({ onStartOver, onSkipToLearning, fontFamily, fontSize, lineHeight, textColor, bgColor }) {
+  return (
+    <nav style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: bgColor,
+      borderBottom: `2px solid ${textColor}33`,
+      padding: '1rem 2rem',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      zIndex: 1000,
+      fontFamily,
+      fontSize: `${fontSize}px`,
+      lineHeight
+    }}>
+      <h1 style={{ 
+        margin: 0, 
+        color: textColor,
+        fontSize: `${fontSize * 1.5}px`
+      }}>
+        What's My Type?
+      </h1>
+      <div style={{ display: 'flex', gap: '1rem' }}>
+        <button
+          onClick={onSkipToLearning}
+          style={{
+            backgroundColor: 'transparent',
+            color: textColor,
+            border: `2px solid ${textColor}`,
+            padding: '0.5rem 1rem',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontSize: `${fontSize}px`,
+            fontWeight: '600',
+            transition: 'all 0.2s'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = textColor;
+            e.target.style.color = bgColor;
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = 'transparent';
+            e.target.style.color = textColor;
+          }}
+        >
+          Learning Resources
+        </button>
+        <button
+          onClick={onStartOver}
+          style={{
+            backgroundColor: textColor,
+            color: bgColor,
+            border: 'none',
+            padding: '0.5rem 1rem',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontSize: `${fontSize}px`,
+            fontWeight: '600'
+          }}
+        >
+          Start Over
+        </button>
+      </div>
+    </nav>
+  );
+}
 
 // Simple reusable card component
 function OptionCard({ letter, title, description, onClick, fontFamily, fontSize, lineHeight, textColor, bgColor }) {
@@ -204,7 +274,7 @@ function App() {
     bgColor: '#ffffff'
   });
   
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(-1);
   const [showLearning, setShowLearning] = useState(false);
   const [sessionId] = useState(() => {
     // Generate a unique session ID for this user
@@ -275,7 +345,7 @@ function App() {
       textColor: '#000000',
       bgColor: '#ffffff'
     });
-    setStep(0);
+    setStep(-1);
     setShowLearning(false);
     localStorage.removeItem('userChoices');
     document.body.style.backgroundColor = '#ffffff';
@@ -285,6 +355,9 @@ function App() {
 
   // Show learning resources
   if (showLearning) {
+    // Only show summary option if user has completed choices (has a specific font selected)
+    const hasCompletedChoices = choices.specificFont !== null;
+    
     return (
       <LearningResources
         fontFamily={getCurrentFont()}
@@ -292,8 +365,150 @@ function App() {
         lineHeight={choices.leading}
         textColor={choices.textColor}
         bgColor={choices.bgColor}
-        onClose={() => setShowLearning(false)}
+        onClose={handleStartOver}
+        onViewSummary={hasCompletedChoices ? () => {
+          setShowLearning(false);
+          setStep(5);
+        } : null}
       />
+    );
+  }
+
+  // Welcome page (step -1)
+  if (step === -1) {
+    const boxBg = getBoxBackground(choices.bgColor);
+    
+    return (
+      <>
+        <Navbar 
+          onStartOver={handleStartOver}
+          onSkipToLearning={() => setShowLearning(true)}
+          fontFamily={getCurrentFont()}
+          fontSize={choices.fontSize}
+          lineHeight={choices.leading}
+          textColor={choices.textColor}
+          bgColor={choices.bgColor}
+        />
+        <div className="pageContainer" style={{ 
+          marginTop: '80px',
+          fontSize: `${choices.fontSize}px`,
+          lineHeight: choices.leading,
+          fontFamily: getCurrentFont(),
+          maxWidth: '800px'
+        }}>
+          <div style={{
+            backgroundColor: boxBg,
+            borderColor: choices.textColor + '33',
+            border: `2px solid ${choices.textColor}33`,
+            borderRadius: '5px',
+            padding: '3rem',
+            textAlign: 'left'
+          }}>
+            <h1 style={{ 
+              fontSize: `${choices.fontSize * 2.5}px`,
+              lineHeight: choices.leading,
+              color: choices.textColor,
+              marginTop: 0,
+              marginBottom: '1.5rem'
+            }}>
+              Welcome to What's My Type?
+            </h1>
+            
+            <p style={{ 
+              fontSize: `${choices.fontSize * 1.1}px`,
+              lineHeight: choices.leading,
+              color: choices.textColor,
+              marginBottom: '1.5rem'
+            }}>
+              This interactive tool helps you discover your reading preferences by guiding you through key typography decisions. You will make choices about font style, size, spacing, and colors to create a personalized reading experience.
+            </p>
+
+            <h2 style={{ 
+              fontSize: `${choices.fontSize * 1.5}px`,
+              lineHeight: choices.leading,
+              color: choices.textColor,
+              marginTop: '2rem',
+              marginBottom: '1rem'
+            }}>
+              What You'll Do
+            </h2>
+            
+            <ul style={{ 
+              fontSize: `${choices.fontSize}px`,
+              lineHeight: choices.leading,
+              color: choices.textColor,
+              marginBottom: '1.5rem',
+              paddingLeft: '1.5rem'
+            }}>
+              <li style={{ marginBottom: '0.75rem' }}>
+                Choose between serif and sans-serif font categories
+              </li>
+              <li style={{ marginBottom: '0.75rem' }}>
+                Select a specific typeface that appeals to you
+              </li>
+              <li style={{ marginBottom: '0.75rem' }}>
+                Adjust font size and line spacing for comfortable reading
+              </li>
+              <li style={{ marginBottom: '0.75rem' }}>
+                Pick text and background colors that work well together
+              </li>
+              <li style={{ marginBottom: '0.75rem' }}>
+                Learn about typography fundamentals, accessibility, and UX design
+              </li>
+            </ul>
+
+            <h2 style={{ 
+              fontSize: `${choices.fontSize * 1.5}px`,
+              lineHeight: choices.leading,
+              color: choices.textColor,
+              marginTop: '2rem',
+              marginBottom: '1rem'
+            }}>
+              Why This Matters
+            </h2>
+            
+            <p style={{ 
+              fontSize: `${choices.fontSize}px`,
+              lineHeight: choices.leading,
+              color: choices.textColor,
+              marginBottom: '2rem'
+            }}>
+              Typography significantly impacts readability, comprehension, and user experience. Understanding your preferences helps you make informed design decisions and appreciate the thought that goes into creating accessible, well-designed interfaces. Your choices will be saved anonymously to help us understand common reading preferences.
+            </p>
+
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: '2rem'
+            }}>
+              <button
+                onClick={() => setStep(0)}
+                style={{
+                  backgroundColor: choices.textColor,
+                  color: choices.bgColor,
+                  border: 'none',
+                  padding: '1rem 3rem',
+                  borderRadius: '5px',
+                  fontSize: `${choices.fontSize * 1.2}px`,
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'opacity 0.2s, transform 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.opacity = '0.9';
+                  e.target.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.opacity = '1';
+                  e.target.style.transform = 'translateY(0)';
+                }}
+              >
+                Get Started
+              </button>
+            </div>
+          </div>
+        </div>
+      </>
     );
   }
 
@@ -301,7 +516,8 @@ function App() {
     return (
       <>
         <Navbar 
-          onStartOver={handleStartOver} 
+          onStartOver={handleStartOver}
+          onSkipToLearning={() => setShowLearning(true)}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -368,7 +584,8 @@ function App() {
     return (
       <>
         <Navbar 
-          onStartOver={handleStartOver} 
+          onStartOver={handleStartOver}
+          onSkipToLearning={() => setShowLearning(true)}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -423,7 +640,8 @@ function App() {
     return (
       <>
         <Navbar 
-          onStartOver={handleStartOver} 
+          onStartOver={handleStartOver}
+          onSkipToLearning={() => setShowLearning(true)}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -490,7 +708,8 @@ function App() {
     return (
       <>
         <Navbar 
-          onStartOver={handleStartOver} 
+          onStartOver={handleStartOver}
+          onSkipToLearning={() => setShowLearning(true)}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -557,7 +776,8 @@ function App() {
     return (
       <>
         <Navbar 
-          onStartOver={handleStartOver} 
+          onStartOver={handleStartOver}
+          onSkipToLearning={() => setShowLearning(true)}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -598,7 +818,11 @@ function App() {
               ← Back
             </button>
             <button 
-              onClick={() => setStep(5)} 
+              onClick={() => {
+                // Save data to backend before showing learning resources
+                saveChoicesToBackend();
+                setShowLearning(true);
+              }} 
               className="navButton"
               style={{ 
                 color: choices.bgColor, 
@@ -616,15 +840,11 @@ function App() {
   }
 
   if (step === 5) {
-    // Auto-save choices when reaching summary page
-    React.useEffect(() => {
-      saveChoicesToBackend();
-    }, []);
-
     return (
       <>
         <Navbar 
-          onStartOver={handleStartOver} 
+          onStartOver={handleStartOver}
+          onSkipToLearning={() => setShowLearning(true)}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -747,7 +967,7 @@ function App() {
                   lineHeight: choices.leading
                 }}
               >
-                📚 Learn About Typography & Accessibility
+                Learn About Typography & Accessibility
               </button>
             </div>
           </div>
