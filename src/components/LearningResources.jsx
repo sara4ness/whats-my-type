@@ -1,306 +1,549 @@
-import React, { useState } from 'react';
-import './LearningResources.css';
+import { useState } from 'react';
 
-function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColor, onClose, onViewSummary }) {
-  const [activeSection, setActiveSection] = useState('typography');
+const LearningResource = () => {
+  const [activeTab, setActiveTab] = useState('nielsen');
+  const [expandedCard, setExpandedCard] = useState(null);
 
-  const getBoxBackground = (bg) => {
-    const hex = bg.replace('#', '');
-    const r = parseInt(hex.substr(0, 2), 16);
-    const g = parseInt(hex.substr(2, 2), 16);
-    const b = parseInt(hex.substr(4, 2), 16);
-    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-    
-    if (brightness > 128) {
-      return adjustBrightness(bg, -3);
-    } else {
-      return adjustBrightness(bg, 8);
-    }
+  const tabs = [
+    { id: 'nielsen', label: 'Nielsen Heuristics', icon: '✓' },
+    { id: 'cognitive', label: 'Cognitive Load', icon: '🧠' },
+    { id: 'gestalt', label: 'Gestalt Principles', icon: '👁️' },
+    { id: 'typography', label: 'Typography', icon: '📝' },
+    { id: 'accessibility', label: 'Accessibility', icon: '♿' }
+  ];
+
+  const principles = {
+    nielsen: [
+      {
+        number: 1,
+        title: "Visibility of System Status",
+        description: "Keep users informed about what's happening through appropriate feedback within reasonable time.",
+        example: "Loading indicators, progress bars, and confirmation messages let users know the system is working.",
+        typography: "Use clear, readable fonts for status messages. Ensure sufficient contrast for visibility."
+      },
+      {
+        number: 2,
+        title: "Match Between System and Real World",
+        description: "Use familiar language, concepts, and conventions that users understand from their everyday experience.",
+        example: "Shopping cart icons, folder metaphors, and trash bins mirror real-world objects.",
+        typography: "Use language that matches your users' vocabulary. Avoid jargon and technical terms."
+      },
+      {
+        number: 3,
+        title: "User Control and Freedom",
+        description: "Provide clear ways to undo actions and exit unwanted states without lengthy processes.",
+        example: "Undo/redo buttons, back buttons, and cancel options give users confidence to explore.",
+        typography: "Make exit and undo options clearly visible with appropriate font weight and size."
+      },
+      {
+        number: 4,
+        title: "Consistency and Standards",
+        description: "Follow platform and industry conventions so users don't have to wonder if different words or actions mean the same thing.",
+        example: "Use standard button placements, consistent terminology, and familiar navigation patterns.",
+        typography: "Maintain consistent type scale, font choices, and hierarchy throughout your interface."
+      },
+      {
+        number: 5,
+        title: "Error Prevention",
+        description: "Design to prevent problems from occurring in the first place through careful design and helpful constraints.",
+        example: "Disable submit buttons until forms are valid, use confirmation dialogs for destructive actions.",
+        typography: "Use color and typography to distinguish between safe and destructive actions clearly."
+      },
+      {
+        number: 6,
+        title: "Recognition Rather Than Recall",
+        description: "Minimize memory load by making objects, actions, and options visible and easily retrievable.",
+        example: "Show recently used items, provide autocomplete suggestions, and use visible menu options.",
+        typography: "Use descriptive labels and clear hierarchies. Don't rely on users remembering hidden information."
+      },
+      {
+        number: 7,
+        title: "Flexibility and Efficiency of Use",
+        description: "Provide shortcuts and customization options for experienced users while keeping the interface accessible to novices.",
+        example: "Keyboard shortcuts, customizable dashboards, and quick access menus speed up frequent tasks.",
+        typography: "Consider providing adjustable text size options for different user needs."
+      },
+      {
+        number: 8,
+        title: "Aesthetic and Minimalist Design",
+        description: "Keep interfaces clean and focused. Every extra piece of information competes with relevant information.",
+        example: "Remove unnecessary elements, use white space effectively, and prioritize essential content.",
+        typography: "Choose legible fonts, appropriate sizes, and sufficient spacing. Less is often more."
+      },
+      {
+        number: 9,
+        title: "Help Users Recognize, Diagnose, and Recover from Errors",
+        description: "Express error messages in plain language, precisely indicate the problem, and constructively suggest a solution.",
+        example: "Instead of 'Error 404', say 'We can't find that page. Try our homepage or search.'",
+        typography: "Make error messages clearly visible with appropriate emphasis but not aggressive styling."
+      },
+      {
+        number: 10,
+        title: "Help and Documentation",
+        description: "Provide easily searchable, focused help documentation when needed, with concrete steps to follow.",
+        example: "Contextual help, tooltips, FAQ sections, and searchable documentation.",
+        typography: "Organize help text with clear headings, bullet points, and scannable formatting."
+      }
+    ],
+    cognitive: [
+      {
+        title: "Intrinsic Cognitive Load",
+        description: "The inherent difficulty of the content itself. Some concepts are naturally more complex than others.",
+        principle: "Break complex information into smaller, manageable chunks. Use progressive disclosure to reveal complexity gradually.",
+        typography: "Use clear hierarchies, appropriate font sizes, and sufficient line spacing to make complex content more digestible."
+      },
+      {
+        title: "Extraneous Cognitive Load",
+        description: "Unnecessary mental effort caused by poor design, distractions, or unclear presentation.",
+        principle: "Eliminate visual clutter, redundant information, and confusing navigation. Focus on essential content.",
+        typography: "Avoid decorative fonts for body text, excessive color variations, or tight spacing that makes reading difficult."
+      },
+      {
+        title: "Germane Cognitive Load",
+        description: "The mental effort used to process information and build understanding - the 'good' kind of cognitive load.",
+        principle: "Design to support learning and comprehension through clear structure, examples, and appropriate scaffolding.",
+        typography: "Use typography to guide attention: bold for emphasis, size for hierarchy, and space for grouping."
+      },
+      {
+        title: "Working Memory Limitations",
+        description: "Humans can typically hold 4-7 items in working memory at once (Miller's Law).",
+        principle: "Chunk related information together. Limit navigation items to 5-9 choices. Use visual grouping.",
+        typography: "Group related content visually. Use consistent spacing to show relationships between elements."
+      },
+      {
+        title: "Cognitive Overload",
+        description: "When too much information is presented at once, learning and performance decrease dramatically.",
+        principle: "Prioritize content ruthlessly. Show only what's needed when it's needed. Use progressive disclosure.",
+        typography: "Create breathing room with white space. Don't try to fit too much text in a small area."
+      },
+      {
+        title: "Attention and Focus",
+        description: "Humans can only focus on a limited amount of information at any given time.",
+        principle: "Design clear focal points. Use visual hierarchy to guide attention to important information first.",
+        typography: "Use size, weight, and color to create clear visual hierarchy. Make headings obviously different from body text."
+      }
+    ],
+    gestalt: [
+      {
+        title: "Law of Proximity",
+        description: "Objects that are close together are perceived as related or belonging to the same group.",
+        application: "Group related UI elements together. Use spacing to separate different sections.",
+        typography: "Reduce spacing between related lines (like a heading and its paragraph). Increase spacing between sections."
+      },
+      {
+        title: "Law of Similarity",
+        description: "Similar objects are perceived as belonging to the same group, even if they're not close together.",
+        application: "Use consistent styling for similar elements (all buttons look alike, all links look alike).",
+        typography: "Use the same font style and size for elements at the same hierarchical level."
+      },
+      {
+        title: "Law of Continuity",
+        description: "The eye naturally follows lines, curves, and patterns, perceiving them as continuous.",
+        application: "Align elements to create visual flow. Use grids to organize content predictably.",
+        typography: "Maintain consistent alignment and baseline grids for a smooth reading experience."
+      },
+      {
+        title: "Law of Closure",
+        description: "Minds tend to complete incomplete shapes and patterns automatically.",
+        application: "You don't need to enclose every element completely. Subtle borders or spacing can define areas.",
+        typography: "Strategic use of rules and spacing can define sections without heavy boxes around everything."
+      },
+      {
+        title: "Figure-Ground",
+        description: "We naturally separate objects (figure) from their background (ground).",
+        application: "Ensure sufficient contrast between content and background. Use layering effectively.",
+        typography: "Maintain high contrast between text and background (minimum 4.5:1 for body text)."
+      },
+      {
+        title: "Law of Common Region",
+        description: "Elements within a clearly defined boundary are perceived as a group.",
+        application: "Use cards, panels, or subtle backgrounds to group related content.",
+        typography: "Container elements help organize complex typography-heavy content into scannable sections."
+      }
+    ],
+    typography: [
+      {
+        title: "Hierarchy and Scale",
+        description: "Establish clear visual relationships between different levels of content through size and weight.",
+        guideline: "Use a modular scale (1.2, 1.25, 1.33, 1.5, 1.618). Larger jumps = more contrast = clearer hierarchy.",
+        ratio: "Recommended: H1 (3-4x body), H2 (2-3x body), H3 (1.5-2x body), Body (16-18px base)"
+      },
+      {
+        title: "Line Length (Measure)",
+        description: "The optimal line length for reading is 45-75 characters per line, with 66 being ideal.",
+        guideline: "Too short = excessive eye movement. Too long = difficulty finding next line. Use max-width.",
+        implementation: "Set max-width: 65-75ch for text containers (ch = width of '0' character)"
+      },
+      {
+        title: "Line Height (Leading)",
+        description: "The vertical space between lines of text affects readability significantly.",
+        guideline: "Body text: 1.5-1.8. Headings: 1.2-1.4. Tighter leading for larger text, looser for smaller text.",
+        accessibility: "Minimum 1.5 for body text (WCAG requirement)"
+      },
+      {
+        title: "Font Pairing",
+        description: "Combining fonts creates visual interest while maintaining readability and cohesion.",
+        guideline: "Pair contrasting styles (serif + sans-serif). Ensure they share similar x-heights. Limit to 2-3 fonts max.",
+        examples: "Classic: Georgia + Helvetica, Modern: Inter + Playfair Display, Friendly: Open Sans + Merriweather"
+      },
+      {
+        title: "White Space (Negative Space)",
+        description: "Empty space is not wasted space - it improves comprehension and reduces cognitive load.",
+        guideline: "Generous margins, padding between sections, space around headings. Let content breathe.",
+        ratio: "Aim for 1:1.5 ratio of text to white space for optimal readability"
+      },
+      {
+        title: "Contrast and Readability",
+        description: "Sufficient contrast between text and background is essential for accessibility and comfort.",
+        guideline: "WCAG AA: 4.5:1 for body text, 3:1 for large text (18pt+ or 14pt+ bold). AAA: 7:1 and 4.5:1.",
+        testing: "Use tools like WebAIM Contrast Checker to verify ratios"
+      },
+      {
+        title: "Responsive Typography",
+        description: "Text should adapt to different screen sizes while maintaining readability and hierarchy.",
+        guideline: "Use relative units (rem, em). Scale down font sizes for mobile, but never below 16px for body text.",
+        implementation: "Consider fluid typography using clamp() or viewport units"
+      }
+    ],
+    accessibility: [
+      {
+        title: "Color is Not Enough",
+        description: "Never use color alone to convey information - some users can't perceive color differences.",
+        implementation: "Combine color with text labels, icons, or patterns. Use high contrast ratios.",
+        typography: "Underline links, use bold or size changes to indicate importance, not just color."
+      },
+      {
+        title: "Text Alternatives",
+        description: "All non-text content needs text alternatives for screen readers and other assistive technologies.",
+        implementation: "Use descriptive alt text for images. Provide transcripts for audio/video.",
+        typography: "Ensure all text is actual text (not images of text) that can be read by screen readers."
+      },
+      {
+        title: "Keyboard Navigation",
+        description: "All functionality must be accessible via keyboard for users who can't use a mouse.",
+        implementation: "Ensure logical tab order. Make focus states clearly visible. Provide skip links.",
+        typography: "Focus indicators should be clearly visible (at least 3:1 contrast against background)."
+      },
+      {
+        title: "Sufficient Size and Spacing",
+        description: "Interactive elements need sufficient size and space for users with motor impairments.",
+        implementation: "Minimum 44x44px touch targets. Adequate spacing between interactive elements.",
+        typography: "Ensure clickable text has sufficient padding and doesn't require precise targeting."
+      },
+      {
+        title: "Zoom and Resize",
+        description: "Text must remain readable and functional when zoomed up to 200%.",
+        implementation: "Use relative units (rem, em). Test at different zoom levels. Avoid fixed-width containers.",
+        typography: "Font size should respect user preferences. Don't disable zoom on mobile."
+      },
+      {
+        title: "Clear Language and Structure",
+        description: "Content should be clear, concise, and properly structured for all users, including those with cognitive disabilities.",
+        implementation: "Use headings properly (h1-h6). Write in plain language. Organize content logically.",
+        typography: "Clear hierarchy with properly nested headings makes content navigable by screen readers."
+      }
+    ]
   };
 
-  const adjustBrightness = (hex, percent) => {
-    const num = parseInt(hex.replace('#', ''), 16);
-    const amt = Math.round(2.55 * percent);
-    const R = (num >> 16) + amt;
-    const G = (num >> 8 & 0x00FF) + amt;
-    const B = (num & 0x0000FF) + amt;
-    return '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
-      (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
-      (B < 255 ? B < 1 ? 0 : B : 255))
-      .toString(16).slice(1);
-  };
-
-  const boxBg = getBoxBackground(bgColor);
-
-  const sections = {
-    typography: {
-      title: 'Typography Fundamentals',
-      content: [
-        {
-          heading: 'Font Pairing',
-          text: 'When combining fonts, use contrasting styles (serif + sans-serif) or stick to one font family with different weights. Limit yourself to 2-3 typefaces maximum to maintain visual harmony.',
-          example: 'Headings in bold sans-serif with body text in a readable serif creates clear hierarchy.'
-        },
-        {
-          heading: 'Hierarchy and Scale',
-          text: 'Establish a clear typographic scale with distinct sizes for headings (H1-H6) and body text. Use a ratio like 1.25 (Major Third) or 1.5 (Perfect Fifth) to create harmonious size relationships.',
-          example: 'H1: 32px, H2: 24px, H3: 20px, Body: 16px creates a clear visual hierarchy.'
-        },
-        {
-          heading: 'Line Length (Measure)',
-          text: 'Optimal line length is 50-75 characters per line (including spaces). Lines that are too long tire the eyes, while too-short lines disrupt reading rhythm.',
-          example: 'For 16px text, this translates to roughly 600-900px width for comfortable reading.'
-        },
-        {
-          heading: 'White Space',
-          text: 'Generous white space around text improves readability and creates visual breathing room. Use margins, padding, and line height to prevent cramped layouts.',
-          example: 'Add 1.5-2em margins between paragraphs and ensure comfortable padding around text blocks.'
-        }
-      ]
-    },
-    accessibility: {
-      title: 'Accessibility Best Practices',
-      content: [
-        {
-          heading: 'Color Contrast (WCAG)',
-          text: 'Text must have sufficient contrast with backgrounds. WCAG AA requires 4.5:1 for normal text, 3:1 for large text (18pt+). AAA standard requires 7:1 for normal text.',
-          example: 'Black text on white has 21:1 contrast ratio - excellent. Gray on white is 4.47:1 - just passes AA.'
-        },
-        {
-          heading: 'Font Size Minimums',
-          text: 'Body text should be at least 16px for comfortable reading. Mobile text should never go below 16px to prevent browser zoom. Larger text (18-20px) improves accessibility for users with vision impairments.',
-          example: 'Use 16-18px for body text, 14px minimum for secondary text like captions.'
-        },
-        {
-          heading: 'Text Alternatives',
-          text: 'Never rely on color alone to convey information. Use icons, labels, or patterns in addition to color. This helps colorblind users and improves overall usability.',
-          example: 'For errors, use a red color plus warning icon plus Error label to convey meaning.'
-        },
-        {
-          heading: 'Focus Indicators',
-          text: 'Ensure keyboard navigation has visible focus states. Users who navigate with keyboards need clear indicators of where they are on the page.',
-          example: 'Add a 2-3px outline or color change when elements receive focus via keyboard.'
-        },
-        {
-          heading: 'Responsive Text',
-          text: 'Text should scale appropriately on different screen sizes. Use relative units (rem, em) instead of fixed pixels, and test on mobile devices.',
-          example: 'Set base font size in rem (1rem = 16px) so text scales with user preferences.'
-        }
-      ]
-    },
-    ux: {
-      title: 'UX Design Principles',
-      content: [
-        {
-          heading: 'Consistency',
-          text: 'Maintain consistent typography throughout your interface. Same font sizes, colors, and spacing for similar elements creates predictability and reduces cognitive load.',
-          example: 'All buttons use the same font size, all headings follow the same scale, all body text uses identical styling.'
-        },
-        {
-          heading: 'Visual Hierarchy',
-          text: 'Guide users through content with clear visual priority. Use size, weight, color, and spacing to show what is most important.',
-          example: 'Page title is largest, then Section headings are medium, then Body text is base size, then Captions are smallest.'
-        },
-        {
-          heading: 'Readability vs Legibility',
-          text: 'Legibility is how easily individual characters are distinguished. Readability is how easy it is to read text blocks. Both matter, but prioritize readability for body text.',
-          example: 'A decorative font may be legible but poor for long reading. Choose appropriate fonts for their context.'
-        },
-        {
-          heading: 'Responsive Design',
-          text: 'Design for mobile-first, then scale up. Text should be readable without zooming on any device. Consider how line length changes on different screen widths.',
-          example: 'Use fluid typography with clamp() or media queries to adjust sizes smoothly across devices.'
-        },
-        {
-          heading: 'Performance',
-          text: 'Font loading affects page performance. Use system fonts when possible, or limit custom fonts to 2-3 weights. Consider using font-display: swap for better perceived performance.',
-          example: 'Loading 10 font weights can add 1-2 seconds to page load. Stick to regular and bold for most interfaces.'
-        }
-      ]
-    },
-    tools: {
-      title: 'Helpful Tools & Resources',
-      content: [
-        {
-          heading: 'Contrast Checkers',
-          text: 'Tools to verify your color combinations meet accessibility standards.',
-          example: 'WebAIM Contrast Checker, Contrast Ratio by Lea Verou, Colorable'
-        },
-        {
-          heading: 'Typography Tools',
-          text: 'Resources for finding fonts, testing combinations, and generating type scales.',
-          example: 'Type Scale, Google Fonts, Fontsquirrel, Typewolf'
-        },
-        {
-          heading: 'Testing Tools',
-          text: 'Simulate different vision conditions and test accessibility.',
-          example: 'Chrome DevTools with Lighthouse, WAVE, axe DevTools, Color Oracle for colorblindness simulation'
-        },
-        {
-          heading: 'Learning Resources',
-          text: 'Books and websites to deepen your understanding.',
-          example: 'The Elements of Typographic Style by Robert Bringhurst, Practical Typography by Matthew Butterick, Laws of UX website'
-        },
-        {
-          heading: 'Guidelines & Standards',
-          text: 'Official accessibility and design standards.',
-          example: 'WCAG 2.1 Guidelines, Material Design Typography, Apple Human Interface Guidelines'
-        }
-      ]
-    }
+  const toggleCard = (index) => {
+    setExpandedCard(expandedCard === index ? null : index);
   };
 
   return (
-    <div className="learningContainer" style={{ 
-      fontFamily,
-      fontSize: `${fontSize}px`,
-      lineHeight,
-      color: textColor,
-      backgroundColor: bgColor
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      padding: '60px 20px'
     }}>
-      <div className="learningHeader" style={{
-        borderBottom: `2px solid ${textColor}33`,
-        backgroundColor: boxBg
+      <div style={{
+        maxWidth: '1200px',
+        margin: '0 auto'
       }}>
-        <h1 style={{ fontSize: `${fontSize * 2}px`, color: textColor }}>
-          Learning Resources
-        </h1>
-        <p style={{ fontSize: `${fontSize * 1.1}px`, color: textColor + 'CC' }}>
-          Explore typography, accessibility, and UX design principles
-        </p>
-      </div>
-
-      <div className="learningContent">
-        <nav className="learningNav" style={{
-          backgroundColor: boxBg,
-          borderRight: `2px solid ${textColor}33`
+        {/* Header */}
+        <div style={{
+          textAlign: 'center',
+          marginBottom: '50px',
+          color: 'white'
         }}>
-          {Object.entries(sections).map(([key, section]) => (
+          <h1 style={{
+            fontSize: '3rem',
+            fontWeight: '800',
+            marginBottom: '15px',
+            textShadow: '0 2px 10px rgba(0,0,0,0.2)'
+          }}>
+            UX & Design Principles
+          </h1>
+          <p style={{
+            fontSize: '1.25rem',
+            opacity: 0.9,
+            maxWidth: '700px',
+            margin: '0 auto'
+          }}>
+            Master the fundamental principles that create exceptional user experiences
+          </p>
+        </div>
+
+        {/* Tab Navigation */}
+        <div style={{
+          display: 'flex',
+          gap: '10px',
+          justifyContent: 'center',
+          flexWrap: 'wrap',
+          marginBottom: '40px'
+        }}>
+          {tabs.map(tab => (
             <button
-              key={key}
-              className={`navItem ${activeSection === key ? 'active' : ''}`}
-              onClick={() => setActiveSection(key)}
+              key={tab.id}
+              onClick={() => {
+                setActiveTab(tab.id);
+                setExpandedCard(null);
+              }}
               style={{
-                color: activeSection === key ? bgColor : textColor,
-                backgroundColor: activeSection === key ? textColor : 'transparent',
-                borderBottom: `1px solid ${textColor}22`,
-                fontSize: `${fontSize}px`,
-                lineHeight
+                padding: '12px 24px',
+                fontSize: '1rem',
+                fontWeight: '600',
+                border: 'none',
+                borderRadius: '12px',
+                background: activeTab === tab.id ? 'white' : 'rgba(255,255,255,0.2)',
+                color: activeTab === tab.id ? '#667eea' : 'white',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                backdropFilter: 'blur(10px)',
+                boxShadow: activeTab === tab.id ? '0 4px 15px rgba(0,0,0,0.2)' : 'none',
+                transform: activeTab === tab.id ? 'translateY(-2px)' : 'none'
+              }}
+              onMouseEnter={(e) => {
+                if (activeTab !== tab.id) {
+                  e.target.style.background = 'rgba(255,255,255,0.3)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (activeTab !== tab.id) {
+                  e.target.style.background = 'rgba(255,255,255,0.2)';
+                }
               }}
             >
-              {section.title}
+              <span style={{ marginRight: '8px' }}>{tab.icon}</span>
+              {tab.label}
             </button>
           ))}
-        </nav>
+        </div>
 
-        <div className="learningMain" style={{ fontSize: `${fontSize}px` }}>
-          <h2 style={{ 
-            fontSize: `${fontSize * 1.8}px`, 
-            color: textColor,
-            marginBottom: '2rem'
-          }}>
-            {sections[activeSection].title}
-          </h2>
-
-          {sections[activeSection].content.map((item, index) => (
-            <div 
-              key={index} 
-              className="contentCard"
+        {/* Content Cards */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+          gap: '25px'
+        }}>
+          {principles[activeTab].map((item, index) => (
+            <div
+              key={index}
               style={{
-                backgroundColor: boxBg,
-                borderLeft: `4px solid ${textColor}`,
-                marginBottom: '2rem',
-                padding: '1.5rem',
-                borderRadius: '4px'
+                background: 'white',
+                borderRadius: '16px',
+                padding: '30px',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                transform: expandedCard === index ? 'scale(1.02)' : 'scale(1)',
+                position: 'relative',
+                overflow: 'hidden'
+              }}
+              onClick={() => toggleCard(index)}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-5px)';
+                e.currentTarget.style.boxShadow = '0 15px 40px rgba(0,0,0,0.2)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = expandedCard === index ? 'scale(1.02)' : 'scale(1)';
+                e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.15)';
               }}
             >
-              <h3 style={{ 
-                fontSize: `${fontSize * 1.3}px`,
-                color: textColor,
-                marginBottom: '0.75rem'
-              }}>
-                {item.heading}
-              </h3>
-              <p style={{ 
-                fontSize: `${fontSize}px`,
-                color: textColor + 'DD',
-                marginBottom: '1rem',
-                lineHeight
-              }}>
-                {item.text}
-              </p>
-              <div 
-                className="exampleBox"
-                style={{
-                  backgroundColor: adjustBrightness(boxBg, bgColor === '#ffffff' ? -5 : 10),
-                  padding: '1rem',
-                  borderRadius: '4px',
-                  borderLeft: `3px solid ${textColor}55`
-                }}
-              >
-                <strong style={{ color: textColor + 'AA', fontSize: `${fontSize * 0.9}px` }}>
-                  Example:
-                </strong>
-                <p style={{ 
-                  fontSize: `${fontSize * 0.95}px`,
-                  color: textColor + 'CC',
-                  marginTop: '0.5rem',
-                  fontStyle: 'italic'
+              {/* Number badge for Nielsen's heuristics */}
+              {item.number && (
+                <div style={{
+                  position: 'absolute',
+                  top: '20px',
+                  right: '20px',
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  color: 'white',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '1.25rem',
+                  fontWeight: '700'
                 }}>
-                  {item.example}
-                </p>
+                  {item.number}
+                </div>
+              )}
+
+              {/* Title */}
+              <h3 style={{
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                color: '#1a202c',
+                marginBottom: '15px',
+                paddingRight: item.number ? '50px' : '0'
+              }}>
+                {item.title}
+              </h3>
+
+              {/* Description */}
+              <p style={{
+                fontSize: '1rem',
+                color: '#4a5568',
+                lineHeight: '1.6',
+                marginBottom: expandedCard === index ? '20px' : '0'
+              }}>
+                {item.description || item.principle}
+              </p>
+
+              {/* Expanded content */}
+              {expandedCard === index && (
+                <div style={{
+                  marginTop: '20px',
+                  paddingTop: '20px',
+                  borderTop: '2px solid #e2e8f0'
+                }}>
+                  {item.example && (
+                    <div style={{ marginBottom: '15px' }}>
+                      <strong style={{ color: '#667eea', display: 'block', marginBottom: '8px' }}>
+                        💡 Example:
+                      </strong>
+                      <p style={{ fontSize: '0.95rem', color: '#4a5568', lineHeight: '1.6' }}>
+                        {item.example}
+                      </p>
+                    </div>
+                  )}
+                  
+                  {item.typography && (
+                    <div style={{ marginBottom: '15px' }}>
+                      <strong style={{ color: '#667eea', display: 'block', marginBottom: '8px' }}>
+                        📝 Typography Tip:
+                      </strong>
+                      <p style={{ fontSize: '0.95rem', color: '#4a5568', lineHeight: '1.6' }}>
+                        {item.typography}
+                      </p>
+                    </div>
+                  )}
+
+                  {item.guideline && (
+                    <div style={{ marginBottom: '15px' }}>
+                      <strong style={{ color: '#667eea', display: 'block', marginBottom: '8px' }}>
+                        📋 Guideline:
+                      </strong>
+                      <p style={{ fontSize: '0.95rem', color: '#4a5568', lineHeight: '1.6' }}>
+                        {item.guideline}
+                      </p>
+                    </div>
+                  )}
+
+                  {item.application && (
+                    <div style={{ marginBottom: '15px' }}>
+                      <strong style={{ color: '#667eea', display: 'block', marginBottom: '8px' }}>
+                        🎯 Application:
+                      </strong>
+                      <p style={{ fontSize: '0.95rem', color: '#4a5568', lineHeight: '1.6' }}>
+                        {item.application}
+                      </p>
+                    </div>
+                  )}
+
+                  {item.implementation && (
+                    <div style={{ marginBottom: '15px' }}>
+                      <strong style={{ color: '#667eea', display: 'block', marginBottom: '8px' }}>
+                        ⚡ Implementation:
+                      </strong>
+                      <p style={{ fontSize: '0.95rem', color: '#4a5568', lineHeight: '1.6' }}>
+                        {item.implementation}
+                      </p>
+                    </div>
+                  )}
+
+                  {item.ratio && (
+                    <div style={{
+                      background: '#f7fafc',
+                      padding: '15px',
+                      borderRadius: '8px',
+                      fontSize: '0.9rem',
+                      color: '#2d3748',
+                      fontFamily: 'monospace'
+                    }}>
+                      {item.ratio}
+                    </div>
+                  )}
+
+                  {item.examples && (
+                    <div style={{
+                      background: '#f7fafc',
+                      padding: '15px',
+                      borderRadius: '8px',
+                      fontSize: '0.9rem',
+                      color: '#2d3748'
+                    }}>
+                      {item.examples}
+                    </div>
+                  )}
+
+                  {item.testing && (
+                    <div style={{
+                      background: '#fff5f5',
+                      padding: '15px',
+                      borderRadius: '8px',
+                      fontSize: '0.9rem',
+                      color: '#c53030',
+                      border: '1px solid #feb2b2'
+                    }}>
+                      <strong>Testing: </strong>{item.testing}
+                    </div>
+                  )}
+
+                  {item.accessibility && (
+                    <div style={{
+                      background: '#f0fff4',
+                      padding: '15px',
+                      borderRadius: '8px',
+                      fontSize: '0.9rem',
+                      color: '#22543d',
+                      border: '1px solid #9ae6b4'
+                    }}>
+                      <strong>♿ Accessibility: </strong>{item.accessibility}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Expand indicator */}
+              <div style={{
+                marginTop: '15px',
+                textAlign: 'center',
+                color: '#a0aec0',
+                fontSize: '0.875rem',
+                fontWeight: '600'
+              }}>
+                {expandedCard === index ? '▲ Click to collapse' : '▼ Click to learn more'}
               </div>
             </div>
           ))}
         </div>
-      </div>
 
-      <div className="learningFooter" style={{
-        backgroundColor: boxBg,
-        borderTop: `2px solid ${textColor}33`,
-        padding: '1.5rem',
-        textAlign: 'center',
-        display: 'flex',
-        gap: '1rem',
-        justifyContent: 'center'
-      }}>
-        {onViewSummary && (
-          <button
-            onClick={onViewSummary}
-            className="closeButton"
-            style={{
-              backgroundColor: 'transparent',
-              color: textColor,
-              border: `2px solid ${textColor}`,
-              padding: '1rem 2rem',
-              borderRadius: '5px',
-              fontSize: `${fontSize * 1.1}px`,
-              fontWeight: '600',
-              cursor: 'pointer'
-            }}
-          >
-            View My Summary
-          </button>
-        )}
-        <button
-          onClick={onClose}
-          className="closeButton"
-          style={{
-            backgroundColor: textColor,
-            color: bgColor,
-            padding: '1rem 2rem',
-            border: 'none',
-            borderRadius: '5px',
-            fontSize: `${fontSize * 1.1}px`,
-            fontWeight: '600',
-            cursor: 'pointer'
-          }}
-        >
-          Start Over
-        </button>
+        {/* Footer */}
+        <div style={{
+          marginTop: '60px',
+          textAlign: 'center',
+          color: 'white',
+          opacity: 0.8
+        }}>
+          <p style={{ fontSize: '0.95rem' }}>
+            💡 Click any card to expand and see detailed examples and guidelines
+          </p>
+        </div>
       </div>
     </div>
   );
-}
+};
 
-export default LearningResources;
+export default LearningResource;
