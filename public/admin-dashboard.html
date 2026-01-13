@@ -254,7 +254,7 @@
     </div>
 
     <script>
-        const API_URL = 'https://whats-my-type-0y3i.onrender.com';
+        const API_URL = 'https://whats-my-type-0y3i.onrender.com/api';
 
         async function loadData() {
             try {
@@ -295,7 +295,7 @@
             } catch (error) {
                 console.error('Error loading data:', error);
                 document.getElementById('error').textContent = 
-                    'Error loading data. Make sure the backend server is running on http://localhost:3001';
+                    'Error loading data. Check console for details.';
                 document.getElementById('error').style.display = 'block';
                 document.getElementById('loading').style.display = 'none';
             }
