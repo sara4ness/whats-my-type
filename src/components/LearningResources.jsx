@@ -232,7 +232,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
                     fontSize: `${fontSize * 0.8}px`, 
                     borderBottom: `1px solid ${textColor}66`
                   }}>
-                    Click to learn more ↻
+                    Click to learn more
                   </span>
                 </div>
 
