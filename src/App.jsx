@@ -255,9 +255,11 @@ function App() {
     document.body.style.fontFamily = getCurrentFont();
   }, [choices]);
 
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
   const saveChoicesToBackend = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/save-choices', {
+      const response = await fetch(`${API_URL}/api/save-choices`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
