@@ -234,6 +234,11 @@ function App() {
     return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
   });
 
+  const handleViewSummary = () => {
+    setShowLearning(false);
+    setStep(5); // Step 5 is the Summary page in your App logic
+  };
+  
   const getCurrentFont = () => {
     if (!choices.specificFont) return 'system-ui';
     
@@ -376,10 +381,7 @@ function App() {
         textColor={choices.textColor}
         bgColor={choices.bgColor}
         onClose={handleStartOver}
-        onViewSummary={hasCompletedChoices ? () => {
-          setShowLearning(false);
-          setStep(5);
-        } : null}
+        onViewSummary={hasCompletedChoices ? handleViewSummary : null}
       />
     );
   }
