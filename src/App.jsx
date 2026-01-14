@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import LearningResources from './components/LearningResources';
-import Navbar from './components/Navbar'; 
+import Navbar from './components/Navbar'; // Import the extracted component
 
 // --- Helper Functions for Rating System ---
 function getLuminance(hex) {
@@ -40,25 +40,13 @@ function OptionCard({ letter, title, description, onClick, fontFamily, fontSize,
         lineHeight: lineHeight,
         color: textColor,
         backgroundColor: boxBg,
-        borderColor: textColor + '33',
-        cursor: 'pointer',
-        transition: 'transform 0.2s, box-shadow 0.2s'
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-5px)';
-        e.currentTarget.style.boxShadow = `0 10px 20px -5px ${textColor}33`;
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = 'none';
+        borderColor: textColor + '33'
       }}
     >
-      {letter && (
-        <div className="fontFamily" style={{ fontSize: `${fontSize * 2.5}px`, lineHeight: lineHeight, marginBottom: '0.5rem' }}>
-          {letter}
-        </div>
-      )}
-      <h2 className="titleh2" style={{ fontSize: `${fontSize * 1.3}px`, lineHeight: lineHeight, marginTop: 0 }}>
+      <div className="fontFamily" style={{ fontSize: `${fontSize * 2.5}px`, lineHeight: lineHeight }}>
+        {letter}
+      </div>
+      <h2 className="titleh2" style={{ fontSize: `${fontSize * 1.3}px`, lineHeight: lineHeight }}>
         {title}
       </h2>
       <p className="description" style={{ color: textColor + 'CC', fontSize: `${fontSize}px`, lineHeight: lineHeight }}>
@@ -242,36 +230,21 @@ function App() {
   const [step, setStep] = useState(-1);
   const [showLearning, setShowLearning] = useState(false);
   const [sessionId] = useState(() => {
+    // Generate a unique session ID for this user
     return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
   });
 
   const getCurrentFont = () => {
     if (!choices.specificFont) return 'system-ui';
     
-    // Serif
     if (choices.specificFont === 'Georgia') return 'Georgia, serif';
     if (choices.specificFont === 'Times New Roman') return '"Times New Roman", serif';
     if (choices.specificFont === 'Garamond') return 'Garamond, serif';
     if (choices.specificFont === 'Merriweather') return 'Merriweather, serif';
-    
-    // Sans-Serif
     if (choices.specificFont === 'Arial') return 'Arial, sans-serif';
     if (choices.specificFont === 'Helvetica') return 'Helvetica, sans-serif';
     if (choices.specificFont === 'Verdana') return 'Verdana, sans-serif';
     if (choices.specificFont === 'Roboto') return 'Roboto, sans-serif';
-
-    // Casual / Humanist (Dyslexia Friendly proxy)
-    if (choices.specificFont === 'Comic Sans MS') return '"Comic Sans MS", "Chalkboard SE", "Comic Neue", sans-serif';
-    if (choices.specificFont === 'Trebuchet MS') return '"Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", sans-serif';
-    if (choices.specificFont === 'Century Gothic') return '"Century Gothic", Futura, sans-serif';
-    if (choices.specificFont === 'Calibri') return 'Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif';
-
-    // Monospace
-    if (choices.specificFont === 'Courier New') return '"Courier New", Courier, monospace';
-    if (choices.specificFont === 'Consolas') return 'Consolas, monaco, monospace';
-    if (choices.specificFont === 'Lucida Console') return '"Lucida Console", Monaco, monospace';
-    if (choices.specificFont === 'Andale Mono') return '"Andale Mono", monospace';
-
     return 'system-ui';
   };
 
@@ -313,6 +286,7 @@ function App() {
       }
     } catch (error) {
       console.error('Error saving choices:', error);
+      // Don't block the user if backend is down
       return false;
     }
   };
@@ -334,6 +308,7 @@ function App() {
     document.body.style.fontFamily = 'system-ui';
   };
 
+  // --- Rating Calculation Logic (Added) ---
   const calculateRating = () => {
     const contrast = getContrastRatio(choices.textColor, choices.bgColor);
     const size = choices.fontSize;
@@ -346,6 +321,7 @@ function App() {
       leading: { status: '', text: '', score: 0, val: leading }
     };
 
+    // 1. Contrast (50 points max)
     if (contrast >= 7) {
       report.contrast = { status: 'Excellent', text: 'Passes WCAG AAA. Perfect for all readers.', score: 50, val: contrast.toFixed(2) };
     } else if (contrast >= 4.5) {
@@ -356,6 +332,7 @@ function App() {
       report.contrast = { status: 'Poor', text: 'Fails accessibility standards. Hard to read.', score: 0, val: contrast.toFixed(2) };
     }
 
+    // 2. Font Size (30 points max)
     if (size >= 18) {
       report.size = { status: 'Excellent', text: 'Very comfortable reading size.', score: 30, val: size + 'px' };
     } else if (size >= 16) {
@@ -366,6 +343,7 @@ function App() {
       report.size = { status: 'Poor', text: 'Too small for accessible body text.', score: 0, val: size + 'px' };
     }
 
+    // 3. Leading (20 points max)
     if (leading >= 1.4 && leading <= 1.6) {
       report.leading = { status: 'Excellent', text: 'Perfect spacing for readability.', score: 20, val: leading };
     } else if (leading >= 1.2 && leading <= 1.8) {
@@ -385,8 +363,11 @@ function App() {
     return { score, grade: finalGrade, report };
   };
 
+  // Show learning resources
   if (showLearning) {
+    // Only show summary option if user has completed choices (has a specific font selected)
     const hasCompletedChoices = choices.specificFont !== null;
+    
     return (
       <LearningResources
         fontFamily={getCurrentFont()}
@@ -403,9 +384,10 @@ function App() {
     );
   }
 
-  // Welcome page
+  // Welcome page (step -1)
   if (step === -1) {
     const boxBg = getBoxBackground(choices.bgColor);
+    
     return (
       <>
         <Navbar 
@@ -441,14 +423,69 @@ function App() {
             }}>
               Welcome to What's My Type?
             </h1>
+            
             <p style={{ 
               fontSize: `${choices.fontSize * 1.1}px`,
               lineHeight: choices.leading,
               color: choices.textColor,
               marginBottom: '1.5rem'
             }}>
-              This interactive tool helps you discover your reading preferences by guiding you through key typography decisions.
+              This interactive tool helps you discover your reading preferences by guiding you through key typography decisions. You will make choices about font style, size, spacing, and colors to create a personalized reading experience.
             </p>
+
+            <h2 style={{ 
+              fontSize: `${choices.fontSize * 1.5}px`,
+              lineHeight: choices.leading,
+              color: choices.textColor,
+              marginTop: '2rem',
+              marginBottom: '1rem'
+            }}>
+              What You'll Do
+            </h2>
+            
+            <ul style={{ 
+              fontSize: `${choices.fontSize}px`,
+              lineHeight: choices.leading,
+              color: choices.textColor,
+              marginBottom: '1.5rem',
+              paddingLeft: '1.5rem'
+            }}>
+              <li style={{ marginBottom: '0.75rem' }}>
+                Choose between serif and sans-serif font categories
+              </li>
+              <li style={{ marginBottom: '0.75rem' }}>
+                Select a specific typeface that appeals to you
+              </li>
+              <li style={{ marginBottom: '0.75rem' }}>
+                Adjust font size and line spacing for comfortable reading
+              </li>
+              <li style={{ marginBottom: '0.75rem' }}>
+                Pick text and background colors that work well together
+              </li>
+              <li style={{ marginBottom: '0.75rem' }}>
+                Learn about typography fundamentals, accessibility, and UX design
+              </li>
+            </ul>
+
+            <h2 style={{ 
+              fontSize: `${choices.fontSize * 1.5}px`,
+              lineHeight: choices.leading,
+              color: choices.textColor,
+              marginTop: '2rem',
+              marginBottom: '1rem'
+            }}>
+              Why This Matters
+            </h2>
+            
+            <p style={{ 
+              fontSize: `${choices.fontSize}px`,
+              lineHeight: choices.leading,
+              color: choices.textColor,
+              marginBottom: '2rem'
+            }}>
+              Typography significantly impacts readability, comprehension, and user experience. Understanding your preferences helps you make informed design decisions and appreciate the thought that goes into creating accessible, well-designed interfaces. Your choices will be saved anonymously to help us understand common reading preferences.
+            </p>
+
             <div style={{
               display: 'flex',
               justifyContent: 'center',
@@ -464,7 +501,16 @@ function App() {
                   borderRadius: '5px',
                   fontSize: `${choices.fontSize * 1.2}px`,
                   fontWeight: '600',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  transition: 'opacity 0.2s, transform 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.opacity = '0.9';
+                  e.target.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.opacity = '1';
+                  e.target.style.transform = 'translateY(0)';
                 }}
               >
                 Get Started
@@ -476,7 +522,6 @@ function App() {
     );
   }
 
-  // Step 0: Choose Category
   if (step === 0) {
     return (
       <>
@@ -495,17 +540,10 @@ function App() {
           lineHeight: choices.leading,
           fontFamily: getCurrentFont()
         }}>
-          <h2 style={{color: choices.textColor, marginBottom: '2rem'}}>Choose a Font Category</h2>
-          <div className="choiceFontFamily" style={{ 
-             display: 'grid', 
-             gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
-             gap: '2rem',
-             width: '100%'
-          }}>
+          <div className="choiceFontFamily">
             <OptionCard
               title="Serif"
-              letter="Ag"
-              description="Traditional, formal, and elegant. Small decorative strokes guide the eye along lines of text. Best for long-form reading."
+              description="Serif fonts are typefaces with small decorative strokes (serifs) at the ends of letters. They have a traditional, formal, and elegant appearance, which helps guide the reader's eye along lines of text. Serif fonts are often used in books, newspapers, academic writing, and classic branding."
               fontFamily="Georgia, serif"
               fontSize={choices.fontSize}
               lineHeight={choices.leading}
@@ -519,8 +557,7 @@ function App() {
             
             <OptionCard
               title="Sans-Serif"
-              letter="Ag"
-              description="Clean, modern, and simple. No decorative strokes. Excellent for digital interfaces and clarity."
+              description="Sans serif fonts are typefaces without the small decorative strokes (serifs) at the ends of letters. They have a clean, simple, and modern look, which makes them easy to read—especially on screens. Sans serif fonts are commonly used in web design, user interfaces, signage, and contemporary branding."
               fontFamily="Arial, sans-serif"
               fontSize={choices.fontSize}
               lineHeight={choices.leading}
@@ -531,77 +568,28 @@ function App() {
                 setStep(1);
               }}
             />
-
-            <OptionCard
-              title="Casual"
-              letter="Ag"
-              description="Friendly, open, and informal. Irregular shapes and humanist styles can often improve readability for some readers (dyslexia-friendly)."
-              fontFamily='"Comic Sans MS", "Chalkboard SE", sans-serif'
-              fontSize={choices.fontSize}
-              lineHeight={choices.leading}
-              textColor={choices.textColor}
-              bgColor={choices.bgColor}
-              onClick={() => {
-                setChoices({ ...choices, fontCategory: 'casual' });
-                setStep(1);
-              }}
-            />
-
-            <OptionCard
-              title="Monospace"
-              letter="Ag"
-              description="Distinct and technical. Every character has the same width. Great for distinguishing similar characters and coding."
-              fontFamily='"Courier New", monospace'
-              fontSize={choices.fontSize}
-              lineHeight={choices.leading}
-              textColor={choices.textColor}
-              bgColor={choices.bgColor}
-              onClick={() => {
-                setChoices({ ...choices, fontCategory: 'monospace' });
-                setStep(1);
-              }}
-            />
           </div>
         </div>
       </>
     );
   }
 
-  // Step 1: Choose Specific Font
   if (step === 1) {
     const serifFonts = [
-      { name: 'Georgia', family: 'Georgia, serif', description: "Designed for screens with large letterforms and sturdy serifs. Classic yet friendly." },
-      { name: 'Times New Roman', family: '"Times New Roman", serif', description: "The standard for academic and formal documents. Highly familiar and traditional." },
-      { name: 'Garamond', family: 'Garamond, serif', description: "Elegant and literary with refined strokes. A favorite for books." },
-      { name: 'Merriweather', family: 'Merriweather, serif', description: "A modern serif designed specifically for easy reading on digital screens." }
+      { name: 'Georgia', family: 'Georgia, serif', description: "Georgia is a serif typeface designed for clear readability on screens, featuring large letterforms, generous spacing, and sturdy serifs. It has a classic yet friendly appearance, making it well suited for web content, long-form reading, and accessible digital typography." },
+      { name: 'Times New Roman', family: '"Times New Roman", serif', description: "Times New Roman is a classic serif typeface known for its formal, traditional appearance and high readability. Originally designed for print, it is widely used in academic, professional, and editorial content, and its familiar letterforms make it comfortable for extended reading both in print and on screens." },
+      { name: 'Garamond', family: 'Garamond, serif', description: "Garamond is an elegant serif typeface with refined, flowing letterforms and a timeless, literary feel. Known for its excellent readability in long texts, it is commonly used in books, academic works, and classic print design, offering a warm and sophisticated tone."},
+      { name: 'Merriweather', family: 'Merriweather, serif', description: "Merriweather is a serif typeface designed for comfortable on-screen reading, with sturdy letterforms, generous spacing, and a slightly modern feel. It works especially well for long-form digital content, combining traditional serif structure with enhanced readability on screens." }
     ];
     
     const sansSerifFonts = [
-      { name: 'Arial', family: 'Arial, sans-serif', description: "Neutral and widely used. Simple shapes make it very legible." },
-      { name: 'Helvetica', family: 'Helvetica, sans-serif', description: "The gold standard of modern, neutral design. Professional and clean." },
-      { name: 'Verdana', family: 'Verdana, sans-serif', description: "Wide spacing and open letters make this excellent for small text on screens." },
-      { name: 'Roboto', family: 'Roboto, sans-serif', description: "Friendly and open curves. A modern standard for mobile and web." }
-    ];
-
-    const casualFonts = [
-      { name: 'Comic Sans MS', family: '"Comic Sans MS", "Chalkboard SE", sans-serif', description: "Often cited as dyslexia-friendly due to its unique, irregular character shapes that are hard to confuse." },
-      { name: 'Trebuchet MS', family: '"Trebuchet MS", sans-serif', description: "A humanist sans-serif with open shapes and distinctive characters, offering great clarity." },
-      { name: 'Century Gothic', family: '"Century Gothic", sans-serif', description: "Geometric and round. Its simple circles and straight lines provide a very clean look." },
-      { name: 'Calibri', family: 'Calibri, sans-serif', description: "Soft, rounded corners and a modern feel. Warm and very comfortable to read." }
-    ];
-
-    const monospaceFonts = [
-      { name: 'Courier New', family: '"Courier New", monospace', description: "The classic typewriter look. Slab serifs on a fixed-width grid." },
-      { name: 'Consolas', family: 'Consolas, monospace', description: "Designed for modern programming environments. Clear and easy on the eyes." },
-      { name: 'Lucida Console', family: '"Lucida Console", monospace', description: "A legible sans-serif monospace font with a high x-height." },
-      { name: 'Andale Mono', family: '"Andale Mono", monospace', description: "A highly distinct monospace font originally designed for software command lines." }
+      { name: 'Arial', family: 'Arial, sans-serif', description: "Arial is a widely used sans serif typeface with a clean, simple design and high legibility. Its familiar shapes and balanced spacing make it suitable for digital interfaces, documents, and everyday online reading."},
+      { name: 'Helvetica', family: 'Helvetica, sans-serif', description: "Helvetica is a modern sans serif typeface known for its neutral, streamlined appearance. It is commonly used in branding, signage, and user interfaces, offering clarity and a professional tone."},
+      { name: 'Verdana', family: 'Verdana, sans-serif', description: "Verdana is a sans serif typeface designed specifically for screen readability, featuring large letterforms and wide spacing. It is especially effective for small text sizes and accessible web content."},
+      { name: 'Roboto', family: 'Roboto, sans-serif', description: "Roboto is a contemporary sans serif typeface with open shapes and smooth curves, created for digital environments. It is widely used in web and app design, balancing a modern aesthetic with excellent readability."}
     ];
     
-    let fonts = [];
-    if (choices.fontCategory === 'serif') fonts = serifFonts;
-    else if (choices.fontCategory === 'sans-serif') fonts = sansSerifFonts;
-    else if (choices.fontCategory === 'casual') fonts = casualFonts;
-    else if (choices.fontCategory === 'monospace') fonts = monospaceFonts;
+    const fonts = choices.fontCategory === 'serif' ? serifFonts : sansSerifFonts;
     
     return (
       <>
@@ -620,13 +608,11 @@ function App() {
           lineHeight: choices.leading,
           fontFamily: getCurrentFont()
         }}>
-          <h2 style={{color: choices.textColor, marginBottom: '2rem'}}>Choose a Specific Font</h2>
           <div className="choiceFont">
             {fonts.map((font) => (
               <OptionCard
                 key={font.name}
                 title={font.name}
-                letter="Ag"
                 description={font.description}
                 fontFamily={font.family}
                 fontSize={choices.fontSize}
@@ -660,7 +646,6 @@ function App() {
     );
   }
 
-  // Steps 2, 3, 4 remain largely the same, just rendering the current component
   if (step === 2) {
     return (
       <>
@@ -682,14 +667,14 @@ function App() {
           <div className="sliderContainer">
             <SliderOption
               title="Font Size"
-              description="Adjust the size for comfortable reading. Larger text reduces eye strain."
+              description="Font size determines how large the text appears. Larger sizes are easier to read but take up more space, while smaller sizes fit more content but may strain the eyes. Standard body text is typically 14-18px."
               value={choices.fontSize}
               onChange={(value) => setChoices({ ...choices, fontSize: value })}
               min={12}
               max={32}
               step={1}
               unit="px"
-              previewText="The quick brown fox jumps over the lazy dog. Adjusting font size helps people with low vision or reading difficulties."
+              previewText="The quick brown fox jumps over the lazy dog. This is a sample of how your text will look at this font size. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
               fontFamily={getCurrentFont()}
               fontSize={choices.fontSize}
               lineHeight={choices.leading}
@@ -697,6 +682,7 @@ function App() {
               bgColor={choices.bgColor}
             />
           </div>
+          
           <div className="navigationButtons">
             <button 
               onClick={() => setStep(1)} 
@@ -749,14 +735,14 @@ function App() {
           <div className="sliderContainer">
             <SliderOption
               title="Leading (Line Height)"
-              description="Adjust the vertical space between lines. More space often improves tracking for dyslexic readers."
+              description="Leading controls the vertical space between lines of text. More spacing improves readability and creates a lighter feel, while tighter spacing saves space but can make text harder to read. Standard leading is 1.4-1.6."
               value={choices.leading}
               onChange={(value) => setChoices({ ...choices, leading: value })}
               min={1}
               max={2.5}
               step={0.1}
               unit=""
-              previewText="The quick brown fox jumps over the lazy dog. Generous line spacing prevents the text from looking cluttered and makes it easier to keep your place while reading."
+              previewText="The quick brown fox jumps over the lazy dog. This is a sample paragraph to demonstrate line height. Leading affects how easy it is to track from one line to the next. Proper spacing prevents lines from feeling cramped or too loose. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
               fontFamily={getCurrentFont()}
               fontSize={choices.fontSize}
               lineHeight={choices.leading}
@@ -764,6 +750,7 @@ function App() {
               bgColor={choices.bgColor}
             />
           </div>
+          
           <div className="navigationButtons">
             <button 
               onClick={() => setStep(2)} 
@@ -816,7 +803,7 @@ function App() {
           <div className="sliderContainer">
             <ColorOption
               title="Color Scheme"
-              description="High contrast helps legibility, but some users prefer softer off-white backgrounds to reduce glare."
+              description="Choose colors that work well together and ensure good readability. High contrast between text and background improves legibility."
               currentTextColor={choices.textColor}
               currentBgColor={choices.bgColor}
               onTextChange={(color) => setChoices(prev => ({ ...prev, textColor: color }))}
@@ -826,6 +813,7 @@ function App() {
               lineHeight={choices.leading}
             />
           </div>
+          
           <div className="navigationButtons">
             <button 
               onClick={() => setStep(3)} 
@@ -841,6 +829,7 @@ function App() {
             </button>
             <button 
               onClick={() => {
+                // Save data to backend before showing learning resources
                 saveChoicesToBackend();
                 setShowLearning(true);
               }} 
@@ -861,6 +850,7 @@ function App() {
   }
 
   if (step === 5) {
+    // --- Calculate Rating for Summary View ---
     const rating = calculateRating();
     const boxBg = getBoxBackground(choices.bgColor);
 
@@ -875,12 +865,15 @@ function App() {
           textColor={choices.textColor}
           bgColor={choices.bgColor}
         />
-        <div className="pageContainer" style={{ 
+        <div 
+          className="pageContainer"
+          style={{ 
             marginTop: '80px',
             fontSize: `${choices.fontSize}px`,
             lineHeight: choices.leading,
             fontFamily: getCurrentFont()
-          }}>
+          }}
+        >
           <div className="summaryPage">
             <h1 className="titleh1" style={{ 
               fontFamily: getCurrentFont(),
@@ -891,6 +884,7 @@ function App() {
               Your Custom Style
             </h1>
 
+            {/* --- NEW RATING CARD --- */}
             <div style={{
               backgroundColor: boxBg,
               border: `2px solid ${choices.textColor}33`,
@@ -916,6 +910,7 @@ function App() {
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
+                {/* Contrast Metric */}
                 <div style={{ padding: '1rem', border: `1px solid ${choices.textColor}22`, borderRadius: '4px' }}>
                   <strong style={{ display: 'block', color: choices.textColor, opacity: 0.7, marginBottom: '0.5rem' }}>
                     Contrast ({rating.report.contrast.val}:1)
@@ -928,6 +923,7 @@ function App() {
                   </p>
                 </div>
 
+                {/* Size Metric */}
                 <div style={{ padding: '1rem', border: `1px solid ${choices.textColor}22`, borderRadius: '4px' }}>
                   <strong style={{ display: 'block', color: choices.textColor, opacity: 0.7, marginBottom: '0.5rem' }}>
                     Font Size ({rating.report.size.val})
@@ -940,6 +936,7 @@ function App() {
                   </p>
                 </div>
 
+                {/* Leading Metric */}
                 <div style={{ padding: '1rem', border: `1px solid ${choices.textColor}22`, borderRadius: '4px' }}>
                   <strong style={{ display: 'block', color: choices.textColor, opacity: 0.7, marginBottom: '0.5rem' }}>
                     Leading ({rating.report.leading.val})
@@ -966,12 +963,36 @@ function App() {
                 color: choices.textColor,
                 lineHeight: choices.leading 
               }}>Your Choices:</h3>
-              <p className="spesification">Font Category: <strong>{choices.fontCategory}</strong></p>
-              <p className="spesification">Specific Font: <strong>{choices.specificFont}</strong></p>
-              <p className="spesification">Font Size: <strong>{choices.fontSize}px</strong></p>
-              <p className="spesification">Leading: <strong>{choices.leading}</strong></p>
-              <p className="spesification">Text Color: <strong>{choices.textColor}</strong></p>
-              <p className="spesification">Background Color: <strong>{choices.bgColor}</strong></p>
+              <p className="spesification" style={{ 
+                color: choices.textColor,
+                fontSize: `${choices.fontSize}px`,
+                lineHeight: choices.leading 
+              }}>Font Category: <strong>{choices.fontCategory}</strong></p>
+              <p className="spesification" style={{ 
+                color: choices.textColor,
+                fontSize: `${choices.fontSize}px`,
+                lineHeight: choices.leading 
+              }}>Specific Font: <strong>{choices.specificFont}</strong></p>
+              <p className="spesification" style={{ 
+                color: choices.textColor,
+                fontSize: `${choices.fontSize}px`,
+                lineHeight: choices.leading 
+              }}>Font Size: <strong>{choices.fontSize}px</strong></p>
+              <p className="spesification" style={{ 
+                color: choices.textColor,
+                fontSize: `${choices.fontSize}px`,
+                lineHeight: choices.leading 
+              }}>Leading: <strong>{choices.leading}</strong></p>
+              <p className="spesification" style={{ 
+                color: choices.textColor,
+                fontSize: `${choices.fontSize}px`,
+                lineHeight: choices.leading 
+              }}>Text Color: <strong>{choices.textColor}</strong></p>
+              <p className="spesification" style={{ 
+                color: choices.textColor,
+                fontSize: `${choices.fontSize}px`,
+                lineHeight: choices.leading 
+              }}>Background Color: <strong>{choices.bgColor}</strong></p>
             </div>
             
             <div 
@@ -985,15 +1006,34 @@ function App() {
                 lineHeight: choices.leading
               }}
             >
-              <h2 style={{ fontSize: `${choices.fontSize * 1.5}px`, lineHeight: choices.leading, color: choices.textColor }}>Sample Text</h2>
-              <p>
+              <h2 style={{ 
+                fontSize: `${choices.fontSize * 1.5}px`, 
+                lineHeight: choices.leading, 
+                color: choices.textColor 
+              }}>Sample Text</h2>
+              <p style={{ 
+                fontSize: `${choices.fontSize}px`, 
+                lineHeight: choices.leading 
+              }}>
                 This is how your text will look with the selected font, size, leading, and colors. 
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
-                tempor incididunt ut labore et dolore magna aliqua.
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
               </p>
-              <p>
+              <p style={{ 
+                fontSize: `${choices.fontSize}px`, 
+                lineHeight: choices.leading 
+              }}>
                 The quick brown fox jumps over the lazy dog. 
                 ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890
+              </p>
+              <p style={{ 
+                fontSize: `${choices.fontSize}px`, 
+                lineHeight: choices.leading 
+              }}>
+                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore 
+                eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, 
+                sunt in culpa qui officia deserunt mollit anim id est laborum.
               </p>
             </div>
 
