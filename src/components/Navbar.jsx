@@ -3,7 +3,6 @@ import React from 'react';
 function Navbar({ 
   onStartOver, 
   onSkipToLearning, 
-  onViewSummary, // New prop to handle navigation to the summary page
   fontFamily, 
   fontSize, 
   lineHeight, 
@@ -36,34 +35,6 @@ function Navbar({
         What's My Type?
       </h1>
       <div style={{ display: 'flex', gap: '1rem' }}>
-        {/* Render View Summary button if the prop is provided */}
-        {onViewSummary && (
-          <button
-            onClick={onViewSummary}
-            style={{
-              backgroundColor: 'transparent',
-              color: textColor,
-              border: `2px solid ${textColor}`,
-              padding: '0.5rem 1rem',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              fontSize: `${fontSize}px`,
-              fontWeight: '600',
-              transition: 'all 0.2s'
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.backgroundColor = textColor;
-              e.target.style.color = bgColor;
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.backgroundColor = 'transparent';
-              e.target.style.color = textColor;
-            }}
-          >
-            View My Summary
-          </button>
-        )}
-
         {showLearningButton && (
           <button
             onClick={onSkipToLearning}
@@ -90,7 +61,6 @@ function Navbar({
             Learning Resources
           </button>
         )}
-        
         <button
           onClick={onStartOver}
           style={{
