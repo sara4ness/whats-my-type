@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './LearningResources.css';
-import Navbar from './Navbar'; //
+import Navbar from './Navbar'; 
 
 function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColor, onClose, onViewSummary }) {
   const [flippedCardId, setFlippedCardId] = useState(null);
@@ -31,12 +31,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
   const cardBorder = `${textColor}22`;
   
   // Dynamic Sizing Logic
-  // Height: Ensures card grows if text is huge
   const cardHeight = `${Math.max(320, fontSize * 20)}px`;
-  
-  // Width: Calculates minimum width based on font size. 
-  // Base is 300px (at 16px font). Adds 15px width for every 1px of font size increase.
-  // This forces fewer cards per line as text gets bigger.
   const minCardWidth = Math.max(300, 300 + (fontSize - 16) * 15);
 
   const principles = [
@@ -200,7 +195,6 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
         </div>
 
         <div className="cardsGrid" style={{
-          // Apply dynamic column sizing here
           gridTemplateColumns: `repeat(auto-fill, minmax(${minCardWidth}px, 1fr))`
         }}>
           {filteredPrinciples.map((card) => (
@@ -221,8 +215,6 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
                     {card.category}
                   </span>
                   
-                  {/* Icon removed here */}
-
                   <h3 style={{ fontSize: `${fontSize * 1.4}px`, margin: '0 0 1rem 0' }}>
                     {card.title}
                   </h3>
@@ -271,7 +263,6 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
             </div>
           ))}
         </div>
-
       </div>
     </>
   );

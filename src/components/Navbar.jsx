@@ -2,7 +2,8 @@ import React from 'react';
 
 function Navbar({ 
   onStartOver, 
-  onSkipToLearning, 
+  onSkipToLearning,
+  onViewSummary,
   fontFamily, 
   fontSize, 
   lineHeight, 
@@ -61,6 +62,7 @@ function Navbar({
             Learning Resources
           </button>
         )}
+
         {onViewSummary && (
           <button
             onClick={onViewSummary}
@@ -87,6 +89,7 @@ function Navbar({
             View My Summary
           </button>
         )}
+
         <button
           onClick={onStartOver}
           style={{
