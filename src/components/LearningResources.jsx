@@ -145,7 +145,6 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       <Navbar 
         onStartOver={onClose} 
         onSkipToLearning={() => {}} 
-        onViewSummary={handleViewSummary}
         showLearningButton={false} 
         fontFamily={fontFamily}
         fontSize={fontSize}
