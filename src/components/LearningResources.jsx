@@ -95,7 +95,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       details: "The time to acquire a target is a function of the distance to and size of the target. Make touch targets (buttons, links) large enough (at least 44x44px) and place commonly used actions in easy-to-reach zones.",
       action: "Increase padding on clickable elements."
     },
-    // --- ACCESSIBILITY ---
+
     {
       id: 1,
       tab: 'accessibility',
