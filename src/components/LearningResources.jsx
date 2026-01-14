@@ -146,6 +146,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
         onStartOver={onClose} 
         onSkipToLearning={() => {}} 
         showLearningButton={false} 
+        onViewSummary={onViewSummary}
         fontFamily={fontFamily}
         fontSize={fontSize}
         lineHeight={lineHeight}
@@ -271,26 +272,6 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
           ))}
         </div>
 
-        <div className="learningFooter">
-          {onViewSummary && (
-            <button
-              onClick={onViewSummary}
-              style={{
-                backgroundColor: 'transparent',
-                color: textColor,
-                border: `2px solid ${textColor}`,
-                padding: '1rem 2rem',
-                borderRadius: '5px',
-                fontSize: `${fontSize * 1.1}px`,
-                fontWeight: '600',
-                cursor: 'pointer',
-                marginRight: '1rem'
-              }}
-            >
-              View My Summary
-            </button>
-          )}
-        </div>
       </div>
     </>
   );

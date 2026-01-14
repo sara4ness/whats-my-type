@@ -61,6 +61,32 @@ function Navbar({
             Learning Resources
           </button>
         )}
+        {onViewSummary && (
+          <button
+            onClick={onViewSummary}
+            style={{
+              backgroundColor: 'transparent',
+              color: textColor,
+              border: `2px solid ${textColor}`,
+              padding: '0.5rem 1rem',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              fontSize: `${fontSize}px`,
+              fontWeight: '600',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = textColor;
+              e.target.style.color = bgColor;
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = 'transparent';
+              e.target.style.color = textColor;
+            }}
+          >
+            View My Summary
+          </button>
+        )}
         <button
           onClick={onStartOver}
           style={{
