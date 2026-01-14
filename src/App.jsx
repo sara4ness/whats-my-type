@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import LearningResources from './components/LearningResources';
-import Navbar from './components/Navbar'; // Import the extracted component
+import Navbar from './components/Navbar'; 
 
 // --- Helper Functions for Rating System ---
 function getLuminance(hex) {
@@ -26,7 +26,6 @@ function getContrastRatio(hex1, hex2) {
   return (brightest + 0.05) / (darkest + 0.05);
 }
 
-// Simple reusable card component
 function OptionCard({ letter, title, description, onClick, fontFamily, fontSize, lineHeight, textColor, bgColor }) {
   const boxBg = getBoxBackground(bgColor);
   
@@ -56,7 +55,6 @@ function OptionCard({ letter, title, description, onClick, fontFamily, fontSize,
   );
 }
 
-// Slider component for size and leading
 function SliderOption({ title, description, value, onChange, min, max, step, unit, previewText, fontFamily, fontSize, lineHeight, textColor, bgColor }) {
   const boxBg = getBoxBackground(bgColor);
   
@@ -98,26 +96,17 @@ function SliderOption({ title, description, value, onChange, min, max, step, uni
   );
 }
 
-// Helper function to get contrasting box background
 function getBoxBackground(bgColor) {
   const hex = bgColor.replace('#', '');
   const r = parseInt(hex.substr(0, 2), 16);
   const g = parseInt(hex.substr(2, 2), 16);
   const b = parseInt(hex.substr(4, 2), 16);
-  
   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-  
-  if (brightness > 128) {
-    return adjustBrightness(bgColor, -3);
-  } else {
-    return adjustBrightness(bgColor, 8);
-  }
+  return brightness > 128 ? adjustBrightness(bgColor, -3) : adjustBrightness(bgColor, 8);
 }
 
-// Color picker component
 function ColorOption({ title, description, currentTextColor, currentBgColor, onTextChange, onBgChange, onPresetChange, fontSize, lineHeight }) {
   const boxBg = getBoxBackground(currentBgColor);
-  
   const presets = [
     { name: 'Classic', text: '#000000', bg: '#ffffff' },
     { name: 'Dark Mode', text: '#ffffff', bg: '#1a1a1a' },
@@ -141,23 +130,12 @@ function ColorOption({ title, description, currentTextColor, currentBgColor, onT
       <div className="colorPickers">
         <div className="colorPickerGroup">
           <label style={{ color: currentTextColor, fontSize: `${fontSize * 1.1}px`, lineHeight: lineHeight }}>Text Color</label>
-          <input 
-            type="color"
-            value={currentTextColor}
-            onChange={(e) => onTextChange(e.target.value)}
-            className="colorInput"
-          />
+          <input type="color" value={currentTextColor} onChange={(e) => onTextChange(e.target.value)} className="colorInput" />
           <span className="colorValue" style={{ color: currentTextColor, fontSize: `${fontSize * 0.9}px` }}>{currentTextColor}</span>
         </div>
-        
         <div className="colorPickerGroup">
           <label style={{ color: currentTextColor, fontSize: `${fontSize * 1.1}px`, lineHeight: lineHeight }}>Background Color</label>
-          <input 
-            type="color"
-            value={currentBgColor}
-            onChange={(e) => onBgChange(e.target.value)}
-            className="colorInput"
-          />
+          <input type="color" value={currentBgColor} onChange={(e) => onBgChange(e.target.value)} className="colorInput" />
           <span className="colorValue" style={{ color: currentTextColor, fontSize: `${fontSize * 0.9}px` }}>{currentBgColor}</span>
         </div>
       </div>
@@ -169,42 +147,18 @@ function ColorOption({ title, description, currentTextColor, currentBgColor, onT
             <button
               key={preset.name}
               className="presetButton"
-              style={{
-                backgroundColor: preset.bg,
-                color: preset.text,
-                border: `2px solid ${preset.text}33`,
-                fontSize: `${fontSize}px`,
-                lineHeight: lineHeight
-              }}
-              onClick={() => {
-                if (onPresetChange) {
-                  onPresetChange(preset.text, preset.bg);
-                } else {
-                  onTextChange(preset.text);
-                  onBgChange(preset.bg);
-                }
-              }}
+              style={{ backgroundColor: preset.bg, color: preset.text, border: `2px solid ${preset.text}33`, fontSize: `${fontSize}px`, lineHeight: lineHeight }}
+              onClick={() => onPresetChange ? onPresetChange(preset.text, preset.bg) : (onTextChange(preset.text), onBgChange(preset.bg))}
             >
               {preset.name}
             </button>
           ))}
         </div>
       </div>
-
-      <div className="previewBox" style={{ 
-        color: currentTextColor,
-        backgroundColor: adjustBrightness(boxBg, currentBgColor === '#ffffff' ? -2 : 5),
-        borderColor: currentTextColor + '33',
-        fontSize: `${fontSize}px`,
-        lineHeight: lineHeight
-      }}>
-        <p style={{ fontSize: `${fontSize}px`, lineHeight: lineHeight }}>This is a preview of your color scheme. The quick brown fox jumps over the lazy dog.</p>
-      </div>
     </div>
   );
 }
 
-// Helper function to adjust brightness
 function adjustBrightness(hex, percent) {
   const num = parseInt(hex.replace('#', ''), 16);
   const amt = Math.round(2.55 * percent);
@@ -229,23 +183,21 @@ function App() {
   
   const [step, setStep] = useState(-1);
   const [showLearning, setShowLearning] = useState(false);
-  const [sessionId] = useState(() => {
-    // Generate a unique session ID for this user
-    return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-  });
+  const [sessionId] = useState(() => 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9));
 
   const getCurrentFont = () => {
     if (!choices.specificFont) return 'system-ui';
-    
-    if (choices.specificFont === 'Georgia') return 'Georgia, serif';
-    if (choices.specificFont === 'Times New Roman') return '"Times New Roman", serif';
-    if (choices.specificFont === 'Garamond') return 'Garamond, serif';
-    if (choices.specificFont === 'Merriweather') return 'Merriweather, serif';
-    if (choices.specificFont === 'Arial') return 'Arial, sans-serif';
-    if (choices.specificFont === 'Helvetica') return 'Helvetica, sans-serif';
-    if (choices.specificFont === 'Verdana') return 'Verdana, sans-serif';
-    if (choices.specificFont === 'Roboto') return 'Roboto, sans-serif';
-    return 'system-ui';
+    const fonts = {
+      'Georgia': 'Georgia, serif',
+      'Times New Roman': '"Times New Roman", serif',
+      'Garamond': 'Garamond, serif',
+      'Merriweather': 'Merriweather, serif',
+      'Arial': 'Arial, sans-serif',
+      'Helvetica': 'Helvetica, sans-serif',
+      'Verdana': 'Verdana, sans-serif',
+      'Roboto': 'Roboto, sans-serif'
+    };
+    return fonts[choices.specificFont] || 'system-ui';
   };
 
   useEffect(() => {
@@ -259,47 +211,18 @@ function App() {
 
   const saveChoicesToBackend = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/save-choices`, {
+      await fetch(`${API_URL}/api/save-choices`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          fontCategory: choices.fontCategory,
-          specificFont: choices.specificFont,
-          fontSize: choices.fontSize,
-          leading: choices.leading,
-          textColor: choices.textColor,
-          bgColor: choices.bgColor,
-          sessionId: sessionId
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...choices, sessionId })
       });
-
-      const data = await response.json();
-      
-      if (data.success) {
-        console.log('Choices saved successfully!');
-        return true;
-      } else {
-        console.error('Failed to save choices:', data.error);
-        return false;
-      }
     } catch (error) {
       console.error('Error saving choices:', error);
-      // Don't block the user if backend is down
-      return false;
     }
   };
 
   const handleStartOver = () => {
-    setChoices({ 
-      fontCategory: null, 
-      specificFont: null,
-      fontSize: 16,
-      leading: 1.5,
-      textColor: '#000000',
-      bgColor: '#ffffff'
-    });
+    setChoices({ fontCategory: null, specificFont: null, fontSize: 16, leading: 1.5, textColor: '#000000', bgColor: '#ffffff' });
     setStep(-1);
     setShowLearning(false);
     localStorage.removeItem('userChoices');
@@ -308,66 +231,35 @@ function App() {
     document.body.style.fontFamily = 'system-ui';
   };
 
-  // --- Rating Calculation Logic (Added) ---
   const calculateRating = () => {
     const contrast = getContrastRatio(choices.textColor, choices.bgColor);
-    const size = choices.fontSize;
-    const leading = choices.leading;
-    
-    let score = 0;
+    const { fontSize: size, leading } = choices;
     const report = {
-      contrast: { status: '', text: '', score: 0, val: contrast.toFixed(2) },
-      size: { status: '', text: '', score: 0, val: size + 'px' },
-      leading: { status: '', text: '', score: 0, val: leading }
+      contrast: contrast >= 7 ? { status: 'Excellent', text: 'Passes WCAG AAA.', score: 50, val: contrast.toFixed(2) } :
+                contrast >= 4.5 ? { status: 'Good', text: 'Passes WCAG AA.', score: 40, val: contrast.toFixed(2) } :
+                contrast >= 3 ? { status: 'Fair', text: 'Okay for large text.', score: 20, val: contrast.toFixed(2) } :
+                { status: 'Poor', text: 'Fails standards.', score: 0, val: contrast.toFixed(2) },
+      size: size >= 18 ? { status: 'Excellent', text: 'Very comfortable size.', score: 30, val: size + 'px' } :
+            size >= 16 ? { status: 'Good', text: 'Standard legible size.', score: 25, val: size + 'px' } :
+            size >= 14 ? { status: 'Fair', text: 'A bit small.', score: 10, val: size + 'px' } :
+            { status: 'Poor', text: 'Too small.', score: 0, val: size + 'px' },
+      leading: (leading >= 1.4 && leading <= 1.6) ? { status: 'Excellent', text: 'Perfect spacing.', score: 20, val: leading } :
+               (leading >= 1.2 && leading <= 1.8) ? { status: 'Good', text: 'Acceptable spacing.', score: 15, val: leading } :
+               { status: 'Fair', text: 'Spacing may be off.', score: 5, val: leading }
     };
-
-    // 1. Contrast (50 points max)
-    if (contrast >= 7) {
-      report.contrast = { status: 'Excellent', text: 'Passes WCAG AAA. Perfect for all readers.', score: 50, val: contrast.toFixed(2) };
-    } else if (contrast >= 4.5) {
-      report.contrast = { status: 'Good', text: 'Passes WCAG AA. Readable for most.', score: 40, val: contrast.toFixed(2) };
-    } else if (contrast >= 3) {
-      report.contrast = { status: 'Fair', text: 'Okay for large text, but fails for body text.', score: 20, val: contrast.toFixed(2) };
-    } else {
-      report.contrast = { status: 'Poor', text: 'Fails accessibility standards. Hard to read.', score: 0, val: contrast.toFixed(2) };
-    }
-
-    // 2. Font Size (30 points max)
-    if (size >= 18) {
-      report.size = { status: 'Excellent', text: 'Very comfortable reading size.', score: 30, val: size + 'px' };
-    } else if (size >= 16) {
-      report.size = { status: 'Good', text: 'Standard legible font size.', score: 25, val: size + 'px' };
-    } else if (size >= 14) {
-      report.size = { status: 'Fair', text: 'A bit small for prolonged reading.', score: 10, val: size + 'px' };
-    } else {
-      report.size = { status: 'Poor', text: 'Too small for accessible body text.', score: 0, val: size + 'px' };
-    }
-
-    // 3. Leading (20 points max)
-    if (leading >= 1.4 && leading <= 1.6) {
-      report.leading = { status: 'Excellent', text: 'Perfect spacing for readability.', score: 20, val: leading };
-    } else if (leading >= 1.2 && leading <= 1.8) {
-      report.leading = { status: 'Good', text: 'Acceptable line height.', score: 15, val: leading };
-    } else {
-      report.leading = { status: 'Fair', text: 'Spacing may be too tight or too loose.', score: 5, val: leading };
-    }
-
-    score = report.contrast.score + report.size.score + report.leading.score;
-    
-    let finalGrade = 'Good';
-    if (score >= 90) finalGrade = 'Excellent';
-    else if (score >= 70) finalGrade = 'Good';
-    else if (score >= 50) finalGrade = 'Fair';
-    else finalGrade = 'Needs Work';
-
-    return { score, grade: finalGrade, report };
+    const score = report.contrast.score + report.size.score + report.leading.score;
+    const grade = score >= 90 ? 'Excellent' : score >= 70 ? 'Good' : score >= 50 ? 'Fair' : 'Needs Work';
+    return { score, grade, report };
   };
 
-  // Show learning resources
+  // --- NAVIGATION LOGIC ---
+  const hasCompletedChoices = choices.specificFont !== null;
+  const handleViewSummary = hasCompletedChoices ? () => {
+    setShowLearning(false);
+    setStep(5);
+  } : null;
+
   if (showLearning) {
-    // Only show summary option if user has completed choices (has a specific font selected)
-    const hasCompletedChoices = choices.specificFont !== null;
-    
     return (
       <LearningResources
         fontFamily={getCurrentFont()}
@@ -376,146 +268,33 @@ function App() {
         textColor={choices.textColor}
         bgColor={choices.bgColor}
         onClose={handleStartOver}
-        onViewSummary={hasCompletedChoices ? () => {
-          setShowLearning(false);
-          setStep(5);
-        } : null}
+        onViewSummary={handleViewSummary}
       />
     );
   }
 
-  // Welcome page (step -1)
+  // Common props for Navbar in all steps
+  const navProps = {
+    onStartOver: handleStartOver,
+    onSkipToLearning: () => setShowLearning(true),
+    onViewSummary: handleViewSummary,
+    fontFamily: getCurrentFont(),
+    fontSize: choices.fontSize,
+    lineHeight: choices.leading,
+    textColor: choices.textColor,
+    bgColor: choices.bgColor
+  };
+
   if (step === -1) {
-    const boxBg = getBoxBackground(choices.bgColor);
-    
     return (
       <>
-        <Navbar 
-          onStartOver={handleStartOver}
-          onSkipToLearning={() => setShowLearning(true)}
-          onViewSummary={handleViewSummary}
-          fontFamily={getCurrentFont()}
-          fontSize={choices.fontSize}
-          lineHeight={choices.leading}
-          textColor={choices.textColor}
-          bgColor={choices.bgColor}
-        />
-        <div className="pageContainer" style={{ 
-          marginTop: '80px',
-          fontSize: `${choices.fontSize}px`,
-          lineHeight: choices.leading,
-          fontFamily: getCurrentFont(),
-          maxWidth: '800px'
-        }}>
-          <div style={{
-            backgroundColor: boxBg,
-            borderColor: choices.textColor + '33',
-            border: `2px solid ${choices.textColor}33`,
-            borderRadius: '5px',
-            padding: '3rem',
-            textAlign: 'left'
-          }}>
-            <h1 style={{ 
-              fontSize: `${choices.fontSize * 2.5}px`,
-              lineHeight: choices.leading,
-              color: choices.textColor,
-              marginTop: 0,
-              marginBottom: '1.5rem'
-            }}>
-              Welcome to What's My Type?
-            </h1>
-            
-            <p style={{ 
-              fontSize: `${choices.fontSize * 1.1}px`,
-              lineHeight: choices.leading,
-              color: choices.textColor,
-              marginBottom: '1.5rem'
-            }}>
-              This interactive tool helps you discover your reading preferences by guiding you through key typography decisions. You will make choices about font style, size, spacing, and colors to create a personalized reading experience.
-            </p>
-
-            <h2 style={{ 
-              fontSize: `${choices.fontSize * 1.5}px`,
-              lineHeight: choices.leading,
-              color: choices.textColor,
-              marginTop: '2rem',
-              marginBottom: '1rem'
-            }}>
-              What You'll Do
-            </h2>
-            
-            <ul style={{ 
-              fontSize: `${choices.fontSize}px`,
-              lineHeight: choices.leading,
-              color: choices.textColor,
-              marginBottom: '1.5rem',
-              paddingLeft: '1.5rem'
-            }}>
-              <li style={{ marginBottom: '0.75rem' }}>
-                Choose between serif and sans-serif font categories
-              </li>
-              <li style={{ marginBottom: '0.75rem' }}>
-                Select a specific typeface that appeals to you
-              </li>
-              <li style={{ marginBottom: '0.75rem' }}>
-                Adjust font size and line spacing for comfortable reading
-              </li>
-              <li style={{ marginBottom: '0.75rem' }}>
-                Pick text and background colors that work well together
-              </li>
-              <li style={{ marginBottom: '0.75rem' }}>
-                Learn about typography fundamentals, accessibility, and UX design
-              </li>
-            </ul>
-
-            <h2 style={{ 
-              fontSize: `${choices.fontSize * 1.5}px`,
-              lineHeight: choices.leading,
-              color: choices.textColor,
-              marginTop: '2rem',
-              marginBottom: '1rem'
-            }}>
-              Why This Matters
-            </h2>
-            
-            <p style={{ 
-              fontSize: `${choices.fontSize}px`,
-              lineHeight: choices.leading,
-              color: choices.textColor,
-              marginBottom: '2rem'
-            }}>
-              Typography significantly impacts readability, comprehension, and user experience. Understanding your preferences helps you make informed design decisions and appreciate the thought that goes into creating accessible, well-designed interfaces. Your choices will be saved anonymously to help us understand common reading preferences.
-            </p>
-
-            <div style={{
-              display: 'flex',
-              justifyContent: 'center',
-              marginTop: '2rem'
-            }}>
-              <button
-                onClick={() => setStep(0)}
-                style={{
-                  backgroundColor: choices.textColor,
-                  color: choices.bgColor,
-                  border: 'none',
-                  padding: '1rem 3rem',
-                  borderRadius: '5px',
-                  fontSize: `${choices.fontSize * 1.2}px`,
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'opacity 0.2s, transform 0.2s'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.opacity = '0.9';
-                  e.target.style.transform = 'translateY(-2px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.opacity = '1';
-                  e.target.style.transform = 'translateY(0)';
-                }}
-              >
-                Get Started
-              </button>
+        <Navbar {...navProps} />
+        <div className="pageContainer" style={{ marginTop: '80px', fontSize: `${choices.fontSize}px`, lineHeight: choices.leading, fontFamily: getCurrentFont(), maxWidth: '800px' }}>
+          <div style={{ backgroundColor: getBoxBackground(choices.bgColor), border: `2px solid ${choices.textColor}33`, borderRadius: '5px', padding: '3rem' }}>
+            <h1 style={{ fontSize: `${choices.fontSize * 2.5}px`, marginBottom: '1.5rem' }}>Welcome to What's My Type?</h1>
+            <p>Discover your reading preferences through guided typography choices. Your settings will be used to create a personalized reading experience.</p>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+              <button onClick={() => setStep(0)} className="navButton" style={{ padding: '1rem 3rem', backgroundColor: choices.textColor, color: choices.bgColor }}>Get Started</button>
             </div>
           </div>
         </div>
@@ -526,50 +305,11 @@ function App() {
   if (step === 0) {
     return (
       <>
-        <Navbar 
-          onStartOver={handleStartOver}
-          onSkipToLearning={() => setShowLearning(true)}
-          onViewSummary={handleViewSummary}
-          fontFamily={getCurrentFont()}
-          fontSize={choices.fontSize}
-          lineHeight={choices.leading}
-          textColor={choices.textColor}
-          bgColor={choices.bgColor}
-        />
-        <div className="pageContainer" style={{ 
-          marginTop: '80px',
-          fontSize: `${choices.fontSize}px`,
-          lineHeight: choices.leading,
-          fontFamily: getCurrentFont()
-        }}>
+        <Navbar {...navProps} />
+        <div className="pageContainer" style={{ marginTop: '80px' }}>
           <div className="choiceFontFamily">
-            <OptionCard
-              title="Serif"
-              description="Serif fonts are typefaces with small decorative strokes (serifs) at the ends of letters. They have a traditional, formal, and elegant appearance, which helps guide the reader's eye along lines of text. Serif fonts are often used in books, newspapers, academic writing, and classic branding."
-              fontFamily="Georgia, serif"
-              fontSize={choices.fontSize}
-              lineHeight={choices.leading}
-              textColor={choices.textColor}
-              bgColor={choices.bgColor}
-              onClick={() => {
-                setChoices({ ...choices, fontCategory: 'serif' });
-                setStep(1);
-              }}
-            />
-            
-            <OptionCard
-              title="Sans-Serif"
-              description="Sans serif fonts are typefaces without the small decorative strokes (serifs) at the ends of letters. They have a clean, simple, and modern look, which makes them easy to read—especially on screens. Sans serif fonts are commonly used in web design, user interfaces, signage, and contemporary branding."
-              fontFamily="Arial, sans-serif"
-              fontSize={choices.fontSize}
-              lineHeight={choices.leading}
-              textColor={choices.textColor}
-              bgColor={choices.bgColor}
-              onClick={() => {
-                setChoices({ ...choices, fontCategory: 'sans-serif' });
-                setStep(1);
-              }}
-            />
+            <OptionCard title="Serif" description="Traditional and elegant with small strokes at the ends of letters." fontFamily="Georgia, serif" fontSize={choices.fontSize} lineHeight={choices.leading} textColor={choices.textColor} bgColor={choices.bgColor} onClick={() => { setChoices({ ...choices, fontCategory: 'serif' }); setStep(1); }} />
+            <OptionCard title="Sans-Serif" description="Clean and modern without decorative strokes." fontFamily="Arial, sans-serif" fontSize={choices.fontSize} lineHeight={choices.leading} textColor={choices.textColor} bgColor={choices.bgColor} onClick={() => { setChoices({ ...choices, fontCategory: 'sans-serif' }); setStep(1); }} />
           </div>
         </div>
       </>
@@ -577,73 +317,20 @@ function App() {
   }
 
   if (step === 1) {
-    const serifFonts = [
-      { name: 'Georgia', family: 'Georgia, serif', description: "Georgia is a serif typeface designed for clear readability on screens, featuring large letterforms, generous spacing, and sturdy serifs. It has a classic yet friendly appearance, making it well suited for web content, long-form reading, and accessible digital typography." },
-      { name: 'Times New Roman', family: '"Times New Roman", serif', description: "Times New Roman is a classic serif typeface known for its formal, traditional appearance and high readability. Originally designed for print, it is widely used in academic, professional, and editorial content, and its familiar letterforms make it comfortable for extended reading both in print and on screens." },
-      { name: 'Garamond', family: 'Garamond, serif', description: "Garamond is an elegant serif typeface with refined, flowing letterforms and a timeless, literary feel. Known for its excellent readability in long texts, it is commonly used in books, academic works, and classic print design, offering a warm and sophisticated tone."},
-      { name: 'Merriweather', family: 'Merriweather, serif', description: "Merriweather is a serif typeface designed for comfortable on-screen reading, with sturdy letterforms, generous spacing, and a slightly modern feel. It works especially well for long-form digital content, combining traditional serif structure with enhanced readability on screens." }
-    ];
-    
-    const sansSerifFonts = [
-      { name: 'Arial', family: 'Arial, sans-serif', description: "Arial is a widely used sans serif typeface with a clean, simple design and high legibility. Its familiar shapes and balanced spacing make it suitable for digital interfaces, documents, and everyday online reading."},
-      { name: 'Helvetica', family: 'Helvetica, sans-serif', description: "Helvetica is a modern sans serif typeface known for its neutral, streamlined appearance. It is commonly used in branding, signage, and user interfaces, offering clarity and a professional tone."},
-      { name: 'Verdana', family: 'Verdana, sans-serif', description: "Verdana is a sans serif typeface designed specifically for screen readability, featuring large letterforms and wide spacing. It is especially effective for small text sizes and accessible web content."},
-      { name: 'Roboto', family: 'Roboto, sans-serif', description: "Roboto is a contemporary sans serif typeface with open shapes and smooth curves, created for digital environments. It is widely used in web and app design, balancing a modern aesthetic with excellent readability."}
-    ];
-    
-    const fonts = choices.fontCategory === 'serif' ? serifFonts : sansSerifFonts;
+    const fonts = choices.fontCategory === 'serif' ? 
+      [{ name: 'Georgia' }, { name: 'Times New Roman' }, { name: 'Garamond' }, { name: 'Merriweather' }] : 
+      [{ name: 'Arial' }, { name: 'Helvetica' }, { name: 'Verdana' }, { name: 'Roboto' }];
     
     return (
       <>
-        <Navbar 
-          onStartOver={handleStartOver}
-          onSkipToLearning={() => setShowLearning(true)}
-          onViewSummary={handleViewSummary}
-          fontFamily={getCurrentFont()}
-          fontSize={choices.fontSize}
-          lineHeight={choices.leading}
-          textColor={choices.textColor}
-          bgColor={choices.bgColor}
-        />
-        <div className="pageContainer" style={{ 
-          marginTop: '80px',
-          fontSize: `${choices.fontSize}px`,
-          lineHeight: choices.leading,
-          fontFamily: getCurrentFont()
-        }}>
+        <Navbar {...navProps} />
+        <div className="pageContainer" style={{ marginTop: '80px' }}>
           <div className="choiceFont">
-            {fonts.map((font) => (
-              <OptionCard
-                key={font.name}
-                title={font.name}
-                description={font.description}
-                fontFamily={font.family}
-                fontSize={choices.fontSize}
-                lineHeight={choices.leading}
-                textColor={choices.textColor}
-                bgColor={choices.bgColor}
-                onClick={() => {
-                  setChoices({ ...choices, specificFont: font.name });
-                  setStep(2);
-                }}
-              />
+            {fonts.map((f) => (
+              <OptionCard key={f.name} title={f.name} description={`A popular ${choices.fontCategory} font.`} fontFamily={f.name} fontSize={choices.fontSize} lineHeight={choices.leading} textColor={choices.textColor} bgColor={choices.bgColor} onClick={() => { setChoices({ ...choices, specificFont: f.name }); setStep(2); }} />
             ))}
           </div>
-          
-          <div className="navigationButtons">
-            <button 
-              onClick={() => setStep(0)} 
-              className="navButton"
-              style={{ 
-                color: choices.bgColor, 
-                backgroundColor: choices.textColor,
-                fontSize: `${choices.fontSize * 1.1}px`,
-                lineHeight: choices.leading
-              }}
-            >
-              ← Back
-            </button>
-          </div>
+          <div className="navigationButtons"><button onClick={() => setStep(0)} className="navButton" style={{ backgroundColor: choices.textColor, color: choices.bgColor }}>← Back</button></div>
         </div>
       </>
     );
@@ -652,66 +339,12 @@ function App() {
   if (step === 2) {
     return (
       <>
-        <Navbar 
-          onStartOver={handleStartOver}
-          onSkipToLearning={() => setShowLearning(true)}
-          onViewSummary={handleViewSummary}
-          fontFamily={getCurrentFont()}
-          fontSize={choices.fontSize}
-          lineHeight={choices.leading}
-          textColor={choices.textColor}
-          bgColor={choices.bgColor}
-        />
-        <div className="pageContainer" style={{ 
-          marginTop: '80px',
-          fontSize: `${choices.fontSize}px`,
-          lineHeight: choices.leading,
-          fontFamily: getCurrentFont()
-        }}>
-          <div className="sliderContainer">
-            <SliderOption
-              title="Font Size"
-              description="Font size determines how large the text appears. Larger sizes are easier to read but take up more space, while smaller sizes fit more content but may strain the eyes. Standard body text is typically 14-18px."
-              value={choices.fontSize}
-              onChange={(value) => setChoices({ ...choices, fontSize: value })}
-              min={12}
-              max={32}
-              step={1}
-              unit="px"
-              previewText="The quick brown fox jumps over the lazy dog. This is a sample of how your text will look at this font size. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-              fontFamily={getCurrentFont()}
-              fontSize={choices.fontSize}
-              lineHeight={choices.leading}
-              textColor={choices.textColor}
-              bgColor={choices.bgColor}
-            />
-          </div>
-          
+        <Navbar {...navProps} />
+        <div className="pageContainer" style={{ marginTop: '80px' }}>
+          <SliderOption title="Font Size" value={choices.fontSize} onChange={(v) => setChoices({ ...choices, fontSize: v })} min={12} max={32} unit="px" previewText="The quick brown fox jumps over the lazy dog." {...choices} fontFamily={getCurrentFont()} />
           <div className="navigationButtons">
-            <button 
-              onClick={() => setStep(1)} 
-              className="navButton"
-              style={{ 
-                color: choices.bgColor, 
-                backgroundColor: choices.textColor,
-                fontSize: `${choices.fontSize * 1.1}px`,
-                lineHeight: choices.leading
-              }}
-            >
-              ← Back
-            </button>
-            <button 
-              onClick={() => setStep(3)} 
-              className="navButton"
-              style={{ 
-                color: choices.bgColor, 
-                backgroundColor: choices.textColor,
-                fontSize: `${choices.fontSize * 1.1}px`,
-                lineHeight: choices.leading
-              }}
-            >
-              Continue →
-            </button>
+            <button onClick={() => setStep(1)} className="navButton" style={{ backgroundColor: choices.textColor, color: choices.bgColor }}>← Back</button>
+            <button onClick={() => setStep(3)} className="navButton" style={{ backgroundColor: choices.textColor, color: choices.bgColor }}>Continue →</button>
           </div>
         </div>
       </>
@@ -721,66 +354,12 @@ function App() {
   if (step === 3) {
     return (
       <>
-        <Navbar 
-          onStartOver={handleStartOver}
-          onSkipToLearning={() => setShowLearning(true)}
-          onViewSummary={handleViewSummary}
-          fontFamily={getCurrentFont()}
-          fontSize={choices.fontSize}
-          lineHeight={choices.leading}
-          textColor={choices.textColor}
-          bgColor={choices.bgColor}
-        />
-        <div className="pageContainer" style={{ 
-          marginTop: '80px',
-          fontSize: `${choices.fontSize}px`,
-          lineHeight: choices.leading,
-          fontFamily: getCurrentFont()
-        }}>
-          <div className="sliderContainer">
-            <SliderOption
-              title="Leading (Line Height)"
-              description="Leading controls the vertical space between lines of text. More spacing improves readability and creates a lighter feel, while tighter spacing saves space but can make text harder to read. Standard leading is 1.4-1.6."
-              value={choices.leading}
-              onChange={(value) => setChoices({ ...choices, leading: value })}
-              min={1}
-              max={2.5}
-              step={0.1}
-              unit=""
-              previewText="The quick brown fox jumps over the lazy dog. This is a sample paragraph to demonstrate line height. Leading affects how easy it is to track from one line to the next. Proper spacing prevents lines from feeling cramped or too loose. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-              fontFamily={getCurrentFont()}
-              fontSize={choices.fontSize}
-              lineHeight={choices.leading}
-              textColor={choices.textColor}
-              bgColor={choices.bgColor}
-            />
-          </div>
-          
+        <Navbar {...navProps} />
+        <div className="pageContainer" style={{ marginTop: '80px' }}>
+          <SliderOption title="Leading" value={choices.leading} onChange={(v) => setChoices({ ...choices, leading: v })} min={1} max={2.5} step={0.1} previewText="Line spacing affects readability." {...choices} fontFamily={getCurrentFont()} />
           <div className="navigationButtons">
-            <button 
-              onClick={() => setStep(2)} 
-              className="navButton"
-              style={{ 
-                color: choices.bgColor, 
-                backgroundColor: choices.textColor,
-                fontSize: `${choices.fontSize * 1.1}px`,
-                lineHeight: choices.leading
-              }}
-            >
-              ← Back
-            </button>
-            <button 
-              onClick={() => setStep(4)} 
-              className="navButton"
-              style={{ 
-                color: choices.bgColor, 
-                backgroundColor: choices.textColor,
-                fontSize: `${choices.fontSize * 1.1}px`,
-                lineHeight: choices.leading
-              }}
-            >
-              Continue →
-            </button>
+            <button onClick={() => setStep(2)} className="navButton" style={{ backgroundColor: choices.textColor, color: choices.bgColor }}>← Back</button>
+            <button onClick={() => setStep(4)} className="navButton" style={{ backgroundColor: choices.textColor, color: choices.bgColor }}>Continue →</button>
           </div>
         </div>
       </>
@@ -790,65 +369,12 @@ function App() {
   if (step === 4) {
     return (
       <>
-        <Navbar 
-          onStartOver={handleStartOver}
-          onSkipToLearning={() => setShowLearning(true)}
-          onViewSummary={handleViewSummary}
-          fontFamily={getCurrentFont()}
-          fontSize={choices.fontSize}
-          lineHeight={choices.leading}
-          textColor={choices.textColor}
-          bgColor={choices.bgColor}
-        />
-        <div className="pageContainer" style={{ 
-          marginTop: '80px',
-          fontSize: `${choices.fontSize}px`,
-          lineHeight: choices.leading,
-          fontFamily: getCurrentFont()
-        }}>
-          <div className="sliderContainer">
-            <ColorOption
-              title="Color Scheme"
-              description="Choose colors that work well together and ensure good readability. High contrast between text and background improves legibility."
-              currentTextColor={choices.textColor}
-              currentBgColor={choices.bgColor}
-              onTextChange={(color) => setChoices(prev => ({ ...prev, textColor: color }))}
-              onBgChange={(color) => setChoices(prev => ({ ...prev, bgColor: color }))}
-              onPresetChange={(textColor, bgColor) => setChoices(prev => ({ ...prev, textColor, bgColor }))}
-              fontSize={choices.fontSize}
-              lineHeight={choices.leading}
-            />
-          </div>
-          
+        <Navbar {...navProps} />
+        <div className="pageContainer" style={{ marginTop: '80px' }}>
+          <ColorOption title="Colors" currentTextColor={choices.textColor} currentBgColor={choices.bgColor} onTextChange={(c) => setChoices(p => ({...p, textColor: c}))} onBgChange={(c) => setChoices(p => ({...p, bgColor: c}))} onPresetChange={(t, b) => setChoices(p => ({...p, textColor: t, bgColor: b}))} fontSize={choices.fontSize} lineHeight={choices.leading} />
           <div className="navigationButtons">
-            <button 
-              onClick={() => setStep(3)} 
-              className="navButton"
-              style={{ 
-                color: choices.bgColor, 
-                backgroundColor: choices.textColor,
-                fontSize: `${choices.fontSize * 1.1}px`,
-                lineHeight: choices.leading
-              }}
-            >
-              ← Back
-            </button>
-            <button 
-              onClick={() => {
-                // Save data to backend before showing learning resources
-                saveChoicesToBackend();
-                setShowLearning(true);
-              }} 
-              className="navButton"
-              style={{ 
-                color: choices.bgColor, 
-                backgroundColor: choices.textColor,
-                fontSize: `${choices.fontSize * 1.1}px`,
-                lineHeight: choices.leading
-              }}
-            >
-              Continue →
-            </button>
+            <button onClick={() => setStep(3)} className="navButton" style={{ backgroundColor: choices.textColor, color: choices.bgColor }}>← Back</button>
+            <button onClick={() => { saveChoicesToBackend(); setShowLearning(true); }} className="navButton" style={{ backgroundColor: choices.textColor, color: choices.bgColor }}>Continue →</button>
           </div>
         </div>
       </>
@@ -856,223 +382,22 @@ function App() {
   }
 
   if (step === 5) {
-    // --- Calculate Rating for Summary View ---
     const rating = calculateRating();
     const boxBg = getBoxBackground(choices.bgColor);
-
     return (
       <>
-        <Navbar 
-          onStartOver={handleStartOver}
-          onSkipToLearning={() => setShowLearning(true)}
-          onViewSummary={handleViewSummary}
-          fontFamily={getCurrentFont()}
-          fontSize={choices.fontSize}
-          lineHeight={choices.leading}
-          textColor={choices.textColor}
-          bgColor={choices.bgColor}
-        />
-        <div 
-          className="pageContainer"
-          style={{ 
-            marginTop: '80px',
-            fontSize: `${choices.fontSize}px`,
-            lineHeight: choices.leading,
-            fontFamily: getCurrentFont()
-          }}
-        >
+        <Navbar {...navProps} />
+        <div className="pageContainer" style={{ marginTop: '80px', fontFamily: getCurrentFont() }}>
           <div className="summaryPage">
-            <h1 className="titleh1" style={{ 
-              fontFamily: getCurrentFont(),
-              fontSize: `${choices.fontSize * 1.8}px`,
-              lineHeight: choices.leading,
-              color: choices.textColor
-            }}>
-              Your Custom Style
-            </h1>
-
-            {/* --- NEW RATING CARD --- */}
-            <div style={{
-              backgroundColor: boxBg,
-              border: `2px solid ${choices.textColor}33`,
-              borderRadius: '5px',
-              padding: '2rem',
-              marginBottom: '2rem',
-              textAlign: 'left'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-                <h2 style={{ margin: 0, fontSize: `${choices.fontSize * 1.5}px`, color: choices.textColor }}>
-                  Best Practice Rating
-                </h2>
-                <div style={{ 
-                  backgroundColor: choices.textColor, 
-                  color: choices.bgColor, 
-                  padding: '0.5rem 1rem', 
-                  borderRadius: '5px', 
-                  fontWeight: 'bold',
-                  fontSize: `${choices.fontSize * 1.2}px`
-                }}>
-                  {rating.grade} ({rating.score}/100)
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
-                {/* Contrast Metric */}
-                <div style={{ padding: '1rem', border: `1px solid ${choices.textColor}22`, borderRadius: '4px' }}>
-                  <strong style={{ display: 'block', color: choices.textColor, opacity: 0.7, marginBottom: '0.5rem' }}>
-                    Contrast ({rating.report.contrast.val}:1)
-                  </strong>
-                  <div style={{ fontSize: `${choices.fontSize * 1.1}px`, fontWeight: '600', color: choices.textColor, marginBottom: '0.5rem' }}>
-                    {rating.report.contrast.status}
-                  </div>
-                  <p style={{ margin: 0, fontSize: `${choices.fontSize * 0.9}px`, color: choices.textColor, opacity: 0.9 }}>
-                    {rating.report.contrast.text}
-                  </p>
-                </div>
-
-                {/* Size Metric */}
-                <div style={{ padding: '1rem', border: `1px solid ${choices.textColor}22`, borderRadius: '4px' }}>
-                  <strong style={{ display: 'block', color: choices.textColor, opacity: 0.7, marginBottom: '0.5rem' }}>
-                    Font Size ({rating.report.size.val})
-                  </strong>
-                  <div style={{ fontSize: `${choices.fontSize * 1.1}px`, fontWeight: '600', color: choices.textColor, marginBottom: '0.5rem' }}>
-                    {rating.report.size.status}
-                  </div>
-                  <p style={{ margin: 0, fontSize: `${choices.fontSize * 0.9}px`, color: choices.textColor, opacity: 0.9 }}>
-                    {rating.report.size.text}
-                  </p>
-                </div>
-
-                {/* Leading Metric */}
-                <div style={{ padding: '1rem', border: `1px solid ${choices.textColor}22`, borderRadius: '4px' }}>
-                  <strong style={{ display: 'block', color: choices.textColor, opacity: 0.7, marginBottom: '0.5rem' }}>
-                    Leading ({rating.report.leading.val})
-                  </strong>
-                  <div style={{ fontSize: `${choices.fontSize * 1.1}px`, fontWeight: '600', color: choices.textColor, marginBottom: '0.5rem' }}>
-                    {rating.report.leading.status}
-                  </div>
-                  <p style={{ margin: 0, fontSize: `${choices.fontSize * 0.9}px`, color: choices.textColor, opacity: 0.9 }}>
-                    {rating.report.leading.text}
-                  </p>
-                </div>
+            <div style={{ backgroundColor: boxBg, border: `2px solid ${choices.textColor}33`, padding: '2rem', marginBottom: '2rem' }}>
+              <h2>Best Practice Rating: {rating.grade} ({rating.score}/100)</h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+                <div><strong>Contrast:</strong> {rating.report.contrast.status}</div>
+                <div><strong>Size:</strong> {rating.report.size.status}</div>
+                <div><strong>Leading:</strong> {rating.report.leading.status}</div>
               </div>
             </div>
-            
-            <div className="customChoicesSummary" style={{ 
-              backgroundColor: getBoxBackground(choices.bgColor),
-              borderColor: choices.textColor + '33',
-              color: choices.textColor,
-              fontSize: `${choices.fontSize}px`,
-              lineHeight: choices.leading
-            }}>
-              <h3 className="yourChoices" style={{ 
-                fontSize: `${choices.fontSize * 1.3}px`, 
-                color: choices.textColor,
-                lineHeight: choices.leading 
-              }}>Your Choices:</h3>
-              <p className="spesification" style={{ 
-                color: choices.textColor,
-                fontSize: `${choices.fontSize}px`,
-                lineHeight: choices.leading 
-              }}>Font Category: <strong>{choices.fontCategory}</strong></p>
-              <p className="spesification" style={{ 
-                color: choices.textColor,
-                fontSize: `${choices.fontSize}px`,
-                lineHeight: choices.leading 
-              }}>Specific Font: <strong>{choices.specificFont}</strong></p>
-              <p className="spesification" style={{ 
-                color: choices.textColor,
-                fontSize: `${choices.fontSize}px`,
-                lineHeight: choices.leading 
-              }}>Font Size: <strong>{choices.fontSize}px</strong></p>
-              <p className="spesification" style={{ 
-                color: choices.textColor,
-                fontSize: `${choices.fontSize}px`,
-                lineHeight: choices.leading 
-              }}>Leading: <strong>{choices.leading}</strong></p>
-              <p className="spesification" style={{ 
-                color: choices.textColor,
-                fontSize: `${choices.fontSize}px`,
-                lineHeight: choices.leading 
-              }}>Text Color: <strong>{choices.textColor}</strong></p>
-              <p className="spesification" style={{ 
-                color: choices.textColor,
-                fontSize: `${choices.fontSize}px`,
-                lineHeight: choices.leading 
-              }}>Background Color: <strong>{choices.bgColor}</strong></p>
-            </div>
-            
-            <div 
-              className="sampleText"
-              style={{
-                fontFamily: getCurrentFont(),
-                color: choices.textColor,
-                backgroundColor: getBoxBackground(choices.bgColor),
-                borderColor: choices.textColor + '33',
-                fontSize: `${choices.fontSize}px`,
-                lineHeight: choices.leading
-              }}
-            >
-              <h2 style={{ 
-                fontSize: `${choices.fontSize * 1.5}px`, 
-                lineHeight: choices.leading, 
-                color: choices.textColor 
-              }}>Sample Text</h2>
-              <p style={{ 
-                fontSize: `${choices.fontSize}px`, 
-                lineHeight: choices.leading 
-              }}>
-                This is how your text will look with the selected font, size, leading, and colors. 
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-              </p>
-              <p style={{ 
-                fontSize: `${choices.fontSize}px`, 
-                lineHeight: choices.leading 
-              }}>
-                The quick brown fox jumps over the lazy dog. 
-                ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890
-              </p>
-              <p style={{ 
-                fontSize: `${choices.fontSize}px`, 
-                lineHeight: choices.leading 
-              }}>
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore 
-                eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, 
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
-            </div>
-
-            <div className="navigationButtons" style={{ gap: '1.5rem', marginTop: '2rem' }}>
-              <button 
-                onClick={() => setShowLearning(true)}
-                className="navButton"
-                style={{ 
-                  color: choices.bgColor, 
-                  backgroundColor: choices.textColor,
-                  fontSize: `${choices.fontSize * 1.1}px`,
-                  lineHeight: choices.leading
-                }}
-              >
-                Learn About Typography & Accessibility
-              </button>
-            </div>
-          </div>
-          
-          <div className="navigationButtons">
-            <button 
-              onClick={() => setStep(4)} 
-              className="navButton"
-              style={{ 
-                color: choices.bgColor, 
-                backgroundColor: choices.textColor,
-                fontSize: `${choices.fontSize * 1.1}px`,
-                lineHeight: choices.leading
-              }}
-            >
-              ← Back
-            </button>
+            <button onClick={() => setShowLearning(true)} className="navButton" style={{ backgroundColor: choices.textColor, color: choices.bgColor }}>Back to Resources</button>
           </div>
         </div>
       </>
