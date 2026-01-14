@@ -393,7 +393,6 @@ function App() {
         <Navbar 
           onStartOver={handleStartOver}
           onSkipToLearning={() => setShowLearning(true)}
-          onViewSummary={handleViewSummary}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -529,7 +528,6 @@ function App() {
         <Navbar 
           onStartOver={handleStartOver}
           onSkipToLearning={() => setShowLearning(true)}
-          onViewSummary={handleViewSummary}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -598,7 +596,6 @@ function App() {
         <Navbar 
           onStartOver={handleStartOver}
           onSkipToLearning={() => setShowLearning(true)}
-          onViewSummary={handleViewSummary}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -655,7 +652,6 @@ function App() {
         <Navbar 
           onStartOver={handleStartOver}
           onSkipToLearning={() => setShowLearning(true)}
-          onViewSummary={handleViewSummary}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -724,7 +720,6 @@ function App() {
         <Navbar 
           onStartOver={handleStartOver}
           onSkipToLearning={() => setShowLearning(true)}
-          onViewSummary={handleViewSummary}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -793,7 +788,6 @@ function App() {
         <Navbar 
           onStartOver={handleStartOver}
           onSkipToLearning={() => setShowLearning(true)}
-          onViewSummary={handleViewSummary}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
@@ -865,7 +859,6 @@ function App() {
         <Navbar 
           onStartOver={handleStartOver}
           onSkipToLearning={() => setShowLearning(true)}
-          onViewSummary={handleViewSummary}
           fontFamily={getCurrentFont()}
           fontSize={choices.fontSize}
           lineHeight={choices.leading}
