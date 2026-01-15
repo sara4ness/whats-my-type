@@ -571,6 +571,8 @@
 
             const { font, fontSize, leading, textColor, bgColor } = communityStyles;
             
+            console.log('Applying community styles:', communityStyles);
+            
             // Remove any existing custom styles and fonts
             const existingStyle = document.getElementById('communityStyles');
             if (existingStyle) {
@@ -585,31 +587,35 @@
             const fontLink = document.createElement('link');
             fontLink.id = 'communityFont';
             fontLink.rel = 'stylesheet';
-            fontLink.href = `https://fonts.googleapis.com/css2?family=${font.replace(/ /g, '+')}&display=swap`;
+            fontLink.href = `https://fonts.googleapis.com/css2?family=${font.replace(/ /g, '+')}:wght@400;500;600;700&display=swap`;
             document.head.appendChild(fontLink);
-
-            // Create new style element
-            const style = document.createElement('style');
-            style.id = 'communityStyles';
             
-            // Calculate contrast color for buttons
-            const buttonBg = textColor;
-            const buttonText = bgColor;
+            console.log('Loading font:', font, 'from URL:', fontLink.href);
+
+            // Wait a moment for font to start loading, then apply styles
+            setTimeout(() => {
+                applyStyleSheet();
+            }, 100);
+            
+            function applyStyleSheet() {
+                // Create new style element
+                const style = document.createElement('style');
+                style.id = 'communityStyles';
+                
+                // Calculate contrast color for buttons
+                const buttonBg = textColor;
+                const buttonText = bgColor;
             
             style.textContent = `
-                * {
+                /* Apply font to everything except toggle */
+                body,
+                body *:not(.style-toggle):not(.style-toggle *):not(.toggle-switch):not(.toggle-slider) {
                     font-family: "${font}", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
                 }
 
                 body {
                     background-color: ${bgColor} !important;
                     color: ${textColor} !important;
-                    font-size: ${fontSize}px !important;
-                    line-height: ${leading} !important;
-                }
-
-                body * {
-                    font-size: ${fontSize}px !important;
                     line-height: ${leading} !important;
                 }
 
@@ -621,52 +627,68 @@
                 .navbar h1 {
                     color: ${textColor} !important;
                     font-size: ${fontSize * 1.5}px !important;
+                    line-height: ${leading} !important;
+                }
+
+                .container {
+                    font-size: ${fontSize}px !important;
+                    line-height: ${leading} !important;
                 }
 
                 .page-title {
                     color: ${textColor} !important;
                     font-size: ${fontSize * 2.5}px !important;
+                    line-height: ${leading} !important;
                 }
 
                 .page-subtitle {
                     color: ${textColor}99 !important;
                     font-size: ${fontSize * 1.1}px !important;
+                    line-height: ${leading} !important;
                 }
 
                 .section-title {
                     color: ${textColor} !important;
                     font-size: ${fontSize * 1.5}px !important;
+                    line-height: ${leading} !important;
                 }
 
                 .stat-label {
                     color: ${textColor}99 !important;
                     font-size: ${fontSize * 0.9}px !important;
+                    line-height: ${leading} !important;
                 }
 
                 .stat-value {
                     color: ${textColor} !important;
                     font-size: ${fontSize * 2.5}px !important;
+                    line-height: 1.2 !important;
                 }
 
                 .bar-label {
                     color: ${textColor} !important;
                     font-size: ${fontSize * 0.95}px !important;
+                    line-height: ${leading} !important;
                 }
 
                 .bar-fill {
                     font-size: ${fontSize * 0.9}px !important;
+                    line-height: ${leading} !important;
                 }
 
                 th {
                     font-size: ${fontSize * 0.9}px !important;
+                    line-height: ${leading} !important;
                 }
 
                 td {
                     font-size: ${fontSize}px !important;
+                    line-height: ${leading} !important;
                 }
 
-                button {
+                button:not(.style-toggle button) {
                     font-size: ${fontSize}px !important;
+                    line-height: ${leading} !important;
                 }
 
                 .stat-card,
@@ -742,6 +764,7 @@
                 🎨 Styled by community: <strong>${font}</strong>, ${fontSize}px, ${leading} leading
                 <br><small>Text: ${textColor} • Background: ${bgColor}</small>
             `;
+            } // end of applyStyleSheet function
         }
 
         function removeCustomStyles() {
