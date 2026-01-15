@@ -583,16 +583,30 @@
                 existingFont.remove();
             }
 
-            // Load the Google Font with multiple weights
+            // Common system fonts that don't need Google Fonts loading
+            const systemFonts = [
+                'Arial', 'Helvetica', 'Times New Roman', 'Times', 'Courier New', 'Courier',
+                'Verdana', 'Georgia', 'Palatino', 'Garamond', 'Bookman', 'Comic Sans MS',
+                'Trebuchet MS', 'Arial Black', 'Impact', 'Lucida Sans', 'Tahoma',
+                'Lucida Console', 'Monaco', 'Brush Script MT', 'Copperplate', 'Papyrus'
+            ];
+
             const fontFamily = font.trim();
-            const fontLink = document.createElement('link');
-            fontLink.id = 'communityFont';
-            fontLink.rel = 'stylesheet';
-            const encodedFont = fontFamily.replace(/ /g, '+');
-            fontLink.href = `https://fonts.googleapis.com/css2?family=${encodedFont}:wght@300;400;500;600;700&display=swap`;
-            document.head.appendChild(fontLink);
-            
-            console.log('Loading font:', fontFamily, 'from URL:', fontLink.href);
+            const isSystemFont = systemFonts.some(sf => sf.toLowerCase() === fontFamily.toLowerCase());
+
+            // Only load from Google Fonts if it's not a system font
+            if (!isSystemFont) {
+                const fontLink = document.createElement('link');
+                fontLink.id = 'communityFont';
+                fontLink.rel = 'stylesheet';
+                const encodedFont = fontFamily.replace(/ /g, '+');
+                fontLink.href = `https://fonts.googleapis.com/css2?family=${encodedFont}:wght@300;400;500;600;700&display=swap`;
+                document.head.appendChild(fontLink);
+                
+                console.log('Loading Google Font:', fontFamily, 'from URL:', fontLink.href);
+            } else {
+                console.log('Using system font:', fontFamily, '(not loading from Google Fonts)');
+            }
 
             // Create new style element immediately
             const style = document.createElement('style');
@@ -774,8 +788,9 @@
             document.head.appendChild(style);
 
             // Update indicator
+            const fontType = isSystemFont ? '(System Font)' : '(Google Font)';
             document.getElementById('styleIndicator').innerHTML = `
-                🎨 Styled by community: <strong>${fontFamily}</strong>, ${fontSize}px, ${leading} leading
+                🎨 Styled by community: <strong>${fontFamily}</strong> ${fontType}, ${fontSize}px, ${leading} leading
                 <br><small>Text: ${textColor} • Background: ${bgColor}</small>
             `;
         }
