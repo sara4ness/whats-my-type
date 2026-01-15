@@ -583,216 +583,234 @@
                 existingFont.remove();
             }
 
-            // Common system fonts that don't need Google Fonts loading
+            const fontFamily = font.trim();
+            
+            // Common system fonts
             const systemFonts = [
                 'Arial', 'Helvetica', 'Times New Roman', 'Times', 'Courier New', 'Courier',
                 'Verdana', 'Georgia', 'Palatino', 'Garamond', 'Bookman', 'Comic Sans MS',
                 'Trebuchet MS', 'Arial Black', 'Impact', 'Lucida Sans', 'Tahoma',
                 'Lucida Console', 'Monaco', 'Brush Script MT', 'Copperplate', 'Papyrus'
             ];
-
-            const fontFamily = font.trim();
+            
             const isSystemFont = systemFonts.some(sf => sf.toLowerCase() === fontFamily.toLowerCase());
 
-            // Only load from Google Fonts if it's not a system font
+            // Function to actually apply the styles
+            function applyStyles() {
+                const style = document.createElement('style');
+                style.id = 'communityStyles';
+                
+                const buttonBg = textColor;
+                const buttonText = bgColor;
+                
+                style.textContent = `
+                    /* Base font family */
+                    body {
+                        font-family: "${fontFamily}", Georgia, serif !important;
+                        background-color: ${bgColor} !important;
+                        color: ${textColor} !important;
+                        line-height: ${leading} !important;
+                    }
+                    
+                    /* Protect toggle */
+                    .no-community-style,
+                    .no-community-style * {
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+                        font-size: 0.9rem !important;
+                        line-height: 1.6 !important;
+                        color: inherit !important;
+                    }
+                    
+                    /* Apply to all elements */
+                    .navbar h1,
+                    .page-title,
+                    .page-subtitle,
+                    .section-title,
+                    .stat-label,
+                    .stat-value,
+                    .bar-label,
+                    .bar-fill,
+                    th, td, p, span, div, a,
+                    button:not(.no-community-style):not(.no-community-style *),
+                    .style-indicator,
+                    .container,
+                    .container * {
+                        font-family: "${fontFamily}", Georgia, serif !important;
+                    }
+
+                    .navbar {
+                        background-color: ${bgColor} !important;
+                        border-bottom-color: ${textColor}33 !important;
+                    }
+
+                    .navbar h1 {
+                        color: ${textColor} !important;
+                        font-size: ${fontSize * 1.5}px !important;
+                        line-height: ${leading} !important;
+                    }
+
+                    .page-title {
+                        color: ${textColor} !important;
+                        font-size: ${fontSize * 2.5}px !important;
+                        line-height: ${leading} !important;
+                    }
+
+                    .page-subtitle {
+                        color: ${textColor}99 !important;
+                        font-size: ${fontSize * 1.1}px !important;
+                        line-height: ${leading} !important;
+                    }
+
+                    .section-title {
+                        color: ${textColor} !important;
+                        font-size: ${fontSize * 1.5}px !important;
+                        line-height: ${leading} !important;
+                    }
+
+                    .stat-label {
+                        color: ${textColor}99 !important;
+                        font-size: ${fontSize * 0.9}px !important;
+                        line-height: ${leading} !important;
+                    }
+
+                    .stat-value {
+                        color: ${textColor} !important;
+                        font-size: ${fontSize * 2.5}px !important;
+                        line-height: 1.2 !important;
+                    }
+
+                    .bar-label {
+                        color: ${textColor} !important;
+                        font-size: ${fontSize * 0.95}px !important;
+                        line-height: ${leading} !important;
+                    }
+
+                    .bar-fill {
+                        font-size: ${fontSize * 0.9}px !important;
+                        line-height: ${leading} !important;
+                    }
+
+                    th {
+                        font-size: ${fontSize * 0.9}px !important;
+                        line-height: ${leading} !important;
+                    }
+
+                    td {
+                        font-size: ${fontSize}px !important;
+                        line-height: ${leading} !important;
+                    }
+
+                    button:not(.no-community-style):not(.no-community-style *) {
+                        font-size: ${fontSize}px !important;
+                        line-height: ${leading} !important;
+                    }
+
+                    .stat-card,
+                    .section-card {
+                        background: ${adjustBrightness(bgColor, textColor === '#ffffff' ? -10 : 10)} !important;
+                        border-color: ${textColor}22 !important;
+                    }
+
+                    button:not(.no-community-style):not(.no-community-style *) {
+                        background-color: ${buttonBg} !important;
+                        color: ${buttonText} !important;
+                    }
+
+                    button.secondary:not(.no-community-style):not(.no-community-style *) {
+                        background-color: transparent !important;
+                        color: ${textColor} !important;
+                        border-color: ${textColor} !important;
+                    }
+
+                    button.secondary:hover:not(.no-community-style):not(.no-community-style *) {
+                        background-color: ${textColor} !important;
+                        color: ${bgColor} !important;
+                    }
+
+                    .bar-fill-container {
+                        background: ${textColor}11 !important;
+                    }
+
+                    .bar-fill {
+                        background: linear-gradient(90deg, ${textColor} 0%, ${textColor}cc 100%) !important;
+                        color: ${bgColor} !important;
+                    }
+
+                    th {
+                        background-color: ${adjustBrightness(bgColor, textColor === '#ffffff' ? -10 : 10)} !important;
+                        color: ${textColor} !important;
+                    }
+
+                    td {
+                        color: ${textColor} !important;
+                        border-bottom-color: ${textColor}11 !important;
+                    }
+
+                    tr:hover {
+                        background-color: ${adjustBrightness(bgColor, textColor === '#ffffff' ? -5 : 5)} !important;
+                    }
+
+                    .timestamp {
+                        color: ${textColor}99 !important;
+                        font-size: ${fontSize * 0.85}px !important;
+                    }
+
+                    .table-container {
+                        background: ${bgColor} !important;
+                        border-color: ${textColor}11 !important;
+                    }
+
+                    .style-indicator {
+                        background: ${textColor}11 !important;
+                        color: ${textColor} !important;
+                        font-size: ${fontSize * 0.9}px !important;
+                    }
+                `;
+                
+                document.head.appendChild(style);
+
+                const fontType = isSystemFont ? '(System Font)' : '(Google Font)';
+                document.getElementById('styleIndicator').innerHTML = `
+                    🎨 Styled by community: <strong>${fontFamily}</strong> ${fontType}, ${fontSize}px, ${leading} leading
+                    <br><small>Text: ${textColor} • Background: ${bgColor}</small>
+                `;
+                
+                console.log('✓ Styles applied with font:', fontFamily);
+            }
+
+            // Load font and apply styles
             if (!isSystemFont) {
+                // Use CSS Font Loading API to properly load Google Fonts
+                const encodedFont = fontFamily.replace(/ /g, '+');
+                const fontUrl = `https://fonts.googleapis.com/css2?family=${encodedFont}:wght@300;400;500;600;700&display=swap`;
+                
+                console.log('Loading Google Font:', fontFamily);
+                
+                // Create link element
                 const fontLink = document.createElement('link');
                 fontLink.id = 'communityFont';
                 fontLink.rel = 'stylesheet';
-                const encodedFont = fontFamily.replace(/ /g, '+');
-                fontLink.href = `https://fonts.googleapis.com/css2?family=${encodedFont}:wght@300;400;500;600;700&display=swap`;
+                fontLink.href = fontUrl;
+                
+                // Wait for font to load using FontFace API
+                fontLink.onload = () => {
+                    console.log('✓ Font stylesheet loaded');
+                    // Wait a bit more for font to be parsed and available
+                    setTimeout(() => {
+                        applyStyles();
+                    }, 200);
+                };
+                
+                fontLink.onerror = () => {
+                    console.error('✗ Failed to load font from Google Fonts, using fallback');
+                    applyStyles(); // Apply anyway with fallback
+                };
+                
                 document.head.appendChild(fontLink);
-                
-                console.log('Loading Google Font:', fontFamily, 'from URL:', fontLink.href);
             } else {
-                console.log('Using system font:', fontFamily, '(not loading from Google Fonts)');
+                console.log('Using system font:', fontFamily);
+                applyStyles(); // Apply immediately for system fonts
             }
-
-            // Create new style element immediately
-            const style = document.createElement('style');
-            style.id = 'communityStyles';
-            
-            // Calculate contrast color for buttons
-            const buttonBg = textColor;
-            const buttonText = bgColor;
-            
-            // More targeted CSS that explicitly protects toggle
-            style.textContent = `
-                /* Base font family - applied everywhere except protected elements */
-                body {
-                    font-family: "${fontFamily}", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-                    background-color: ${bgColor} !important;
-                    color: ${textColor} !important;
-                    line-height: ${leading} !important;
-                }
-                
-                /* Protect toggle from all changes */
-                .no-community-style,
-                .no-community-style * {
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-                    font-size: 0.9rem !important;
-                    line-height: 1.6 !important;
-                    color: inherit !important;
-                }
-                
-                /* Apply community font to all major elements */
-                .navbar h1,
-                .page-title,
-                .page-subtitle,
-                .section-title,
-                .stat-label,
-                .stat-value,
-                .bar-label,
-                .bar-fill,
-                th, td,
-                button:not(.no-community-style button),
-                .style-indicator,
-                .container,
-                .container * {
-                    font-family: "${fontFamily}", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-                }
-
-                .navbar {
-                    background-color: ${bgColor} !important;
-                    border-bottom-color: ${textColor}33 !important;
-                }
-
-                .navbar h1 {
-                    color: ${textColor} !important;
-                    font-size: ${fontSize * 1.5}px !important;
-                    line-height: ${leading} !important;
-                }
-
-                .container {
-                    line-height: ${leading} !important;
-                }
-
-                .page-title {
-                    color: ${textColor} !important;
-                    font-size: ${fontSize * 2.5}px !important;
-                    line-height: ${leading} !important;
-                }
-
-                .page-subtitle {
-                    color: ${textColor}99 !important;
-                    font-size: ${fontSize * 1.1}px !important;
-                    line-height: ${leading} !important;
-                }
-
-                .section-title {
-                    color: ${textColor} !important;
-                    font-size: ${fontSize * 1.5}px !important;
-                    line-height: ${leading} !important;
-                }
-
-                .stat-label {
-                    color: ${textColor}99 !important;
-                    font-size: ${fontSize * 0.9}px !important;
-                    line-height: ${leading} !important;
-                }
-
-                .stat-value {
-                    color: ${textColor} !important;
-                    font-size: ${fontSize * 2.5}px !important;
-                    line-height: 1.2 !important;
-                }
-
-                .bar-label {
-                    color: ${textColor} !important;
-                    font-size: ${fontSize * 0.95}px !important;
-                    line-height: ${leading} !important;
-                }
-
-                .bar-fill {
-                    font-size: ${fontSize * 0.9}px !important;
-                    line-height: ${leading} !important;
-                }
-
-                th {
-                    font-size: ${fontSize * 0.9}px !important;
-                    line-height: ${leading} !important;
-                }
-
-                td {
-                    font-size: ${fontSize}px !important;
-                    line-height: ${leading} !important;
-                }
-
-                button:not(.no-community-style):not(.no-community-style *) {
-                    font-size: ${fontSize}px !important;
-                    line-height: ${leading} !important;
-                }
-
-                .stat-card,
-                .section-card {
-                    background: ${adjustBrightness(bgColor, textColor === '#ffffff' ? -10 : 10)} !important;
-                    border-color: ${textColor}22 !important;
-                }
-
-                button:not(.no-community-style):not(.no-community-style *) {
-                    background-color: ${buttonBg} !important;
-                    color: ${buttonText} !important;
-                }
-
-                button.secondary:not(.no-community-style):not(.no-community-style *) {
-                    background-color: transparent !important;
-                    color: ${textColor} !important;
-                    border-color: ${textColor} !important;
-                }
-
-                button.secondary:hover:not(.no-community-style):not(.no-community-style *) {
-                    background-color: ${textColor} !important;
-                    color: ${bgColor} !important;
-                }
-
-                .bar-fill-container {
-                    background: ${textColor}11 !important;
-                }
-
-                .bar-fill {
-                    background: linear-gradient(90deg, ${textColor} 0%, ${textColor}cc 100%) !important;
-                    color: ${bgColor} !important;
-                }
-
-                th {
-                    background-color: ${adjustBrightness(bgColor, textColor === '#ffffff' ? -10 : 10)} !important;
-                    color: ${textColor} !important;
-                }
-
-                td {
-                    color: ${textColor} !important;
-                    border-bottom-color: ${textColor}11 !important;
-                }
-
-                tr:hover {
-                    background-color: ${adjustBrightness(bgColor, textColor === '#ffffff' ? -5 : 5)} !important;
-                }
-
-                .timestamp {
-                    color: ${textColor}99 !important;
-                    font-size: ${fontSize * 0.85}px !important;
-                }
-
-                .table-container {
-                    background: ${bgColor} !important;
-                    border-color: ${textColor}11 !important;
-                }
-
-                .style-indicator {
-                    background: ${textColor}11 !important;
-                    color: ${textColor} !important;
-                    font-size: ${fontSize * 0.9}px !important;
-                }
-            `;
-            
-            document.head.appendChild(style);
-
-            // Update indicator
-            const fontType = isSystemFont ? '(System Font)' : '(Google Font)';
-            document.getElementById('styleIndicator').innerHTML = `
-                🎨 Styled by community: <strong>${fontFamily}</strong> ${fontType}, ${fontSize}px, ${leading} leading
-                <br><small>Text: ${textColor} • Background: ${bgColor}</small>
-            `;
         }
 
         function removeCustomStyles() {
