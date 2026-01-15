@@ -165,7 +165,7 @@
 
         /* Chart bars */
         .chart-container {
-            margin: 1.5rem 0;
+            margin: 3rem 0;
         }
 
         .bar {
@@ -355,7 +355,7 @@
     <nav class="navbar">
         <h1>{What's My Type?} Admin</h1>
         <div class="navbar-controls">
-            <button onclick="loadData()">🔄 Refresh</button>
+            <button onclick="loadData()">Refresh</button>
             <button onclick="exportCSV()" class="secondary">📥 CSV</button>
             <button onclick="exportJSON()" class="secondary">📥 JSON</button>
         </div>
@@ -392,25 +392,25 @@
 
         <!-- Font Categories -->
         <div class="section-card">
-            <h2 class="section-title">📊 Font Category Distribution</h2>
+            <h2 class="section-title">Font Category Distribution</h2>
             <div id="categoryChart" class="chart-container"></div>
         </div>
 
         <!-- Popular Fonts -->
         <div class="section-card">
-            <h2 class="section-title">🔤 Most Popular Fonts</h2>
+            <h2 class="section-title">Most Popular Fonts</h2>
             <div id="fontChart" class="chart-container"></div>
         </div>
 
         <!-- Color Schemes -->
         <div class="section-card">
-            <h2 class="section-title">🎨 Popular Color Schemes</h2>
+            <h2 class="section-title">Popular Color Schemes</h2>
             <div id="colorChart" class="chart-container"></div>
         </div>
 
         <!-- Data Table -->
         <div class="section-card">
-            <h2 class="section-title">📋 All User Choices</h2>
+            <h2 class="section-title">All User Choices</h2>
             <div id="loading" class="loading">Loading data...</div>
             <div id="tableContainer" class="table-container" style="display: none;">
                 <table id="dataTable">
