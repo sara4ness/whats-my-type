@@ -237,14 +237,30 @@ function App() {
   const getCurrentFont = () => {
     if (!choices.specificFont) return 'system-ui';
     
+    // Serif fonts
     if (choices.specificFont === 'Georgia') return 'Georgia, serif';
     if (choices.specificFont === 'Times New Roman') return '"Times New Roman", serif';
     if (choices.specificFont === 'Garamond') return 'Garamond, serif';
     if (choices.specificFont === 'Merriweather') return 'Merriweather, serif';
+    
+    // Sans-serif fonts
     if (choices.specificFont === 'Arial') return 'Arial, sans-serif';
     if (choices.specificFont === 'Helvetica') return 'Helvetica, sans-serif';
     if (choices.specificFont === 'Verdana') return 'Verdana, sans-serif';
     if (choices.specificFont === 'Roboto') return 'Roboto, sans-serif';
+    
+    // Rounded fonts
+    if (choices.specificFont === 'Comic Sans MS') return '"Comic Sans MS", "Trebuchet MS", cursive';
+    if (choices.specificFont === 'Trebuchet MS') return '"Trebuchet MS", sans-serif';
+    if (choices.specificFont === 'Tahoma') return 'Tahoma, sans-serif';
+    if (choices.specificFont === 'Century Gothic') return '"Century Gothic", sans-serif';
+    
+    // Monospace fonts
+    if (choices.specificFont === 'Courier New') return '"Courier New", monospace';
+    if (choices.specificFont === 'Consolas') return 'Consolas, monospace';
+    if (choices.specificFont === 'Monaco') return 'Monaco, monospace';
+    if (choices.specificFont === 'Source Code Pro') return '"Source Code Pro", monospace';
+    
     return 'system-ui';
   };
 
@@ -451,7 +467,7 @@ function App() {
               paddingLeft: '1.5rem'
             }}>
               <li style={{ marginBottom: '0.75rem' }}>
-                Choose between serif and sans-serif font categories
+                Choose between serif, sans-serif, rounded, and monospace font categories
               </li>
               <li style={{ marginBottom: '0.75rem' }}>
                 Select a specific typeface that appeals to you
@@ -568,6 +584,34 @@ function App() {
                 setStep(1);
               }}
             />
+            
+            <OptionCard
+              title="Rounded"
+              description="Rounded fonts feature soft, curved letterforms with gentle edges that create a friendly and approachable feel. These fonts often have open, spacious characters that are easy to distinguish from one another, making them accessible and comfortable for extended reading. They work well for casual content and warm, welcoming interfaces."
+              fontFamily="'Comic Sans MS', 'Trebuchet MS', cursive"
+              fontSize={choices.fontSize}
+              lineHeight={choices.leading}
+              textColor={choices.textColor}
+              bgColor={choices.bgColor}
+              onClick={() => {
+                setChoices({ ...choices, fontCategory: 'rounded' });
+                setStep(1);
+              }}
+            />
+            
+            <OptionCard
+              title="Monospace"
+              description="Monospace fonts have fixed-width characters where each letter occupies the same horizontal space. Originally designed for typewriters and coding, these fonts create a distinctive, technical aesthetic with precise alignment. They offer excellent readability for structured content and provide a unique reading rhythm that some find particularly comfortable."
+              fontFamily="'Courier New', Consolas, monospace"
+              fontSize={choices.fontSize}
+              lineHeight={choices.leading}
+              textColor={choices.textColor}
+              bgColor={choices.bgColor}
+              onClick={() => {
+                setChoices({ ...choices, fontCategory: 'monospace' });
+                setStep(1);
+              }}
+            />
           </div>
         </div>
       </>
@@ -589,7 +633,30 @@ function App() {
       { name: 'Roboto', family: 'Roboto, sans-serif', description: "Roboto is a contemporary sans serif typeface with open shapes and smooth curves, created for digital environments. It is widely used in web and app design, balancing a modern aesthetic with excellent readability."}
     ];
     
-    const fonts = choices.fontCategory === 'serif' ? serifFonts : sansSerifFonts;
+    const roundedFonts = [
+      { name: 'Comic Sans MS', family: '"Comic Sans MS", "Trebuchet MS", cursive', description: "Comic Sans MS is a casual, rounded typeface with friendly, approachable letterforms. Its distinctive, irregular character shapes and generous spacing make it particularly accessible for readers who benefit from less uniform letterforms, including those with dyslexia. While often used informally, its readability characteristics make it valuable for accessible design." },
+      { name: 'Trebuchet MS', family: '"Trebuchet MS", sans-serif', description: "Trebuchet MS is a humanist sans serif with slightly rounded edges and open, spacious letterforms. Its clean design with subtle warmth makes it versatile for both body text and headings, offering good readability while maintaining a friendly, modern appearance."},
+      { name: 'Tahoma', family: 'Tahoma, sans-serif', description: "Tahoma is a compact, rounded sans serif typeface with narrow letterforms and tight spacing. Designed for screen readability, it maintains clarity even at small sizes and offers a neat, professional appearance with a slightly softer edge than traditional sans serifs."},
+      { name: 'Century Gothic', family: '"Century Gothic", sans-serif', description: "Century Gothic is a geometric sans serif with rounded, circular letterforms based on early 20th-century design principles. Its uniform, open characters create a clean, modern look that's particularly effective for headlines and short text passages, though its geometric precision works well for longer reading too."}
+    ];
+    
+    const monospaceFonts = [
+      { name: 'Courier New', family: '"Courier New", monospace', description: "Courier New is a classic monospaced typeface modeled after typewriter fonts, where each character occupies exactly the same width. Its clear, mechanical appearance and consistent spacing make it ideal for code, tabular data, and any content requiring precise alignment. The uniform width creates a distinctive reading rhythm."},
+      { name: 'Consolas', family: 'Consolas, monospace', description: "Consolas is a modern monospaced typeface designed specifically for programming environments, featuring enhanced clarity and subtle humanist touches. Its carefully balanced proportions and improved letterform distinction (especially between similar characters like 0/O and 1/l/I) make it excellent for code and technical documentation."},
+      { name: 'Monaco', family: 'Monaco, monospace', description: "Monaco is a clean, highly legible monospaced typeface originally designed for the classic Mac OS. Its generous spacing, clear distinction between similar characters, and slightly rounded forms make it comfortable for extended reading of code or technical content, with a balanced blend of functionality and visual appeal."},
+      { name: 'Source Code Pro', family: '"Source Code Pro", monospace', description: "Source Code Pro is a contemporary monospaced typeface created specifically for coding environments. It features excellent character distinction, optimized spacing, and multiple weights, making it versatile for both editors and documentation. Its modern design balances technical precision with comfortable readability for long coding sessions."}
+    ];
+    
+    let fonts;
+    if (choices.fontCategory === 'serif') {
+      fonts = serifFonts;
+    } else if (choices.fontCategory === 'sans-serif') {
+      fonts = sansSerifFonts;
+    } else if (choices.fontCategory === 'rounded') {
+      fonts = roundedFonts;
+    } else if (choices.fontCategory === 'monospace') {
+      fonts = monospaceFonts;
+    }
     
     return (
       <>
