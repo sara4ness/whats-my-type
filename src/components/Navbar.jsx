@@ -33,7 +33,7 @@ function Navbar({
         color: textColor,
         fontSize: `${fontSize * 1.5}px`
       }}>
-        What's My Type?
+        &#123;What's My Type?&#125;
       </h1>
       <div style={{ display: 'flex', gap: '1rem' }}>
         {showLearningButton && (
