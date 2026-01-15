@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - What's My Type?</title>
-    <style id="baseStyles">
+    <style>
         * {
             margin: 0;
             padding: 0;
@@ -16,7 +16,6 @@
             background-color: #ffffff;
             color: #000000;
             line-height: 1.6;
-            transition: all 0.5s ease;
         }
 
         /* Navbar - matching the app */
@@ -32,60 +31,17 @@
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
-            transition: all 0.5s ease;
         }
 
         .navbar h1 {
             font-size: 1.5rem;
             color: #000000;
             margin: 0;
-            transition: all 0.5s ease;
         }
 
         .navbar-controls {
             display: flex;
             gap: 1rem;
-            align-items: center;
-        }
-
-        /* Style mode toggle */
-        .style-toggle {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: #f0f0f0;
-            border-radius: 25px;
-            font-size: 0.9rem;
-        }
-
-        .toggle-switch {
-            position: relative;
-            width: 50px;
-            height: 26px;
-            background-color: #ccc;
-            border-radius: 13px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .toggle-switch.active {
-            background-color: #000;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 20px;
-            height: 20px;
-            background-color: white;
-            border-radius: 50%;
-            transition: transform 0.3s;
-        }
-
-        .toggle-switch.active .toggle-slider {
-            transform: translateX(24px);
         }
 
         /* Container */
@@ -93,7 +49,6 @@
             max-width: 1400px;
             margin: 0 auto;
             padding: 100px 20px 40px;
-            transition: all 0.5s ease;
         }
 
         /* Page header */
@@ -106,24 +61,11 @@
             font-size: 2.5rem;
             margin-bottom: 1rem;
             color: #000000;
-            transition: all 0.5s ease;
         }
 
         .page-subtitle {
             font-size: 1.1rem;
             color: #00000099;
-            transition: all 0.5s ease;
-        }
-
-        .style-indicator {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 0.5rem 1rem;
-            background: #f0f0f0;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            color: #666;
-            transition: all 0.5s ease;
         }
 
         /* Stats grid */
@@ -139,7 +81,7 @@
             border: 2px solid #00000022;
             border-radius: 5px;
             padding: 2rem;
-            transition: all 0.5s ease;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .stat-card:hover {
@@ -154,7 +96,6 @@
             color: #00000066;
             margin-bottom: 0.75rem;
             font-weight: 600;
-            transition: all 0.5s ease;
         }
 
         .stat-value {
@@ -162,7 +103,6 @@
             font-weight: 700;
             color: #000000;
             line-height: 1.2;
-            transition: all 0.5s ease;
         }
 
         /* Section cards */
@@ -172,7 +112,6 @@
             border-radius: 5px;
             padding: 2rem;
             margin-bottom: 2rem;
-            transition: all 0.5s ease;
         }
 
         .section-title {
@@ -180,7 +119,6 @@
             margin-bottom: 1.5rem;
             color: #000000;
             font-weight: 600;
-            transition: all 0.5s ease;
         }
 
         /* Buttons */
@@ -193,7 +131,7 @@
             cursor: pointer;
             font-size: 1rem;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: opacity 0.2s, transform 0.2s;
         }
 
         button:hover {
@@ -209,12 +147,20 @@
             background-color: transparent;
             color: #000000;
             border: 2px solid #000000;
-            transition: all 0.3s ease;
         }
 
         button.secondary:hover {
             background-color: #000000;
             color: #ffffff;
+        }
+
+        /* Controls section */
+        .controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            justify-content: center;
         }
 
         /* Chart bars */
@@ -233,7 +179,6 @@
             min-width: 180px;
             font-weight: 500;
             font-size: 0.95rem;
-            transition: all 0.5s ease;
         }
 
         .bar-fill-container {
@@ -243,7 +188,6 @@
             height: 36px;
             position: relative;
             overflow: hidden;
-            transition: all 0.5s ease;
         }
 
         .bar-fill {
@@ -256,7 +200,7 @@
             color: white;
             font-weight: 600;
             font-size: 0.9rem;
-            transition: width 0.3s ease, background 0.5s ease;
+            transition: width 0.3s ease;
         }
 
         /* Color preview */
@@ -276,7 +220,6 @@
             background: #ffffff;
             border-radius: 5px;
             border: 1px solid #00000011;
-            transition: all 0.5s ease;
         }
 
         table {
@@ -288,7 +231,6 @@
             text-align: left;
             padding: 1rem;
             border-bottom: 1px solid #00000011;
-            transition: all 0.5s ease;
         }
 
         th {
@@ -298,7 +240,6 @@
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            transition: all 0.5s ease;
         }
 
         tr:hover {
@@ -312,7 +253,6 @@
         .timestamp {
             font-size: 0.85rem;
             color: #00000099;
-            transition: all 0.5s ease;
         }
 
         /* Loading and error states */
@@ -357,8 +297,12 @@
                 width: 100%;
             }
 
+            .navbar-controls button {
+                width: 100%;
+            }
+
             .container {
-                padding-top: 220px;
+                padding-top: 180px;
             }
 
             .stats-grid {
@@ -376,6 +320,14 @@
             }
 
             .bar-fill-container {
+                width: 100%;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .controls button {
                 width: 100%;
             }
         }
@@ -403,12 +355,6 @@
     <nav class="navbar">
         <h1>{What's My Type?} Admin</h1>
         <div class="navbar-controls">
-            <div class="style-toggle no-community-style">
-                <span class="no-community-style">Community Styled</span>
-                <div class="toggle-switch no-community-style" id="styleToggle" onclick="toggleCommunityStyle()">
-                    <div class="toggle-slider no-community-style"></div>
-                </div>
-            </div>
             <button onclick="loadData()">🔄 Refresh</button>
             <button onclick="exportCSV()" class="secondary">📥 CSV</button>
             <button onclick="exportJSON()" class="secondary">📥 JSON</button>
@@ -420,9 +366,6 @@
         <div class="page-header">
             <h1 class="page-title">Typography Choices Dashboard</h1>
             <p class="page-subtitle">Analyzing user preferences and design patterns</p>
-            <div class="style-indicator" id="styleIndicator">
-                Using default design system
-            </div>
         </div>
 
         <div id="error" class="error" style="display: none;"></div>
@@ -492,8 +435,6 @@
 
     <script>
         const API_URL = 'https://whats-my-type-0y3i.onrender.com/api';
-        let communityStyleEnabled = false;
-        let communityStyles = null;
 
         async function loadData() {
             try {
@@ -513,15 +454,6 @@
                     throw new Error('Failed to load data');
                 }
 
-                // Store community styles
-                communityStyles = {
-                    font: stats.stats.popularFonts[0]?.specific_font || 'Arial',
-                    fontSize: stats.stats.averageFontSize || 16,
-                    leading: stats.stats.averageLeading || 1.5,
-                    textColor: stats.stats.popularColorSchemes[0]?.text_color || '#000000',
-                    bgColor: stats.stats.popularColorSchemes[0]?.bg_color || '#ffffff'
-                };
-
                 // Update stats
                 document.getElementById('totalEntries').textContent = stats.stats.totalEntries || 0;
                 document.getElementById('avgFontSize').textContent = stats.stats.averageFontSize ? 
@@ -537,11 +469,6 @@
                 // Render table
                 renderTable(data.data);
 
-                // Apply community styles if enabled
-                if (communityStyleEnabled) {
-                    applyCommunityStyles();
-                }
-
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('tableContainer').style.display = 'block';
             } catch (error) {
@@ -551,289 +478,6 @@
                 document.getElementById('error').style.display = 'block';
                 document.getElementById('loading').style.display = 'none';
             }
-        }
-
-        function toggleCommunityStyle() {
-            communityStyleEnabled = !communityStyleEnabled;
-            const toggle = document.getElementById('styleToggle');
-            
-            if (communityStyleEnabled) {
-                toggle.classList.add('active');
-                applyCommunityStyles();
-            } else {
-                toggle.classList.remove('active');
-                removeCustomStyles();
-            }
-        }
-
-        function applyCommunityStyles() {
-            if (!communityStyles) return;
-
-            const { font, fontSize, leading, textColor, bgColor } = communityStyles;
-            
-            console.log('Applying community styles:', communityStyles);
-            
-            // Remove any existing custom styles and fonts
-            const existingStyle = document.getElementById('communityStyles');
-            if (existingStyle) {
-                existingStyle.remove();
-            }
-            const existingFont = document.getElementById('communityFont');
-            if (existingFont) {
-                existingFont.remove();
-            }
-
-            const fontFamily = font.trim();
-            
-            // Common system fonts
-            const systemFonts = [
-                'Arial', 'Helvetica', 'Times New Roman', 'Times', 'Courier New', 'Courier',
-                'Verdana', 'Georgia', 'Palatino', 'Garamond', 'Bookman', 'Comic Sans MS',
-                'Trebuchet MS', 'Arial Black', 'Impact', 'Lucida Sans', 'Tahoma',
-                'Lucida Console', 'Monaco', 'Brush Script MT', 'Copperplate', 'Papyrus'
-            ];
-            
-            const isSystemFont = systemFonts.some(sf => sf.toLowerCase() === fontFamily.toLowerCase());
-
-            // Function to actually apply the styles
-            function applyStyles() {
-                const style = document.createElement('style');
-                style.id = 'communityStyles';
-                
-                const buttonBg = textColor;
-                const buttonText = bgColor;
-                
-                style.textContent = `
-                    /* Base font family */
-                    body {
-                        font-family: "${fontFamily}", Georgia, serif !important;
-                        background-color: ${bgColor} !important;
-                        color: ${textColor} !important;
-                        line-height: ${leading} !important;
-                    }
-                    
-                    /* Protect toggle */
-                    .no-community-style,
-                    .no-community-style * {
-                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-                        font-size: 0.9rem !important;
-                        line-height: 1.6 !important;
-                        color: inherit !important;
-                    }
-                    
-                    /* Apply to all elements */
-                    .navbar h1,
-                    .page-title,
-                    .page-subtitle,
-                    .section-title,
-                    .stat-label,
-                    .stat-value,
-                    .bar-label,
-                    .bar-fill,
-                    th, td, p, span, div, a,
-                    button:not(.no-community-style):not(.no-community-style *),
-                    .style-indicator,
-                    .container,
-                    .container * {
-                        font-family: "${fontFamily}", Georgia, serif !important;
-                    }
-
-                    .navbar {
-                        background-color: ${bgColor} !important;
-                        border-bottom-color: ${textColor}33 !important;
-                    }
-
-                    .navbar h1 {
-                        color: ${textColor} !important;
-                        font-size: ${fontSize * 1.5}px !important;
-                        line-height: ${leading} !important;
-                    }
-
-                    .page-title {
-                        color: ${textColor} !important;
-                        font-size: ${fontSize * 2.5}px !important;
-                        line-height: ${leading} !important;
-                    }
-
-                    .page-subtitle {
-                        color: ${textColor}99 !important;
-                        font-size: ${fontSize * 1.1}px !important;
-                        line-height: ${leading} !important;
-                    }
-
-                    .section-title {
-                        color: ${textColor} !important;
-                        font-size: ${fontSize * 1.5}px !important;
-                        line-height: ${leading} !important;
-                    }
-
-                    .stat-label {
-                        color: ${textColor}99 !important;
-                        font-size: ${fontSize * 0.9}px !important;
-                        line-height: ${leading} !important;
-                    }
-
-                    .stat-value {
-                        color: ${textColor} !important;
-                        font-size: ${fontSize * 2.5}px !important;
-                        line-height: 1.2 !important;
-                    }
-
-                    .bar-label {
-                        color: ${textColor} !important;
-                        font-size: ${fontSize * 0.95}px !important;
-                        line-height: ${leading} !important;
-                    }
-
-                    .bar-fill {
-                        font-size: ${fontSize * 0.9}px !important;
-                        line-height: ${leading} !important;
-                    }
-
-                    th {
-                        font-size: ${fontSize * 0.9}px !important;
-                        line-height: ${leading} !important;
-                    }
-
-                    td {
-                        font-size: ${fontSize}px !important;
-                        line-height: ${leading} !important;
-                    }
-
-                    button:not(.no-community-style):not(.no-community-style *) {
-                        font-size: ${fontSize}px !important;
-                        line-height: ${leading} !important;
-                    }
-
-                    .stat-card,
-                    .section-card {
-                        background: ${adjustBrightness(bgColor, textColor === '#ffffff' ? -10 : 10)} !important;
-                        border-color: ${textColor}22 !important;
-                    }
-
-                    button:not(.no-community-style):not(.no-community-style *) {
-                        background-color: ${buttonBg} !important;
-                        color: ${buttonText} !important;
-                    }
-
-                    button.secondary:not(.no-community-style):not(.no-community-style *) {
-                        background-color: transparent !important;
-                        color: ${textColor} !important;
-                        border-color: ${textColor} !important;
-                    }
-
-                    button.secondary:hover:not(.no-community-style):not(.no-community-style *) {
-                        background-color: ${textColor} !important;
-                        color: ${bgColor} !important;
-                    }
-
-                    .bar-fill-container {
-                        background: ${textColor}11 !important;
-                    }
-
-                    .bar-fill {
-                        background: linear-gradient(90deg, ${textColor} 0%, ${textColor}cc 100%) !important;
-                        color: ${bgColor} !important;
-                    }
-
-                    th {
-                        background-color: ${adjustBrightness(bgColor, textColor === '#ffffff' ? -10 : 10)} !important;
-                        color: ${textColor} !important;
-                    }
-
-                    td {
-                        color: ${textColor} !important;
-                        border-bottom-color: ${textColor}11 !important;
-                    }
-
-                    tr:hover {
-                        background-color: ${adjustBrightness(bgColor, textColor === '#ffffff' ? -5 : 5)} !important;
-                    }
-
-                    .timestamp {
-                        color: ${textColor}99 !important;
-                        font-size: ${fontSize * 0.85}px !important;
-                    }
-
-                    .table-container {
-                        background: ${bgColor} !important;
-                        border-color: ${textColor}11 !important;
-                    }
-
-                    .style-indicator {
-                        background: ${textColor}11 !important;
-                        color: ${textColor} !important;
-                        font-size: ${fontSize * 0.9}px !important;
-                    }
-                `;
-                
-                document.head.appendChild(style);
-
-                const fontType = isSystemFont ? '(System Font)' : '(Google Font)';
-                document.getElementById('styleIndicator').innerHTML = `
-                    🎨 Styled by community: <strong>${fontFamily}</strong> ${fontType}, ${fontSize}px, ${leading} leading
-                    <br><small>Text: ${textColor} • Background: ${bgColor}</small>
-                `;
-                
-                console.log('✓ Styles applied with font:', fontFamily);
-            }
-
-            // Load font and apply styles
-            if (!isSystemFont) {
-                // Use CSS Font Loading API to properly load Google Fonts
-                const encodedFont = fontFamily.replace(/ /g, '+');
-                const fontUrl = `https://fonts.googleapis.com/css2?family=${encodedFont}:wght@300;400;500;600;700&display=swap`;
-                
-                console.log('Loading Google Font:', fontFamily);
-                
-                // Create link element
-                const fontLink = document.createElement('link');
-                fontLink.id = 'communityFont';
-                fontLink.rel = 'stylesheet';
-                fontLink.href = fontUrl;
-                
-                // Wait for font to load using FontFace API
-                fontLink.onload = () => {
-                    console.log('✓ Font stylesheet loaded');
-                    // Wait a bit more for font to be parsed and available
-                    setTimeout(() => {
-                        applyStyles();
-                    }, 200);
-                };
-                
-                fontLink.onerror = () => {
-                    console.error('✗ Failed to load font from Google Fonts, using fallback');
-                    applyStyles(); // Apply anyway with fallback
-                };
-                
-                document.head.appendChild(fontLink);
-            } else {
-                console.log('Using system font:', fontFamily);
-                applyStyles(); // Apply immediately for system fonts
-            }
-        }
-
-        function removeCustomStyles() {
-            const existingStyle = document.getElementById('communityStyles');
-            if (existingStyle) {
-                existingStyle.remove();
-            }
-
-            const existingFont = document.getElementById('communityFont');
-            if (existingFont) {
-                existingFont.remove();
-            }
-
-            document.getElementById('styleIndicator').textContent = 'Using default design system';
-        }
-
-        function adjustBrightness(color, percent) {
-            const num = parseInt(color.replace("#", ""), 16);
-            const amt = Math.round(2.55 * percent);
-            const R = Math.min(255, Math.max(0, (num >> 16) + amt));
-            const G = Math.min(255, Math.max(0, (num >> 8 & 0x00FF) + amt));
-            const B = Math.min(255, Math.max(0, (num & 0x0000FF) + amt));
-            return "#" + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
         }
 
         function renderCategoryChart(categories) {
