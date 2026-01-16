@@ -1117,21 +1117,6 @@ function App() {
                 sunt in culpa qui officia deserunt mollit anim id est laborum.
               </p>
             </div>
-
-            <div className="navigationButtons" style={{ gap: '1.5rem', marginTop: '2rem' }}>
-              <button 
-                onClick={() => setShowLearning(true)}
-                className="navButton"
-                style={{ 
-                  color: choices.bgColor, 
-                  backgroundColor: choices.textColor,
-                  fontSize: `${choices.fontSize * 1.1}px`,
-                  lineHeight: choices.leading
-                }}
-              >
-                Learn About Typography & Accessibility
-              </button>
-            </div>
           </div>
           
           <div className="navigationButtons">
