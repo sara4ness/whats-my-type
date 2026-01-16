@@ -30,9 +30,19 @@ function getContrastRatio(hex1, hex2) {
 function OptionCard({ letter, title, description, onClick, fontFamily, fontSize, lineHeight, textColor, bgColor }) {
   const boxBg = getBoxBackground(bgColor);
   
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
     <div 
       onClick={onClick}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+      role="button"
       className="optionBox"
       style={{ 
         fontFamily,
@@ -40,7 +50,8 @@ function OptionCard({ letter, title, description, onClick, fontFamily, fontSize,
         lineHeight: lineHeight,
         color: textColor,
         backgroundColor: boxBg,
-        borderColor: textColor + '33'
+        borderColor: textColor + '33',
+        cursor: 'pointer'
       }}
     >
       <div className="fontFamily" style={{ fontSize: `${fontSize * 2.5}px`, lineHeight: lineHeight }}>
@@ -80,6 +91,7 @@ function SliderOption({ title, description, value, onChange, min, max, step, uni
         max={max}
         step={step || 1}
         value={value}
+        aria-label={title}
         onChange={(e) => onChange(Number(e.target.value))}
         className="slider"
       />
@@ -144,6 +156,7 @@ function ColorOption({ title, description, currentTextColor, currentBgColor, onT
           <input 
             type="color"
             value={currentTextColor}
+            aria-label="Text Color"
             onChange={(e) => onTextChange(e.target.value)}
             className="colorInput"
           />
@@ -155,6 +168,7 @@ function ColorOption({ title, description, currentTextColor, currentBgColor, onT
           <input 
             type="color"
             value={currentBgColor}
+            aria-label="Background Color"
             onChange={(e) => onBgChange(e.target.value)}
             className="colorInput"
           />
