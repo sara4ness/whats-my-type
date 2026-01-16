@@ -202,7 +202,16 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
               key={card.id} 
               className={`flip-card ${flippedCardId === card.id ? 'flipped' : ''}`}
               onClick={() => handleCardClick(card.id)}
-              style={{ height: cardHeight }}
+              onKeyDown={(e) => {
+                // Handle keyboard activation (Enter or Space)
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault(); // Prevent page scroll on Space
+                  handleCardClick(card.id);
+                }
+              }}
+              tabIndex={0}  // Make element focusable
+              role="button" // Semantic role for screen readers
+              style={{ height: cardHeight, cursor: 'pointer' }}
             >
               <div className="flip-card-inner">
                 {/* Front of Card */}
