@@ -159,7 +159,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
         
         <div className="learningHeader">
           <h1 style={{ fontSize: `${fontSize * 2}px`, marginBottom: '1rem' }}>
-            UX & Design Principles
+            UX & Design Learning Resources
           </h1>
           
           <div className="tabsContainer">
