@@ -19,12 +19,19 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
   };
 
   const getContrastColor = (bg) => {
-    const hex = bg.replace('#', '');
-    const r = parseInt(hex.substr(0, 2), 16);
-    const g = parseInt(hex.substr(2, 2), 16);
-    const b = parseInt(hex.substr(4, 2), 16);
-    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-    return brightness > 128 ? adjustBrightness(bg, -10) : adjustBrightness(bg, 15);
+      const hex = bg.replace('#', '');
+      const r = parseInt(hex.substr(0, 2), 16);
+      const g = parseInt(hex.substr(2, 2), 16);
+      const b = parseInt(hex.substr(4, 2), 16);
+      
+      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+      
+      // This logic matches the getBoxBackground function used in App.jsx
+      if (brightness > 128) {
+        return adjustBrightness(bg, -3); // Slightly darker for light backgrounds
+      } else {
+        return adjustBrightness(bg, 8);  // Slightly lighter for dark backgrounds
+      }
   };
 
   const cardBg = getContrastColor(bgColor);
