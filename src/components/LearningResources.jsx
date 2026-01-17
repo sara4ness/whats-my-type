@@ -32,7 +32,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
   
   // Dynamic Sizing Logic
   const cardHeight = `${Math.max(320, fontSize * 20)}px`;
-  const minCardWidth = Math.max(300, 300 + (fontSize - 16) * 15);
+  const minCardWidth = Math.max(600, 600 + (fontSize - 16) * 15);
 
   const principles = [
     // --- UX DESIGN ---
