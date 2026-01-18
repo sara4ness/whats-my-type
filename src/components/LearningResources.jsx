@@ -40,63 +40,521 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
   const minCardWidth = Math.max(600, 600 + (fontSize - 16) * 15);
 
   const principles = [
-    // --- UX DESIGN ---
+    // =====================================================
+    // UX DESIGN CARDS
+    // =====================================================
+
+    // --- GARRETT'S FIVE PLANES ---
     {
       id: 1,
       tab: 'ux',
-      category: "Heuristics",
-      title: "Visibility of System Status",
-      summary: "Keep users informed about what is going on.",
-      details: "Nielsen's 1st Heuristic: The design should always keep users informed about what is going on, through appropriate feedback within a reasonable amount of time. Examples include loading spinners, progress bars, and success notifications.",
-      action: "Ensure every user action has a clear reaction."
+      category: "Garrett's Five Planes",
+      title: "Strategy Plane",
+      summary: "Why are we building this?",
+      details: "The foundation of Garrett's Elements of User Experience. The Strategy Plane defines user needs (what do users want from the product?) and business objectives (what do stakeholders want?). Every design decision should trace back to this plane.",
+      action: "Define user goals and business goals before designing anything."
     },
     {
       id: 2,
       tab: 'ux',
-      category: "Cognitive Psychology",
-      title: "Cognitive Load",
-      summary: "Don't make the user think too hard.",
-      details: "Cognitive load refers to the amount of working memory resources used. 'Extraneous' load comes from bad design (distractions, clutter). 'Germane' load is the effort needed to learn. Good UX minimizes extraneous load so users can focus on their actual task.",
-      action: "Simplify interfaces and remove non-essential elements."
+      category: "Garrett's Five Planes",
+      title: "Scope Plane",
+      summary: "What are we going to build?",
+      details: "The Scope Plane translates strategy into requirements. For functionality, this means feature specifications. For information, this means content requirements. Scope answers: what features and content will fulfill our strategic goals?",
+      action: "Create a prioritized list of features based on user and business needs."
     },
     {
       id: 3,
       tab: 'ux',
-      category: "Heuristics",
-      title: "Error Prevention",
-      summary: "Better a good design than a good error message.",
-      details: "Nielsen's 5th Heuristic: Good design prevents problems from occurring in the first place. Eliminate error-prone conditions or check for them and present users with a confirmation option before they commit to the action.",
-      action: "Use constraints (like date pickers) instead of free text."
+      category: "Garrett's Five Planes",
+      title: "Structure Plane",
+      summary: "How is it organized?",
+      details: "The Structure Plane defines how users move through the system. Interaction design shapes how users interact with functionality. Information architecture organizes content into coherent structures. This is where navigation patterns emerge.",
+      action: "Map user flows and create an information architecture diagram."
     },
     {
       id: 4,
       tab: 'ux',
-      category: "Gestalt Principles",
-      title: "Law of Proximity",
-      summary: "Things close together appear grouped.",
-      details: "Objects that are near, or proximate to each other, tend to be grouped together. This is a fundamental way we organize information. We perceive elements that are closer together as related, while those further apart are unrelated.",
-      action: "Use whitespace to group related controls."
+      category: "Garrett's Five Planes",
+      title: "Skeleton Plane",
+      summary: "How is it arranged on screen?",
+      details: "The Skeleton Plane arranges elements for maximum effect. Interface design positions interactive elements. Navigation design helps users move through information. Information design presents content for comprehension. This is the wireframe level.",
+      action: "Create wireframes that optimize element placement for usability."
     },
     {
       id: 5,
       tab: 'ux',
-      category: "Typography",
-      title: "Line Length (Measure)",
-      summary: "Avoid lines that are too long to track.",
-      details: "For comfortable reading, a line of text should be 50–75 characters long. If lines are too long, the eye has trouble tracking back to the start of the next line. If too short, the rhythm breaks.",
-      action: "Limit container width on large screens."
+      category: "Garrett's Five Planes",
+      title: "Surface Plane",
+      summary: "How does it look?",
+      details: "The Surface Plane is what users actually see—the visual design. Color, typography, imagery, and visual hierarchy come together here. The surface should reinforce and enhance all the planes beneath it, not just look pretty.",
+      action: "Ensure visual design supports and doesn't contradict the UX beneath it."
+    },
+
+    // --- DON'T MAKE ME THINK ---
+    {
+      id: 10,
+      tab: 'ux',
+      category: "Don't Make Me Think",
+      title: "Krug's First Law",
+      summary: "Don't make me think!",
+      details: "Steve Krug's foundational principle: a page should be self-evident and obvious. Users shouldn't have to spend mental effort figuring out what things are or how to use them. Every question mark adds to cognitive load and increases the chance users will leave.",
+      action: "Ask yourself: would a user understand this instantly?"
     },
     {
-      id: 6,
+      id: 11,
+      tab: 'ux',
+      category: "Don't Make Me Think",
+      title: "How Users Actually Read",
+      summary: "They don't read—they scan.",
+      details: "Users don't read web pages word by word. They scan, picking out words and sentences that catch their interest. Design for scanning: use clear visual hierarchy, short paragraphs, bulleted lists, and meaningful headings. Make key information unmissable.",
+      action: "Use headings, bold text, and visual breaks to support scanning."
+    },
+    {
+      id: 12,
+      tab: 'ux',
+      category: "Don't Make Me Think",
+      title: "Satisficing",
+      summary: "Users don't choose the best option—they choose the first reasonable one.",
+      details: "Users don't optimize; they 'satisfice' (satisfy + suffice). They'll click the first link that seems like it might lead somewhere useful. They won't carefully weigh all options. Design for this behavior by making the right path obvious.",
+      action: "Make the primary action the most prominent and obviously correct choice."
+    },
+    {
+      id: 13,
+      tab: 'ux',
+      category: "Don't Make Me Think",
+      title: "Omit Needless Words",
+      summary: "Half the words on most pages can go.",
+      details: "Krug's Third Law of Usability: Get rid of half the words on each page, then get rid of half of what's left. Happy talk (intro text that doesn't say anything) and instructions (that nobody reads) should be ruthlessly cut.",
+      action: "Edit your copy. Then edit it again. Remove everything non-essential."
+    },
+    {
+      id: 14,
+      tab: 'ux',
+      category: "Don't Make Me Think",
+      title: "The Trunk Test",
+      summary: "Could you figure out where you are if dropped here randomly?",
+      details: "Imagine being blindfolded, driven around, and dropped on a random page of a website. Could you answer: What site is this? What page am I on? What are the major sections? What are my options? Where's the search? This tests navigation clarity.",
+      action: "Test any page in isolation—can users orient themselves immediately?"
+    },
+
+    // --- COGNITIVE LOAD THEORY ---
+    {
+      id: 20,
+      tab: 'ux',
+      category: "Cognitive Load Theory",
+      title: "What is Cognitive Load?",
+      summary: "Working memory has hard limits.",
+      details: "Cognitive Load Theory (Sweller, 1988) explains that working memory can only handle a limited amount of information at once. When interfaces exceed this capacity, users become confused, make errors, and abandon tasks. Good UX respects these mental limits.",
+      action: "Audit your interface for unnecessary complexity."
+    },
+    {
+      id: 21,
+      tab: 'ux',
+      category: "Cognitive Load Theory",
+      title: "Intrinsic Load",
+      summary: "The inherent complexity of the task.",
+      details: "Intrinsic load comes from the complexity of the task itself. Filing taxes is inherently complex; checking the weather isn't. You can't eliminate intrinsic load, but you can break complex tasks into manageable chunks and provide scaffolding.",
+      action: "Break complex tasks into smaller, sequential steps."
+    },
+    {
+      id: 22,
+      tab: 'ux',
+      category: "Cognitive Load Theory",
+      title: "Extraneous Load",
+      summary: "Unnecessary complexity from bad design.",
+      details: "Extraneous load is wasted mental effort caused by poor design—confusing layouts, inconsistent patterns, unclear labels, visual clutter. This is the load you CAN and SHOULD eliminate. Every bit of extraneous load steals resources from the actual task.",
+      action: "Remove anything that doesn't directly help users complete their task."
+    },
+    {
+      id: 23,
+      tab: 'ux',
+      category: "Cognitive Load Theory",
+      title: "Germane Load",
+      summary: "Productive effort that builds understanding.",
+      details: "Germane load is the good kind—mental effort spent building schemas and understanding. Well-designed learning experiences maximize germane load while minimizing extraneous load. The goal is to direct all available cognitive resources toward meaningful learning.",
+      action: "Use progressive disclosure to introduce complexity gradually."
+    },
+
+    // --- MILLER'S LAW ---
+    {
+      id: 30,
+      tab: 'ux',
+      category: "Miller's Law",
+      title: "The Magical Number 7±2",
+      summary: "Working memory holds about 7 items.",
+      details: "George Miller's 1956 paper found that people can hold roughly 7 (plus or minus 2) items in working memory. This doesn't mean every menu needs exactly 7 items, but it does mean overwhelming users with too many options at once will cause cognitive overload.",
+      action: "Chunk information into groups of 5-9 related items."
+    },
+    {
+      id: 31,
+      tab: 'ux',
+      category: "Miller's Law",
+      title: "Chunking",
+      summary: "Group information into meaningful units.",
+      details: "Chunking organizes individual pieces of information into larger, meaningful units. Phone numbers are chunked (555-867-5309, not 5558675309). Credit cards use groups of four. Chunking extends effective memory by treating groups as single items.",
+      action: "Group related items visually and logically to reduce perceived complexity."
+    },
+
+    // --- NORMAN'S THREE LEVELS ---
+    {
+      id: 40,
+      tab: 'ux',
+      category: "Norman's Three Levels",
+      title: "Visceral Design",
+      summary: "The immediate gut reaction.",
+      details: "Don Norman's visceral level is automatic and prewired—our immediate emotional response to what we see. Before any conscious thought, we react to colors, shapes, sounds, and feel. First impressions happen here. Visceral design makes users feel something instantly.",
+      action: "Consider the emotional impact of your visual design at first glance."
+    },
+    {
+      id: 41,
+      tab: 'ux',
+      category: "Norman's Three Levels",
+      title: "Behavioral Design",
+      summary: "The pleasure of effective use.",
+      details: "The behavioral level is about use—does it work? Is it usable? Does it feel good to interact with? This is where traditional usability lives. Users get satisfaction from accomplishing tasks effectively, efficiently, and with a sense of control.",
+      action: "Ensure interactions feel responsive, intuitive, and rewarding."
+    },
+    {
+      id: 42,
+      tab: 'ux',
+      category: "Norman's Three Levels",
+      title: "Reflective Design",
+      summary: "The story we tell ourselves.",
+      details: "The reflective level involves conscious thought—what does this product say about me? How do I feel about owning or using it? This is about self-image, personal satisfaction, and memories. Reflective design creates meaning and builds lasting relationships with products.",
+      action: "Consider what identity and values your product communicates to users."
+    },
+
+    // --- NIELSEN'S 10 HEURISTICS ---
+    {
+      id: 50,
+      tab: 'ux',
+      category: "Nielsen's Heuristics",
+      title: "#1: Visibility of System Status",
+      summary: "Keep users informed about what's happening.",
+      details: "The design should always keep users informed about what is going on, through appropriate feedback within reasonable time. Loading indicators, progress bars, success confirmations, and error states all contribute to system status visibility.",
+      action: "Ensure every user action has immediate, visible feedback."
+    },
+    {
+      id: 51,
+      tab: 'ux',
+      category: "Nielsen's Heuristics",
+      title: "#2: Match with the Real World",
+      summary: "Speak the user's language.",
+      details: "The design should speak the users' language, using words, phrases, and concepts familiar to them. Follow real-world conventions, making information appear in a natural and logical order. Avoid system-oriented jargon.",
+      action: "Use terminology your users actually use, not internal jargon."
+    },
+    {
+      id: 52,
+      tab: 'ux',
+      category: "Nielsen's Heuristics",
+      title: "#3: User Control & Freedom",
+      summary: "Always provide an emergency exit.",
+      details: "Users often perform actions by mistake. They need a clearly marked 'emergency exit' to leave the unwanted state without going through an extended process. Support undo and redo. Let users feel in control, not trapped.",
+      action: "Add clear cancel, back, and undo options to all flows."
+    },
+    {
+      id: 53,
+      tab: 'ux',
+      category: "Nielsen's Heuristics",
+      title: "#4: Consistency & Standards",
+      summary: "Don't make users wonder if different things mean the same.",
+      details: "Users shouldn't have to wonder whether different words, situations, or actions mean the same thing. Follow platform and industry conventions. Internal consistency (within your product) and external consistency (with other products) both matter.",
+      action: "Audit your interface for inconsistent patterns and terminology."
+    },
+    {
+      id: 54,
+      tab: 'ux',
+      category: "Nielsen's Heuristics",
+      title: "#5: Error Prevention",
+      summary: "Prevent errors before they happen.",
+      details: "Even better than good error messages is a careful design that prevents problems from occurring in the first place. Eliminate error-prone conditions or check for them and present users with a confirmation option before they commit to an action.",
+      action: "Use constraints, defaults, and confirmations to prevent mistakes."
+    },
+    {
+      id: 55,
+      tab: 'ux',
+      category: "Nielsen's Heuristics",
+      title: "#6: Recognition over Recall",
+      summary: "Show options rather than requiring memory.",
+      details: "Minimize the user's memory load by making elements, actions, and options visible. Users shouldn't have to remember information from one part of the interface to another. Instructions should be visible or easily retrievable.",
+      action: "Use menus, suggestions, and visible options instead of blank fields."
+    },
+    {
+      id: 56,
+      tab: 'ux',
+      category: "Nielsen's Heuristics",
+      title: "#7: Flexibility & Efficiency",
+      summary: "Provide accelerators for expert users.",
+      details: "Accelerators—unseen by novice users—can speed up interaction for experts. Allow users to tailor frequent actions. Keyboard shortcuts, customization options, and power-user features let experienced users work faster without complicating the novice experience.",
+      action: "Add keyboard shortcuts and customization for power users."
+    },
+    {
+      id: 57,
+      tab: 'ux',
+      category: "Nielsen's Heuristics",
+      title: "#8: Aesthetic & Minimalist Design",
+      summary: "Remove everything that doesn't help.",
+      details: "Interfaces should not contain information that is irrelevant or rarely needed. Every extra unit of information competes with relevant information and diminishes their relative visibility. Strive for signal, not noise.",
+      action: "Question every element: does this help users accomplish their goal?"
+    },
+    {
+      id: 58,
+      tab: 'ux',
+      category: "Nielsen's Heuristics",
+      title: "#9: Help Users with Errors",
+      summary: "Error messages should propose solutions.",
+      details: "Error messages should be expressed in plain language (no codes), precisely indicate the problem, and constructively suggest a solution. Don't just say what went wrong—help users fix it and move forward.",
+      action: "Write error messages that explain the problem and offer next steps."
+    },
+    {
+      id: 59,
+      tab: 'ux',
+      category: "Nielsen's Heuristics",
+      title: "#10: Help & Documentation",
+      summary: "Provide searchable, task-focused help.",
+      details: "Even though it's better if the system can be used without documentation, it may be necessary to provide help. Such information should be easy to search, focused on the user's task, list concrete steps, and not be too large.",
+      action: "Create contextual help that appears where and when users need it."
+    },
+
+    // --- GESTALT PRINCIPLES ---
+    {
+      id: 60,
+      tab: 'ux',
+      category: "Gestalt Principles",
+      title: "Law of Proximity",
+      summary: "Things close together appear grouped.",
+      details: "Objects that are near each other tend to be perceived as a group. This is fundamental to organizing information. We perceive elements that are closer together as related, while those further apart seem unrelated. Whitespace is a powerful grouping tool.",
+      action: "Use consistent spacing to create clear visual groups."
+    },
+    {
+      id: 61,
+      tab: 'ux',
+      category: "Gestalt Principles",
+      title: "Law of Similarity",
+      summary: "Similar elements appear grouped.",
+      details: "Elements that share visual characteristics (color, shape, size, orientation) are perceived as related. When proximity isn't enough, use similarity to create associations. Conversely, make functionally different elements look different.",
+      action: "Style related elements consistently; differentiate unrelated ones."
+    },
+    {
+      id: 62,
+      tab: 'ux',
+      category: "Gestalt Principles",
+      title: "Law of Closure",
+      summary: "We complete incomplete shapes.",
+      details: "The mind fills in missing information to perceive complete shapes, even when parts are missing. This allows designers to suggest shapes and connections without explicitly drawing them, creating cleaner, more elegant designs.",
+      action: "Use implied shapes and connections to reduce visual clutter."
+    },
+    {
+      id: 63,
+      tab: 'ux',
+      category: "Gestalt Principles",
+      title: "Law of Continuity",
+      summary: "The eye follows smooth paths.",
+      details: "Elements arranged on a line or curve are perceived as more related than elements not on the line or curve. The eye naturally follows the smoothest path. Use this to guide attention and create visual flow through your design.",
+      action: "Align elements to create clear visual paths through the interface."
+    },
+    {
+      id: 64,
+      tab: 'ux',
+      category: "Gestalt Principles",
+      title: "Figure-Ground",
+      summary: "We separate foreground from background.",
+      details: "The eye differentiates an object (figure) from its surrounding area (ground). The figure-ground relationship helps users understand what's interactive vs. decorative, what's primary vs. secondary, what to focus on vs. ignore.",
+      action: "Create clear contrast between interactive elements and backgrounds."
+    },
+    {
+      id: 65,
+      tab: 'ux',
+      category: "Gestalt Principles",
+      title: "Law of Common Region",
+      summary: "Enclosed elements appear grouped.",
+      details: "Elements that share a common region (like a card, box, or background color) are perceived as belonging together. Borders and backgrounds create implicit groupings, helping users understand which elements are related.",
+      action: "Use cards, containers, and backgrounds to group related content."
+    },
+
+    // --- PSYCHOLOGY & BEHAVIOR ---
+    {
+      id: 70,
       tab: 'ux',
       category: "Psychology",
       title: "Fitts's Law",
-      summary: "Big and close targets are easier to hit.",
-      details: "The time to acquire a target is a function of the distance to and size of the target. Make touch targets (buttons, links) large enough (at least 44x44px) and place commonly used actions in easy-to-reach zones.",
-      action: "Increase padding on clickable elements."
+      summary: "Bigger and closer targets are faster to hit.",
+      details: "The time to acquire a target is a function of the distance to and size of the target. Large targets close to the user's current position are fastest to click. Edges and corners of screens are especially easy to hit (infinite edges).",
+      action: "Make important buttons large and position them near likely cursor locations."
+    },
+    {
+      id: 71,
+      tab: 'ux',
+      category: "Psychology",
+      title: "Hick's Law",
+      summary: "More choices = longer decisions.",
+      details: "The time it takes to make a decision increases with the number and complexity of choices. This doesn't mean fewer options are always better, but choices should be clearly differentiated and progressively disclosed when possible.",
+      action: "Reduce options or break complex choices into sequential steps."
+    },
+    {
+      id: 72,
+      tab: 'ux',
+      category: "Psychology",
+      title: "Jakob's Law",
+      summary: "Users expect your site to work like others.",
+      details: "Users spend most of their time on other sites. They prefer your site to work the same way. Leverage existing mental models. Innovation in interaction patterns has a cost—users must learn new behaviors.",
+      action: "Follow established conventions unless you have a very good reason not to."
+    },
+    {
+      id: 73,
+      tab: 'ux',
+      category: "Psychology",
+      title: "Peak-End Rule",
+      summary: "Experiences are judged by peaks and endings.",
+      details: "People judge an experience largely based on how they felt at its most intense point (peak) and at its end, rather than the average of every moment. A frustrating middle can be forgiven if the ending is delightful.",
+      action: "Invest extra effort in high-impact moments and endings."
+    },
+    {
+      id: 74,
+      tab: 'ux',
+      category: "Psychology",
+      title: "Serial Position Effect",
+      summary: "We remember firsts and lasts best.",
+      details: "Users have a propensity to best remember the first and last items in a series. Place the most important items at the beginning and end of lists, menus, and sequences. The middle is where things get lost.",
+      action: "Put key actions at the start or end of navigation and lists."
+    },
+    {
+      id: 75,
+      tab: 'ux',
+      category: "Psychology",
+      title: "Von Restorff Effect",
+      summary: "Different things stand out.",
+      details: "The Von Restorff effect (isolation effect) predicts that when multiple similar objects are present, the one that differs from the rest is most likely to be remembered. Use visual distinctiveness strategically to highlight what matters.",
+      action: "Make your primary CTA visually distinct from secondary actions."
+    },
+    {
+      id: 76,
+      tab: 'ux',
+      category: "Psychology",
+      title: "Aesthetic-Usability Effect",
+      summary: "Beautiful things seem easier to use.",
+      details: "Users often perceive aesthetically pleasing design as more usable. Beautiful products trigger positive emotions that actually improve cognitive abilities like creative thinking and problem-solving. Aesthetics aren't just superficial—they affect perceived usability.",
+      action: "Invest in visual polish; it genuinely improves user perception."
+    },
+    {
+      id: 77,
+      tab: 'ux',
+      category: "Psychology",
+      title: "Doherty Threshold",
+      summary: "Keep response times under 400ms.",
+      details: "Productivity soars when a computer and its users interact at a pace (<400ms) that ensures neither has to wait on the other. Delays longer than 400ms break concentration. Under 100ms feels instantaneous. Every millisecond matters.",
+      action: "Optimize performance; use skeleton states for unavoidable delays."
+    },
+    {
+      id: 78,
+      tab: 'ux',
+      category: "Psychology",
+      title: "Zeigarnik Effect",
+      summary: "Incomplete tasks stay in our minds.",
+      details: "People remember uncompleted or interrupted tasks better than completed ones. Progress indicators, checklists, and visible completion states leverage this effect. Showing 'almost done' can motivate users to complete tasks.",
+      action: "Show progress and highlight incomplete steps to encourage completion."
     },
 
-    // --- ACCESSIBILITY: PERCEIVABLE ---
+    // --- DESIGN PRINCIPLES ---
+    {
+      id: 80,
+      tab: 'ux',
+      category: "Design Principles",
+      title: "Progressive Disclosure",
+      summary: "Show only what's needed now.",
+      details: "Defer advanced or rarely needed features to secondary screens. This keeps primary interfaces simple and approachable while still making power features accessible. Show the basics first; reveal complexity progressively as users need it.",
+      action: "Move advanced options behind 'More' or 'Advanced' controls."
+    },
+    {
+      id: 81,
+      tab: 'ux',
+      category: "Design Principles",
+      title: "Affordances & Signifiers",
+      summary: "Design should suggest its own use.",
+      details: "Affordances are what an object allows you to do. Signifiers are signals that communicate where the action should take place. A button should look pressable. A link should look clickable. Don't make users guess how to interact.",
+      action: "Ensure interactive elements have clear visual affordances."
+    },
+    {
+      id: 82,
+      tab: 'ux',
+      category: "Design Principles",
+      title: "Tesler's Law",
+      summary: "Complexity can be moved, but not eliminated.",
+      details: "The Law of Conservation of Complexity states that every application has inherent complexity that cannot be removed. The question is: who deals with it—the user or the developer? Good design absorbs complexity so users don't have to.",
+      action: "Invest engineering effort to simplify things for users."
+    },
+    {
+      id: 83,
+      tab: 'ux',
+      category: "Design Principles",
+      title: "Postel's Law",
+      summary: "Be liberal in what you accept.",
+      details: "Be conservative in what you send, be liberal in what you accept. Also known as the Robustness Principle. Accept variable input from users (different date formats, with or without spaces) and convert it to a consistent format behind the scenes.",
+      action: "Accept flexible inputs; provide structured outputs."
+    },
+    {
+      id: 84,
+      tab: 'ux',
+      category: "Design Principles",
+      title: "Mental Models",
+      summary: "Design for how users think it works.",
+      details: "A mental model is what the user believes about how a system works. Users build these models from experience with similar products. When your system matches users' mental models, it feels intuitive. When it doesn't, confusion follows.",
+      action: "Research how users expect your product to work before designing."
+    },
+    {
+      id: 85,
+      tab: 'ux',
+      category: "Design Principles",
+      title: "Occam's Razor",
+      summary: "The simplest solution is usually best.",
+      details: "When choosing between design approaches, prefer the one with the fewest assumptions and complications. Complexity should be justified. Every added element, interaction, or concept is a potential source of confusion and bugs.",
+      action: "Before adding anything, ask: is there a simpler way?"
+    },
+    {
+      id: 86,
+      tab: 'ux',
+      category: "Design Principles",
+      title: "Pareto Principle (80/20)",
+      summary: "80% of effects come from 20% of causes.",
+      details: "In UX, this often means 80% of users use 20% of features. Focus your design energy on the critical few features that provide the most value. Don't let rarely-used features complicate the experience for typical users.",
+      action: "Identify your core user flows and optimize them relentlessly."
+    },
+
+    // --- TYPOGRAPHY ---
+    {
+      id: 90,
+      tab: 'ux',
+      category: "Typography",
+      title: "Line Length (Measure)",
+      summary: "Keep lines between 50-75 characters.",
+      details: "For comfortable reading, a line of text should be 50–75 characters long. If lines are too long, the eye has trouble tracking back to the start of the next line. If too short, the rhythm of reading is broken by constant line breaks.",
+      action: "Set a max-width on text containers; don't let lines run edge-to-edge."
+    },
+    {
+      id: 91,
+      tab: 'ux',
+      category: "Typography",
+      title: "Visual Hierarchy",
+      summary: "Guide the eye through content.",
+      details: "Size, weight, color, and spacing create a hierarchy that tells users what to read first, second, and third. Without clear hierarchy, everything competes for attention and nothing wins. Typography should reveal structure, not obscure it.",
+      action: "Establish and consistently apply heading levels and text styles."
+    },
+    {
+      id: 92,
+      tab: 'ux',
+      category: "Typography",
+      title: "Line Height (Leading)",
+      summary: "Give your lines room to breathe.",
+      details: "Line height affects readability significantly. Too tight and lines blur together; too loose and the text feels disconnected. For body text, 1.4–1.6x the font size is typically comfortable. Headlines can be tighter; long text may need more space.",
+      action: "Use 1.5 line-height for body text as a reliable default."
+    },
+
+    // =====================================================
+    // ACCESSIBILITY CARDS (POUR)
+    // =====================================================
+
+    // --- PERCEIVABLE ---
     {
       id: 100,
       tab: 'accessibility',
@@ -143,7 +601,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       action: "Test all text with a contrast checker tool."
     },
 
-    // --- ACCESSIBILITY: OPERABLE ---
+    // --- OPERABLE ---
     {
       id: 200,
       tab: 'accessibility',
@@ -199,7 +657,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       action: "Ensure all touch targets are at least 44×44 pixels."
     },
 
-    // --- ACCESSIBILITY: UNDERSTANDABLE ---
+    // --- UNDERSTANDABLE ---
     {
       id: 300,
       tab: 'accessibility',
@@ -237,7 +695,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       action: "Show specific, helpful error messages next to form fields."
     },
 
-    // --- ACCESSIBILITY: ROBUST ---
+    // --- ROBUST ---
     {
       id: 400,
       tab: 'accessibility',
@@ -266,7 +724,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       action: "Use aria-live regions for dynamic content updates."
     },
 
-    // --- ACCESSIBILITY: PUTTING IT TOGETHER ---
+    // --- POUR SUMMARY ---
     {
       id: 500,
       tab: 'accessibility',
