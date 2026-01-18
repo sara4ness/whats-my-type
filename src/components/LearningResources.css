@@ -6,11 +6,10 @@
 }
 
 .learningHeader {
-  padding: 2rem 2rem 1rem;
+  padding: 20rem 2rem 1rem;
   text-align: center;
 }
 
-/* Tabs */
 .tabsContainer {
   display: flex;
   justify-content: center;
@@ -35,10 +34,8 @@
   opacity: 0.9;
 }
 
-/* Grid Layout */
 .cardsGrid {
   display: grid;
-  /* Columns are now controlled dynamically via inline style in the component */
   gap: 2rem;
   padding: 2rem;
   max-width: 1400px;
@@ -47,7 +44,6 @@
   box-sizing: border-box;
 }
 
-/* Flip Card Container */
 .flip-card {
   background-color: transparent;
   perspective: 1000px;
@@ -59,7 +55,6 @@
   transform: translateY(-5px);
 }
 
-/* The inner container that does the flipping */
 .flip-card-inner {
   position: relative;
   width: 100%;
@@ -73,12 +68,11 @@
   transform: rotateY(180deg);
 }
 
-/* Common styles for front and back */
 .flip-card-front, .flip-card-back {
   position: absolute;
   width: 100%;
   height: 100%;
-  -webkit-backface-visibility: hidden; /* Safari */
+  -webkit-backface-visibility: hidden; 
   backface-visibility: hidden;
   border-radius: 5px;
   padding: 2rem;
@@ -129,7 +123,6 @@
   box-sizing: border-box;
 }
 
-/* Scrollbar styling for back of card */
 .flip-card-back::-webkit-scrollbar {
   width: 6px;
 }
@@ -146,7 +139,7 @@
 
 @media (max-width: 768px) {
   .cardsGrid {
-    grid-template-columns: 1fr !important; /* Force single column on mobile */
+    grid-template-columns: 1fr !important; 
     padding: 1rem;
   }
 }
