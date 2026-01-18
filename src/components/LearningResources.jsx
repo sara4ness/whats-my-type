@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import './LearningResources.css';
 import Navbar from './Navbar'; 
 
 function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColor, onClose, onViewSummary }) {
   const [flippedCardId, setFlippedCardId] = useState(null);
   const [activeTab, setActiveTab] = useState('ux');
+  const [activeCategory, setActiveCategory] = useState('All');
 
   const adjustBrightness = (hex, percent) => {
     const num = parseInt(hex.replace('#', ''), 16);
@@ -87,7 +88,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "Garrett's Five Planes",
       title: "Surface Plane",
       summary: "How does it look?",
-      details: "The Surface Plane is what users actually see—the visual design. Color, typography, imagery, and visual hierarchy come together here. The surface should reinforce and enhance all the planes beneath it, not just look pretty.",
+      details: "The Surface Plane is what users actually see: the visual design. Color, typography, imagery, and visual hierarchy come together here. The surface should reinforce and enhance all the planes beneath it, not just look pretty.",
       action: "Ensure visual design supports and doesn't contradict the UX beneath it."
     },
 
@@ -106,7 +107,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       tab: 'ux',
       category: "Don't Make Me Think",
       title: "How Users Actually Read",
-      summary: "They don't read—they scan.",
+      summary: "They don't read; they scan.",
       details: "Users don't read web pages word by word. They scan, picking out words and sentences that catch their interest. Design for scanning: use clear visual hierarchy, short paragraphs, bulleted lists, and meaningful headings. Make key information unmissable.",
       action: "Use headings, bold text, and visual breaks to support scanning."
     },
@@ -115,7 +116,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       tab: 'ux',
       category: "Don't Make Me Think",
       title: "Satisficing",
-      summary: "Users don't choose the best option—they choose the first reasonable one.",
+      summary: "Users choose the first reasonable option, not the best one.",
       details: "Users don't optimize; they 'satisfice' (satisfy + suffice). They'll click the first link that seems like it might lead somewhere useful. They won't carefully weigh all options. Design for this behavior by making the right path obvious.",
       action: "Make the primary action the most prominent and obviously correct choice."
     },
@@ -135,7 +136,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       title: "The Trunk Test",
       summary: "Could you figure out where you are if dropped here randomly?",
       details: "Imagine being blindfolded, driven around, and dropped on a random page of a website. Could you answer: What site is this? What page am I on? What are the major sections? What are my options? Where's the search? This tests navigation clarity.",
-      action: "Test any page in isolation—can users orient themselves immediately?"
+      action: "Test any page in isolation. Can users orient themselves immediately?"
     },
 
     // --- COGNITIVE LOAD THEORY ---
@@ -163,7 +164,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "Cognitive Load Theory",
       title: "Extraneous Load",
       summary: "Unnecessary complexity from bad design.",
-      details: "Extraneous load is wasted mental effort caused by poor design—confusing layouts, inconsistent patterns, unclear labels, visual clutter. This is the load you CAN and SHOULD eliminate. Every bit of extraneous load steals resources from the actual task.",
+      details: "Extraneous load is wasted mental effort caused by poor design: confusing layouts, inconsistent patterns, unclear labels, and visual clutter. This is the load you CAN and SHOULD eliminate. Every bit of extraneous load steals resources from the actual task.",
       action: "Remove anything that doesn't directly help users complete their task."
     },
     {
@@ -172,7 +173,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "Cognitive Load Theory",
       title: "Germane Load",
       summary: "Productive effort that builds understanding.",
-      details: "Germane load is the good kind—mental effort spent building schemas and understanding. Well-designed learning experiences maximize germane load while minimizing extraneous load. The goal is to direct all available cognitive resources toward meaningful learning.",
+      details: "Germane load is the good kind: mental effort spent building schemas and understanding. Well-designed learning experiences maximize germane load while minimizing extraneous load. The goal is to direct all available cognitive resources toward meaningful learning.",
       action: "Use progressive disclosure to introduce complexity gradually."
     },
 
@@ -184,7 +185,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       title: "The Magical Number 7±2",
       summary: "Working memory holds about 7 items.",
       details: "George Miller's 1956 paper found that people can hold roughly 7 (plus or minus 2) items in working memory. This doesn't mean every menu needs exactly 7 items, but it does mean overwhelming users with too many options at once will cause cognitive overload.",
-      action: "Chunk information into groups of 5-9 related items."
+      action: "Chunk information into groups of 5 to 9 related items."
     },
     {
       id: 31,
@@ -203,7 +204,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "Norman's Three Levels",
       title: "Visceral Design",
       summary: "The immediate gut reaction.",
-      details: "Don Norman's visceral level is automatic and prewired—our immediate emotional response to what we see. Before any conscious thought, we react to colors, shapes, sounds, and feel. First impressions happen here. Visceral design makes users feel something instantly.",
+      details: "Don Norman's visceral level is automatic and prewired: our immediate emotional response to what we see. Before any conscious thought, we react to colors, shapes, sounds, and feel. First impressions happen here. Visceral design makes users feel something instantly.",
       action: "Consider the emotional impact of your visual design at first glance."
     },
     {
@@ -212,7 +213,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "Norman's Three Levels",
       title: "Behavioral Design",
       summary: "The pleasure of effective use.",
-      details: "The behavioral level is about use—does it work? Is it usable? Does it feel good to interact with? This is where traditional usability lives. Users get satisfaction from accomplishing tasks effectively, efficiently, and with a sense of control.",
+      details: "The behavioral level is about use. Does it work? Is it usable? Does it feel good to interact with? This is where traditional usability lives. Users get satisfaction from accomplishing tasks effectively, efficiently, and with a sense of control.",
       action: "Ensure interactions feel responsive, intuitive, and rewarding."
     },
     {
@@ -221,7 +222,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "Norman's Three Levels",
       title: "Reflective Design",
       summary: "The story we tell ourselves.",
-      details: "The reflective level involves conscious thought—what does this product say about me? How do I feel about owning or using it? This is about self-image, personal satisfaction, and memories. Reflective design creates meaning and builds lasting relationships with products.",
+      details: "The reflective level involves conscious thought: what does this product say about me? How do I feel about owning or using it? This is about self-image, personal satisfaction, and memories. Reflective design creates meaning and builds lasting relationships with products.",
       action: "Consider what identity and values your product communicates to users."
     },
 
@@ -286,7 +287,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "Nielsen's Heuristics",
       title: "#7: Flexibility & Efficiency",
       summary: "Provide accelerators for expert users.",
-      details: "Accelerators—unseen by novice users—can speed up interaction for experts. Allow users to tailor frequent actions. Keyboard shortcuts, customization options, and power-user features let experienced users work faster without complicating the novice experience.",
+      details: "Accelerators, often unseen by novice users, can speed up interaction for experts. Allow users to tailor frequent actions. Keyboard shortcuts, customization options, and power-user features let experienced users work faster without complicating the novice experience.",
       action: "Add keyboard shortcuts and customization for power users."
     },
     {
@@ -304,7 +305,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "Nielsen's Heuristics",
       title: "#9: Help Users with Errors",
       summary: "Error messages should propose solutions.",
-      details: "Error messages should be expressed in plain language (no codes), precisely indicate the problem, and constructively suggest a solution. Don't just say what went wrong—help users fix it and move forward.",
+      details: "Error messages should be expressed in plain language (no codes), precisely indicate the problem, and constructively suggest a solution. Don't just say what went wrong; help users fix it and move forward.",
       action: "Write error messages that explain the problem and offer next steps."
     },
     {
@@ -377,7 +378,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
     {
       id: 70,
       tab: 'ux',
-      category: "Psychology",
+      category: "Psychology & Behavior",
       title: "Fitts's Law",
       summary: "Bigger and closer targets are faster to hit.",
       details: "The time to acquire a target is a function of the distance to and size of the target. Large targets close to the user's current position are fastest to click. Edges and corners of screens are especially easy to hit (infinite edges).",
@@ -386,7 +387,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
     {
       id: 71,
       tab: 'ux',
-      category: "Psychology",
+      category: "Psychology & Behavior",
       title: "Hick's Law",
       summary: "More choices = longer decisions.",
       details: "The time it takes to make a decision increases with the number and complexity of choices. This doesn't mean fewer options are always better, but choices should be clearly differentiated and progressively disclosed when possible.",
@@ -395,16 +396,16 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
     {
       id: 72,
       tab: 'ux',
-      category: "Psychology",
+      category: "Psychology & Behavior",
       title: "Jakob's Law",
       summary: "Users expect your site to work like others.",
-      details: "Users spend most of their time on other sites. They prefer your site to work the same way. Leverage existing mental models. Innovation in interaction patterns has a cost—users must learn new behaviors.",
+      details: "Users spend most of their time on other sites. They prefer your site to work the same way. Leverage existing mental models. Innovation in interaction patterns has a cost: users must learn new behaviors.",
       action: "Follow established conventions unless you have a very good reason not to."
     },
     {
       id: 73,
       tab: 'ux',
-      category: "Psychology",
+      category: "Psychology & Behavior",
       title: "Peak-End Rule",
       summary: "Experiences are judged by peaks and endings.",
       details: "People judge an experience largely based on how they felt at its most intense point (peak) and at its end, rather than the average of every moment. A frustrating middle can be forgiven if the ending is delightful.",
@@ -413,7 +414,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
     {
       id: 74,
       tab: 'ux',
-      category: "Psychology",
+      category: "Psychology & Behavior",
       title: "Serial Position Effect",
       summary: "We remember firsts and lasts best.",
       details: "Users have a propensity to best remember the first and last items in a series. Place the most important items at the beginning and end of lists, menus, and sequences. The middle is where things get lost.",
@@ -422,7 +423,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
     {
       id: 75,
       tab: 'ux',
-      category: "Psychology",
+      category: "Psychology & Behavior",
       title: "Von Restorff Effect",
       summary: "Different things stand out.",
       details: "The Von Restorff effect (isolation effect) predicts that when multiple similar objects are present, the one that differs from the rest is most likely to be remembered. Use visual distinctiveness strategically to highlight what matters.",
@@ -431,16 +432,16 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
     {
       id: 76,
       tab: 'ux',
-      category: "Psychology",
+      category: "Psychology & Behavior",
       title: "Aesthetic-Usability Effect",
       summary: "Beautiful things seem easier to use.",
-      details: "Users often perceive aesthetically pleasing design as more usable. Beautiful products trigger positive emotions that actually improve cognitive abilities like creative thinking and problem-solving. Aesthetics aren't just superficial—they affect perceived usability.",
+      details: "Users often perceive aesthetically pleasing design as more usable. Beautiful products trigger positive emotions that actually improve cognitive abilities like creative thinking and problem-solving. Aesthetics aren't just superficial; they affect perceived usability.",
       action: "Invest in visual polish; it genuinely improves user perception."
     },
     {
       id: 77,
       tab: 'ux',
-      category: "Psychology",
+      category: "Psychology & Behavior",
       title: "Doherty Threshold",
       summary: "Keep response times under 400ms.",
       details: "Productivity soars when a computer and its users interact at a pace (<400ms) that ensures neither has to wait on the other. Delays longer than 400ms break concentration. Under 100ms feels instantaneous. Every millisecond matters.",
@@ -449,7 +450,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
     {
       id: 78,
       tab: 'ux',
-      category: "Psychology",
+      category: "Psychology & Behavior",
       title: "Zeigarnik Effect",
       summary: "Incomplete tasks stay in our minds.",
       details: "People remember uncompleted or interrupted tasks better than completed ones. Progress indicators, checklists, and visible completion states leverage this effect. Showing 'almost done' can motivate users to complete tasks.",
@@ -481,7 +482,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "Design Principles",
       title: "Tesler's Law",
       summary: "Complexity can be moved, but not eliminated.",
-      details: "The Law of Conservation of Complexity states that every application has inherent complexity that cannot be removed. The question is: who deals with it—the user or the developer? Good design absorbs complexity so users don't have to.",
+      details: "The Law of Conservation of Complexity states that every application has inherent complexity that cannot be removed. The question is: who deals with it, the user or the developer? Good design absorbs complexity so users don't have to.",
       action: "Invest engineering effort to simplify things for users."
     },
     {
@@ -527,8 +528,8 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       tab: 'ux',
       category: "Typography",
       title: "Line Length (Measure)",
-      summary: "Keep lines between 50-75 characters.",
-      details: "For comfortable reading, a line of text should be 50–75 characters long. If lines are too long, the eye has trouble tracking back to the start of the next line. If too short, the rhythm of reading is broken by constant line breaks.",
+      summary: "Keep lines between 50 and 75 characters.",
+      details: "For comfortable reading, a line of text should be 50 to 75 characters long. If lines are too long, the eye has trouble tracking back to the start of the next line. If too short, the rhythm of reading is broken by constant line breaks.",
       action: "Set a max-width on text containers; don't let lines run edge-to-edge."
     },
     {
@@ -546,7 +547,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "Typography",
       title: "Line Height (Leading)",
       summary: "Give your lines room to breathe.",
-      details: "Line height affects readability significantly. Too tight and lines blur together; too loose and the text feels disconnected. For body text, 1.4–1.6x the font size is typically comfortable. Headlines can be tighter; long text may need more space.",
+      details: "Line height affects readability significantly. Too tight and lines blur together; too loose and the text feels disconnected. For body text, 1.4 to 1.6 times the font size is typically comfortable. Headlines can be tighter; long text may need more space.",
       action: "Use 1.5 line-height for body text as a reliable default."
     },
 
@@ -570,7 +571,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "Perceivable",
       title: "Text Alternatives",
       summary: "Describe the visual world in words.",
-      details: "Every non-text element needs a text equivalent. Images require alt text, videos need captions and transcripts, and icons need accessible names. Screen readers can't interpret pixels—they need words. Decorative images get empty alt attributes; informative content needs full descriptions.",
+      details: "Every non-text element needs a text equivalent. Images require alt text, videos need captions and transcripts, and icons need accessible names. Screen readers can't interpret pixels; they need words. Decorative images get empty alt attributes; informative content needs full descriptions.",
       action: "Add meaningful alt text to every functional image."
     },
     {
@@ -579,7 +580,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "Perceivable",
       title: "Time-Based Media",
       summary: "Captions, transcripts, and audio descriptions.",
-      details: "Videos need synchronized captions for deaf users and audio descriptions for blind users. Pre-recorded audio needs transcripts. Live content requires real-time captions. Don't let multimedia become a barrier—provide multiple ways to access the same information.",
+      details: "Videos need synchronized captions for deaf users and audio descriptions for blind users. Pre-recorded audio needs transcripts. Live content requires real-time captions. Don't let multimedia become a barrier. Provide multiple ways to access the same information.",
       action: "Add captions to all video content as a baseline."
     },
     {
@@ -588,7 +589,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "Perceivable",
       title: "Adaptable Content",
       summary: "Structure that transforms gracefully.",
-      details: "Content should be presentable in different ways without losing meaning. Use semantic HTML so assistive technologies understand your structure. Headings, lists, tables, and landmarks must be properly coded—not just visually styled. When CSS is disabled, your content should still make sense.",
+      details: "Content should be presentable in different ways without losing meaning. Use semantic HTML so assistive technologies understand your structure. Headings, lists, tables, and landmarks must be properly coded, not just visually styled. When CSS is disabled, your content should still make sense.",
       action: "Use semantic HTML elements instead of styled divs."
     },
     {
@@ -635,7 +636,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "Operable",
       title: "Seizures & Physical Reactions",
       summary: "Protect users from harmful motion.",
-      details: "Flashing content can trigger seizures—nothing should flash more than 3 times per second. Animations can cause vestibular disorders and nausea. Provide controls to pause, stop, or hide motion. Respect the 'prefers-reduced-motion' setting in user's operating systems.",
+      details: "Flashing content can trigger seizures. Nothing should flash more than 3 times per second. Animations can cause vestibular disorders and nausea. Provide controls to pause, stop, or hide motion. Respect the 'prefers-reduced-motion' setting in user's operating systems.",
       action: "Implement prefers-reduced-motion media queries."
     },
     {
@@ -644,7 +645,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "Operable",
       title: "Navigable",
       summary: "Help users find their way around.",
-      details: "Users need to know where they are and how to get where they're going. Provide skip links, descriptive page titles, logical focus order, and multiple ways to find pages. Link text should describe the destination—'click here' tells users nothing.",
+      details: "Users need to know where they are and how to get where they're going. Provide skip links, descriptive page titles, logical focus order, and multiple ways to find pages. Link text should describe the destination. 'Click here' tells users nothing.",
       action: "Add a 'skip to main content' link at the top of pages."
     },
     {
@@ -673,7 +674,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "Understandable",
       title: "Readable Content",
       summary: "Use clear language everyone can follow.",
-      details: "Identify the language of the page and any language changes within content. Write clearly and define unusual terms, abbreviations, and jargon. Consider reading level—readable content benefits everyone, not just those with cognitive disabilities.",
+      details: "Identify the language of the page and any language changes within content. Write clearly and define unusual terms, abbreviations, and jargon. Consider reading level. Readable content benefits everyone, not just those with cognitive disabilities.",
       action: "Set the lang attribute on your HTML element."
     },
     {
@@ -681,7 +682,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       tab: 'accessibility',
       category: "Understandable",
       title: "Predictable Behavior",
-      summary: "No surprises—consistency builds confidence.",
+      summary: "No surprises; consistency builds confidence.",
       details: "Interfaces should behave consistently. Components that look the same should work the same. Focus shouldn't trigger unexpected changes. Forms shouldn't submit automatically. Navigation should remain consistent across pages. When users understand the pattern, they can use your site confidently.",
       action: "Keep navigation and component behavior consistent site-wide."
     },
@@ -691,7 +692,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "Understandable",
       title: "Input Assistance",
       summary: "Help users avoid and correct mistakes.",
-      details: "Clearly identify and describe errors in text—not just color. Provide labels and instructions before users need them. Offer suggestions for fixing errors. For important submissions, allow review, confirmation, or reversal. Everyone makes mistakes; good design helps recover from them.",
+      details: "Clearly identify and describe errors in text, not just color. Provide labels and instructions before users need them. Offer suggestions for fixing errors. For important submissions, allow review, confirmation, or reversal. Everyone makes mistakes; good design helps recover from them.",
       action: "Show specific, helpful error messages next to form fields."
     },
 
@@ -702,7 +703,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "Robust",
       title: "What is Robust?",
       summary: "Built to last and work everywhere.",
-      details: "Content must work reliably across different browsers, devices, and assistive technologies—now and in the future. Robust code follows standards, ensuring your accessibility efforts actually reach the users who need them.",
+      details: "Content must work reliably across different browsers, devices, and assistive technologies, both now and in the future. Robust code follows standards, ensuring your accessibility efforts actually reach the users who need them.",
       action: "Validate your HTML and fix parsing errors."
     },
     {
@@ -711,7 +712,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "Robust",
       title: "Compatible Code",
       summary: "Valid, semantic, and standards-compliant.",
-      details: "Use valid HTML with proper opening/closing tags and unique IDs. Avoid deprecated elements. Provide name, role, and value for all UI components—especially custom widgets. ARIA attributes must be used correctly: wrong ARIA is worse than no ARIA.",
+      details: "Use valid HTML with proper opening/closing tags and unique IDs. Avoid deprecated elements. Provide name, role, and value for all UI components, especially custom widgets. ARIA attributes must be used correctly: wrong ARIA is worse than no ARIA.",
       action: "Test custom components with real screen readers."
     },
     {
@@ -740,16 +741,34 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       category: "POUR Summary",
       title: "Testing Beyond Automation",
       summary: "Real users reveal real barriers.",
-      details: "Automated tools catch about 30% of issues. To truly test POUR: navigate your entire site by keyboard, use a screen reader, disable CSS, zoom to 200%, check contrast ratios, test on mobile, and most importantly—involve people with disabilities in your testing.",
+      details: "Automated tools catch about 30% of issues. To truly test POUR: navigate your entire site by keyboard, use a screen reader, disable CSS, zoom to 200%, check contrast ratios, test on mobile, and most importantly, involve people with disabilities in your testing.",
       action: "Include manual testing and real user feedback in QA."
     }
   ];
+
+  // Get unique categories for the current tab
+  const categories = useMemo(() => {
+    const tabPrinciples = principles.filter(p => p.tab === activeTab);
+    const uniqueCategories = [...new Set(tabPrinciples.map(p => p.category))];
+    return ['All', ...uniqueCategories];
+  }, [activeTab]);
+
+  // Reset category filter when switching tabs
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setActiveCategory('All');
+    setFlippedCardId(null);
+  };
 
   const handleCardClick = (id) => {
     setFlippedCardId(flippedCardId === id ? null : id);
   };
 
-  const filteredPrinciples = principles.filter(p => p.tab === activeTab);
+  const filteredPrinciples = principles.filter(p => {
+    if (p.tab !== activeTab) return false;
+    if (activeCategory === 'All') return true;
+    return p.category === activeCategory;
+  });
 
   return (
     <>
@@ -781,7 +800,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
           <div className="tabsContainer">
             <button 
               className={`tabButton ${activeTab === 'ux' ? 'active' : ''}`}
-              onClick={() => setActiveTab('ux')}
+              onClick={() => handleTabChange('ux')}
               style={{
                 fontSize: `${fontSize * 1.1}px`,
                 color: activeTab === 'ux' ? bgColor : textColor,
@@ -793,7 +812,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
             </button>
             <button 
               className={`tabButton ${activeTab === 'accessibility' ? 'active' : ''}`}
-              onClick={() => setActiveTab('accessibility')}
+              onClick={() => handleTabChange('accessibility')}
               style={{
                 fontSize: `${fontSize * 1.1}px`,
                 color: activeTab === 'accessibility' ? bgColor : textColor,
@@ -803,6 +822,38 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
             >
               Accessibility
             </button>
+          </div>
+
+          {/* Category Filter Pills */}
+          <div className="categoryFilters" style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '0.5rem',
+            justifyContent: 'center',
+            marginTop: '1.5rem',
+            maxWidth: '900px',
+            marginLeft: 'auto',
+            marginRight: 'auto'
+          }}>
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setActiveCategory(category)}
+                style={{
+                  fontSize: `${fontSize * 0.85}px`,
+                  padding: '0.4rem 0.9rem',
+                  borderRadius: '20px',
+                  border: `1px solid ${textColor}44`,
+                  backgroundColor: activeCategory === category ? `${textColor}22` : 'transparent',
+                  color: textColor,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  fontWeight: activeCategory === category ? '600' : '400'
+                }}
+              >
+                {category}
+              </button>
+            ))}
           </div>
 
           <p style={{ opacity: 0.8, marginTop: '1rem' }}>
