@@ -26,25 +26,23 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       
       const brightness = (r * 299 + g * 587 + b * 114) / 1000;
       
-      // This logic matches the getBoxBackground function used in App.jsx
       if (brightness > 128) {
-        return adjustBrightness(bg, -3); // Slightly darker for light backgrounds
+        return adjustBrightness(bg, -3);
       } else {
-        return adjustBrightness(bg, 8);  // Slightly lighter for dark backgrounds
+        return adjustBrightness(bg, 8);
       }
   };
 
   const cardBg = getContrastColor(bgColor);
   const cardBorder = `${textColor}22`;
   
-  // Dynamic Sizing Logic
   const cardHeight = `${Math.max(320, fontSize * 20)}px`;
   const minCardWidth = Math.max(600, 600 + (fontSize - 16) * 15);
 
   const principles = [
     // --- UX DESIGN ---
     {
-      id: 2,
+      id: 1,
       tab: 'ux',
       category: "Heuristics",
       title: "Visibility of System Status",
@@ -53,7 +51,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       action: "Ensure every user action has a clear reaction."
     },
     {
-      id: 3,
+      id: 2,
       tab: 'ux',
       category: "Cognitive Psychology",
       title: "Cognitive Load",
@@ -62,7 +60,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       action: "Simplify interfaces and remove non-essential elements."
     },
     {
-      id: 4,
+      id: 3,
       tab: 'ux',
       category: "Heuristics",
       title: "Error Prevention",
@@ -71,7 +69,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       action: "Use constraints (like date pickers) instead of free text."
     },
     {
-      id: 5,
+      id: 4,
       tab: 'ux',
       category: "Gestalt Principles",
       title: "Law of Proximity",
@@ -80,7 +78,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       action: "Use whitespace to group related controls."
     },
     {
-      id: 7,
+      id: 5,
       tab: 'ux',
       category: "Typography",
       title: "Line Length (Measure)",
@@ -89,7 +87,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       action: "Limit container width on large screens."
     },
     {
-      id: 8,
+      id: 6,
       tab: 'ux',
       category: "Psychology",
       title: "Fitts's Law",
@@ -98,41 +96,194 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       action: "Increase padding on clickable elements."
     },
 
+    // --- ACCESSIBILITY: PERCEIVABLE ---
     {
-      id: 1,
+      id: 100,
       tab: 'accessibility',
-      category: "Visual",
-      title: "WCAG 2.1 Contrast",
-      summary: "Text must distinguish clearly from its background.",
-      details: "The Web Content Accessibility Guidelines (WCAG) require a contrast ratio of at least 4.5:1 for normal text and 3:1 for large text (18pt+). This ensures content is readable by people with moderately low vision.",
-      action: "Check your contrast ratios using tools like WebAIM."
+      category: "Perceivable",
+      title: "What is Perceivable?",
+      summary: "Can everyone sense your content?",
+      details: "Content must be presented in ways that all users can perceive through at least one of their senses. If someone can't see, hear, or otherwise detect your content, it doesn't exist to them. This principle ensures information isn't invisible to any user.",
+      action: "Provide multiple sensory channels for all critical information."
     },
     {
-      id: 6,
+      id: 101,
       tab: 'accessibility',
-      category: "Navigation",
-      title: "Focus Indicators",
-      summary: "Show where the keyboard is.",
-      details: "Sighted keyboard users need a visible indicator (usually a ring or outline) to know which element currently has focus. Removing outline:none without a replacement breaks accessibility for power users and those with motor disabilities.",
-      action: "Never remove CSS outlines without adding a custom style."
+      category: "Perceivable",
+      title: "Text Alternatives",
+      summary: "Describe the visual world in words.",
+      details: "Every non-text element needs a text equivalent. Images require alt text, videos need captions and transcripts, and icons need accessible names. Screen readers can't interpret pixels—they need words. Decorative images get empty alt attributes; informative content needs full descriptions.",
+      action: "Add meaningful alt text to every functional image."
     },
     {
-      id: 9,
+      id: 102,
       tab: 'accessibility',
-      category: "Structure",
-      title: "Semantic HTML",
-      summary: "Use the right tag for the job.",
-      details: "Screen readers rely on proper HTML tags (button, nav, main, h1) to understand the structure of a page. Using <div>s for everything hides meaning and functionality from assistive technologies.",
-      action: "Use <button> for actions, not <div onClick>."
+      category: "Perceivable",
+      title: "Time-Based Media",
+      summary: "Captions, transcripts, and audio descriptions.",
+      details: "Videos need synchronized captions for deaf users and audio descriptions for blind users. Pre-recorded audio needs transcripts. Live content requires real-time captions. Don't let multimedia become a barrier—provide multiple ways to access the same information.",
+      action: "Add captions to all video content as a baseline."
     },
     {
-      id: 10,
+      id: 103,
       tab: 'accessibility',
-      category: "Content",
-      title: "Alt Text",
-      summary: "Describe images for those who can't see them.",
-      details: "Alternative text provides a textual alternative to non-text content in web pages. It is read by screen readers in place of images allowing the content and function of the image to be understood by those with visual or cognitive disabilities.",
-      action: "Describe the function or content, not just 'image'."
+      category: "Perceivable",
+      title: "Adaptable Content",
+      summary: "Structure that transforms gracefully.",
+      details: "Content should be presentable in different ways without losing meaning. Use semantic HTML so assistive technologies understand your structure. Headings, lists, tables, and landmarks must be properly coded—not just visually styled. When CSS is disabled, your content should still make sense.",
+      action: "Use semantic HTML elements instead of styled divs."
+    },
+    {
+      id: 104,
+      tab: 'accessibility',
+      category: "Perceivable",
+      title: "Distinguishable Content",
+      summary: "Foreground must stand out from background.",
+      details: "Users must be able to separate foreground from background. This means sufficient color contrast (4.5:1 for normal text, 3:1 for large text), text that can be resized up to 200%, and audio that can be controlled independently. Never use color alone to convey information.",
+      action: "Test all text with a contrast checker tool."
+    },
+
+    // --- ACCESSIBILITY: OPERABLE ---
+    {
+      id: 200,
+      tab: 'accessibility',
+      category: "Operable",
+      title: "What is Operable?",
+      summary: "Can everyone use your interface?",
+      details: "Every interactive element must be usable by everyone, regardless of how they interact with technology. Some users navigate with keyboards, voice commands, eye trackers, or switches. If your interface only works with a mouse, you've excluded millions of people.",
+      action: "Test your entire interface using only a keyboard."
+    },
+    {
+      id: 201,
+      tab: 'accessibility',
+      category: "Operable",
+      title: "Keyboard Accessibility",
+      summary: "The keyboard is the universal input.",
+      details: "All functionality must be available via keyboard. Users should navigate with Tab, activate with Enter/Space, and never get trapped in a component. Visible focus indicators show where you are. If you can't reach it or activate it with a keyboard, it's not accessible.",
+      action: "Never remove focus outlines without adding a custom style."
+    },
+    {
+      id: 202,
+      tab: 'accessibility',
+      category: "Operable",
+      title: "Enough Time",
+      summary: "Give users control over time limits.",
+      details: "Not everyone reads, types, or processes information at the same speed. Allow users to turn off, adjust, or extend time limits. Auto-updating content should be pausable. Session timeouts should warn users and offer extensions. Rushing creates barriers.",
+      action: "Add pause, stop, and extend controls to timed content."
+    },
+    {
+      id: 203,
+      tab: 'accessibility',
+      category: "Operable",
+      title: "Seizures & Physical Reactions",
+      summary: "Protect users from harmful motion.",
+      details: "Flashing content can trigger seizures—nothing should flash more than 3 times per second. Animations can cause vestibular disorders and nausea. Provide controls to pause, stop, or hide motion. Respect the 'prefers-reduced-motion' setting in user's operating systems.",
+      action: "Implement prefers-reduced-motion media queries."
+    },
+    {
+      id: 204,
+      tab: 'accessibility',
+      category: "Operable",
+      title: "Navigable",
+      summary: "Help users find their way around.",
+      details: "Users need to know where they are and how to get where they're going. Provide skip links, descriptive page titles, logical focus order, and multiple ways to find pages. Link text should describe the destination—'click here' tells users nothing.",
+      action: "Add a 'skip to main content' link at the top of pages."
+    },
+    {
+      id: 205,
+      tab: 'accessibility',
+      category: "Operable",
+      title: "Input Modalities",
+      summary: "Support diverse input methods.",
+      details: "Support all input methods: touch, mouse, keyboard, voice, and pointers. Complex gestures should have single-pointer alternatives. Ensure adequate target sizes (44×44 pixels minimum recommended). Don't require specific motions that some users physically cannot perform.",
+      action: "Ensure all touch targets are at least 44×44 pixels."
+    },
+
+    // --- ACCESSIBILITY: UNDERSTANDABLE ---
+    {
+      id: 300,
+      tab: 'accessibility',
+      category: "Understandable",
+      title: "What is Understandable?",
+      summary: "Does your content make sense to everyone?",
+      details: "Users must be able to comprehend both your content and how your interface works. Confusing language, unpredictable behavior, or unclear error messages create barriers just as real as missing alt text. Clarity is accessibility.",
+      action: "Write content at the simplest level the subject allows."
+    },
+    {
+      id: 301,
+      tab: 'accessibility',
+      category: "Understandable",
+      title: "Readable Content",
+      summary: "Use clear language everyone can follow.",
+      details: "Identify the language of the page and any language changes within content. Write clearly and define unusual terms, abbreviations, and jargon. Consider reading level—readable content benefits everyone, not just those with cognitive disabilities.",
+      action: "Set the lang attribute on your HTML element."
+    },
+    {
+      id: 302,
+      tab: 'accessibility',
+      category: "Understandable",
+      title: "Predictable Behavior",
+      summary: "No surprises—consistency builds confidence.",
+      details: "Interfaces should behave consistently. Components that look the same should work the same. Focus shouldn't trigger unexpected changes. Forms shouldn't submit automatically. Navigation should remain consistent across pages. When users understand the pattern, they can use your site confidently.",
+      action: "Keep navigation and component behavior consistent site-wide."
+    },
+    {
+      id: 303,
+      tab: 'accessibility',
+      category: "Understandable",
+      title: "Input Assistance",
+      summary: "Help users avoid and correct mistakes.",
+      details: "Clearly identify and describe errors in text—not just color. Provide labels and instructions before users need them. Offer suggestions for fixing errors. For important submissions, allow review, confirmation, or reversal. Everyone makes mistakes; good design helps recover from them.",
+      action: "Show specific, helpful error messages next to form fields."
+    },
+
+    // --- ACCESSIBILITY: ROBUST ---
+    {
+      id: 400,
+      tab: 'accessibility',
+      category: "Robust",
+      title: "What is Robust?",
+      summary: "Built to last and work everywhere.",
+      details: "Content must work reliably across different browsers, devices, and assistive technologies—now and in the future. Robust code follows standards, ensuring your accessibility efforts actually reach the users who need them.",
+      action: "Validate your HTML and fix parsing errors."
+    },
+    {
+      id: 401,
+      tab: 'accessibility',
+      category: "Robust",
+      title: "Compatible Code",
+      summary: "Valid, semantic, and standards-compliant.",
+      details: "Use valid HTML with proper opening/closing tags and unique IDs. Avoid deprecated elements. Provide name, role, and value for all UI components—especially custom widgets. ARIA attributes must be used correctly: wrong ARIA is worse than no ARIA.",
+      action: "Test custom components with real screen readers."
+    },
+    {
+      id: 402,
+      tab: 'accessibility',
+      category: "Robust",
+      title: "Status Messages",
+      summary: "Keep everyone informed of changes.",
+      details: "When content updates dynamically, all users need to know. Use ARIA live regions to announce status messages, errors, and progress updates to screen reader users. A visual notification means nothing if assistive technology users aren't informed.",
+      action: "Use aria-live regions for dynamic content updates."
+    },
+
+    // --- ACCESSIBILITY: PUTTING IT TOGETHER ---
+    {
+      id: 500,
+      tab: 'accessibility',
+      category: "POUR Summary",
+      title: "The Four Pillars Together",
+      summary: "POUR principles reinforce each other.",
+      details: "POUR principles overlap and reinforce each other. A video needs to be Perceivable (captions), Operable (keyboard controls), Understandable (clear language), and Robust (works across players). True accessibility means addressing all four pillars for every piece of content.",
+      action: "Audit content against all four POUR categories."
+    },
+    {
+      id: 501,
+      tab: 'accessibility',
+      category: "POUR Summary",
+      title: "Testing Beyond Automation",
+      summary: "Real users reveal real barriers.",
+      details: "Automated tools catch about 30% of issues. To truly test POUR: navigate your entire site by keyboard, use a screen reader, disable CSS, zoom to 200%, check contrast ratios, test on mobile, and most importantly—involve people with disabilities in your testing.",
+      action: "Include manual testing and real user feedback in QA."
     }
   ];
 
@@ -210,14 +361,15 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
               className={`flip-card ${flippedCardId === card.id ? 'flipped' : ''}`}
               onClick={() => handleCardClick(card.id)}
               onKeyDown={(e) => {
-                // Handle keyboard activation (Enter or Space)
                 if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault(); // Prevent page scroll on Space
+                  e.preventDefault();
                   handleCardClick(card.id);
                 }
               }}
-              tabIndex={0}  // Make element focusable
-              role="button" // Semantic role for screen readers
+              tabIndex={0}
+              role="button"
+              aria-pressed={flippedCardId === card.id}
+              aria-label={`${card.title}. ${card.summary}. Click to ${flippedCardId === card.id ? 'hide' : 'show'} details.`}
               style={{ height: cardHeight, cursor: 'pointer' }}
             >
               <div className="flip-card-inner">
