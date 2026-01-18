@@ -818,7 +818,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
             ))}
           </div>
 
-          <p style={{ opacity: 0.8, marginTop: '1rem' }}>
+          <p style={{ opacity: 0.8, marginTop: '2rem' }}>
             Click a card to reveal the principle behind it.
           </p>
         </div>
