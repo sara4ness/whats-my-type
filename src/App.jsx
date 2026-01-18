@@ -580,7 +580,7 @@ function App() {
               textColor={choices.textColor}
               bgColor={choices.bgColor}
               onClick={() => {
-                setChoices({ ...choices, fontCategory: 'serif' });
+                setChoices({ ...choices, fontCategory: 'Serif' });
                 setStep(1);
               }}
             />
@@ -594,35 +594,35 @@ function App() {
               textColor={choices.textColor}
               bgColor={choices.bgColor}
               onClick={() => {
-                setChoices({ ...choices, fontCategory: 'sans-serif' });
+                setChoices({ ...choices, fontCategory: 'Sans-serif' });
                 setStep(1);
               }}
             />
             
             <OptionCard
               title="Rounded"
-              description="Rounded fonts feature soft, curved letterforms with gentle edges that create a friendly and approachable feel. These fonts often have open, spacious characters that are easy to distinguish from one another, making them accessible and comfortable for extended reading. They work well for casual content and warm, welcoming interfaces."
+              description="Rounded fonts feature soft, curved letterforms with gentle edges that create a friendly and approachable feel. These fonts often have open, spacious characters that are easy to distinguish from one another, making them accessible and comfortable for extended reading."
               fontFamily="'Comic Sans MS', 'Trebuchet MS', cursive"
               fontSize={choices.fontSize}
               lineHeight={choices.leading}
               textColor={choices.textColor}
               bgColor={choices.bgColor}
               onClick={() => {
-                setChoices({ ...choices, fontCategory: 'rounded' });
+                setChoices({ ...choices, fontCategory: 'Rounded' });
                 setStep(1);
               }}
             />
             
             <OptionCard
               title="Monospace"
-              description="Monospace fonts have fixed-width characters where each letter occupies the same horizontal space. Originally designed for typewriters and coding, these fonts create a distinctive, technical aesthetic with precise alignment. They offer excellent readability for structured content and provide a unique reading rhythm that some find particularly comfortable."
+              description="Monospace fonts use fixed-width characters where each letter occupies the same horizontal space. Originally designed for typewriters and coding, they create a technical aesthetic with precise alignment. Many find their unique reading rhythm particularly comfortable for structured content."
               fontFamily="'Courier New', Consolas, monospace"
               fontSize={choices.fontSize}
               lineHeight={choices.leading}
               textColor={choices.textColor}
               bgColor={choices.bgColor}
               onClick={() => {
-                setChoices({ ...choices, fontCategory: 'monospace' });
+                setChoices({ ...choices, fontCategory: 'Monospace' });
                 setStep(1);
               }}
             />

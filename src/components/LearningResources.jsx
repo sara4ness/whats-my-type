@@ -512,44 +512,6 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
       details: "When choosing between design approaches, prefer the one with the fewest assumptions and complications. Complexity should be justified. Every added element, interaction, or concept is a potential source of confusion and bugs.",
       action: "Before adding anything, ask: is there a simpler way?"
     },
-    {
-      id: 86,
-      tab: 'ux',
-      category: "Design Principles",
-      title: "Pareto Principle (80/20)",
-      summary: "80% of effects come from 20% of causes.",
-      details: "In UX, this often means 80% of users use 20% of features. Focus your design energy on the critical few features that provide the most value. Don't let rarely-used features complicate the experience for typical users.",
-      action: "Identify your core user flows and optimize them relentlessly."
-    },
-
-    // --- TYPOGRAPHY ---
-    {
-      id: 90,
-      tab: 'ux',
-      category: "Typography",
-      title: "Line Length (Measure)",
-      summary: "Keep lines between 50 and 75 characters.",
-      details: "For comfortable reading, a line of text should be 50 to 75 characters long. If lines are too long, the eye has trouble tracking back to the start of the next line. If too short, the rhythm of reading is broken by constant line breaks.",
-      action: "Set a max-width on text containers; don't let lines run edge-to-edge."
-    },
-    {
-      id: 91,
-      tab: 'ux',
-      category: "Typography",
-      title: "Visual Hierarchy",
-      summary: "Guide the eye through content.",
-      details: "Size, weight, color, and spacing create a hierarchy that tells users what to read first, second, and third. Without clear hierarchy, everything competes for attention and nothing wins. Typography should reveal structure, not obscure it.",
-      action: "Establish and consistently apply heading levels and text styles."
-    },
-    {
-      id: 92,
-      tab: 'ux',
-      category: "Typography",
-      title: "Line Height (Leading)",
-      summary: "Give your lines room to breathe.",
-      details: "Line height affects readability significantly. Too tight and lines blur together; too loose and the text feels disconnected. For body text, 1.4 to 1.6 times the font size is typically comfortable. Headlines can be tighter; long text may need more space.",
-      action: "Use 1.5 line-height for body text as a reliable default."
-    },
 
     // =====================================================
     // ACCESSIBILITY CARDS (POUR)
