@@ -792,7 +792,7 @@ function LearningResources({ fontFamily, fontSize, lineHeight, textColor, bgColo
             flexWrap: 'wrap',
             gap: '0.5rem',
             justifyContent: 'center',
-            marginTop: '1.5rem',
+            marginTop: '2rem',
             maxWidth: '900px',
             marginLeft: 'auto',
             marginRight: 'auto'
