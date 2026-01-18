@@ -580,7 +580,7 @@ function App() {
               textColor={choices.textColor}
               bgColor={choices.bgColor}
               onClick={() => {
-                setChoices({ ...choices, fontCategory: 'Serif' });
+                setChoices({ ...choices, fontCategory: 'serif' });
                 setStep(1);
               }}
             />
@@ -594,7 +594,7 @@ function App() {
               textColor={choices.textColor}
               bgColor={choices.bgColor}
               onClick={() => {
-                setChoices({ ...choices, fontCategory: 'Sans-serif' });
+                setChoices({ ...choices, fontCategory: 'sans-serif' });
                 setStep(1);
               }}
             />
@@ -608,7 +608,7 @@ function App() {
               textColor={choices.textColor}
               bgColor={choices.bgColor}
               onClick={() => {
-                setChoices({ ...choices, fontCategory: 'Rounded' });
+                setChoices({ ...choices, fontCategory: 'rounded' });
                 setStep(1);
               }}
             />
@@ -622,7 +622,7 @@ function App() {
               textColor={choices.textColor}
               bgColor={choices.bgColor}
               onClick={() => {
-                setChoices({ ...choices, fontCategory: 'Monospace' });
+                setChoices({ ...choices, fontCategory: 'monospace' });
                 setStep(1);
               }}
             />
